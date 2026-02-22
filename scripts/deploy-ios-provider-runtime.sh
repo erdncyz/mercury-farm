@@ -17,6 +17,11 @@ mkdir -p "$RUNTIME_DIR"
 
 echo "Syncing workspace to runtime mirror..."
 rsync -a --delete \
+  --no-times \
+  --omit-dir-times \
+  --no-perms \
+  --no-owner \
+  --no-group \
   --exclude ".git" \
   --exclude "node_modules" \
   --exclude "ios-provider.log" \
@@ -24,9 +29,18 @@ rsync -a --delete \
   --exclude "ios-provider.launchd.err.log" \
   "$PROJECT_DIR/" "$RUNTIME_DIR/"
 
+if [ ! -x "$RUNTIME_DIR/scripts/install-ios-provider-launchagent.sh" ]; then
+  echo "ERROR: Missing installer script in runtime: $RUNTIME_DIR/scripts/install-ios-provider-launchagent.sh" >&2
+  exit 1
+fi
+
+echo "Installing LaunchAgent (runtime-only source)..."
+"$RUNTIME_DIR/scripts/install-ios-provider-launchagent.sh"
+
 echo "Restarting LaunchAgent: $LABEL"
 launchctl kickstart -k "gui/$USER_UID/$LABEL"
 
 echo "Done."
 echo "Workspace: $PROJECT_DIR"
 echo "Runtime: $RUNTIME_DIR"
+echo "Launch source: runtime (single source of truth)"

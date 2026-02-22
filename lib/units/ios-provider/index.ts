@@ -501,7 +501,7 @@ export default async (options: Options): Promise<void> => {
     }
     usbDetachWatchdog()
 
-    lifecycle.observe(() => {
+    lifecycle.observe(async() => {
         // Clear timers
         clearTimeout(espTimer)
         clearTimeout(statsTimer)
@@ -510,11 +510,11 @@ export default async (options: Options): Promise<void> => {
         stats(false)
         usbObserver.destroy()
 
+        // Clean up processes first so onCleanup can still publish DeviceAbsent.
+        await processManager.cleanup()
+
         ;[push, sub].forEach((sock) =>
             sock.close()
         )
-
-        // Clean up all processes
-        return processManager.cleanup()
     })
 }
