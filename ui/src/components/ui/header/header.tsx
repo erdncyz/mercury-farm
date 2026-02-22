@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { Button, Tappable, Text } from '@vkontakte/vkui'
 import {
   Icon16DoorEnterArrowRightOutline,
-  Icon16HelpOutline,
   Icon16MailOutline,
   Icon28DevicesOutline,
   Icon28SettingsOutline,
@@ -19,8 +18,6 @@ import { WarningModal } from '@/components/ui/modals'
 import { getAuthRoute, getDevicesRoute, getMainRoute, getSettingsRoute } from '@/constants/route-paths'
 
 import { useGetAdditionalUrl } from '@/lib/hooks/use-get-additional-url.hook'
-import { useGetAuthContact } from '@/lib/hooks/use-get-auth-contact.hook'
-import { useGetAuthDocs } from '@/lib/hooks/use-get-auth-docs.hook'
 import { useGetAuthUrl } from '@/lib/hooks/use-get-auth-url.hook'
 import { authStore } from '@/store/auth-store'
 
@@ -30,9 +27,7 @@ export const Header = () => {
   const { t } = useTranslation()
   const { pathname } = useLocation()
   const { data: authUrl } = useGetAuthUrl()
-  const { data: authDocs } = useGetAuthDocs()
   const { data: additionalUrl } = useGetAdditionalUrl()
-  const { data: authContact } = useGetAuthContact()
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
 
   const onLogout = () => {
@@ -81,25 +76,13 @@ export const Header = () => {
           className={styles.actionButton}
           before={<Icon16MailOutline />}
           Component='a'
-          disabled={!authContact}
-          href={authContact}
+          href='https://github.com/erdncyz/mercury-farm/issues'
           mode='tertiary'
           size='m'
           target='_blank'
+          rel='noreferrer'
         >
           {t('Support')}
-        </Button>
-        <Button
-          className={styles.actionButton}
-          before={<Icon16HelpOutline />}
-          Component='a'
-          disabled={!authDocs}
-          href={authDocs}
-          mode='tertiary'
-          size='m'
-          target='_blank'
-        >
-          {t('Help')}
         </Button>
         <Button className={styles.logoutButton} before={<Icon16DoorEnterArrowRightOutline />} mode='tertiary' size='m' onClick={onLogout}>
           {t('Logout')}
