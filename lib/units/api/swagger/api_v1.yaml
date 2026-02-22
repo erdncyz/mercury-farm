@@ -1,0 +1,4853 @@
+openapi: 3.0.1
+info:
+  title: Mercury
+  description: Control and manages real Smartphone devices from browser and restful
+    apis
+  contact:
+    name: Mercury Team
+    url: https://github.com/erdncyz/mercury
+  license:
+    name: Apache-2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0
+  version: 1.4.7
+servers:
+- url: /api/v1
+tags:
+- name: user
+  description: User Operations
+- name: users
+  description: Users Operations
+- name: devices
+  description: Device Operations
+- name: groups
+  description: Groups Operations
+- name: admin
+  description: Privileged Operations
+- name: autotests
+  description: Autotests Operations
+paths:
+  /groups:
+    get:
+      tags:
+        - groups
+      summary: Gets groups
+      description: Returns the groups to which you belong
+      operationId: getGroups
+      parameters:
+        - name: fields
+          in: query
+          description: Comma-seperated list of fields; only listed fields will be returned
+            in response
+          schema:
+            type: string
+        - name: owner
+          in: query
+          description: "Selects the groups for which you are the owner (true) or a simple\
+          \ member (false); note that by not providing this parameter, it means all\
+          \ groups to which you belong are selected"
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Groups information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupListResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    post:
+      tags:
+        - groups
+      summary: Creates a group
+      description: Creates a group with you as owner
+      operationId: createGroup
+      requestBody:
+        description: Group properties; at least one property is required
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupPayload'
+          application/octet-stream:
+            schema:
+              $ref: '#/components/schemas/GroupPayload'
+        required: true
+      responses:
+        "201":
+          description: Group information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 400: Bad Request => invalid format or semantic of properties
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: group
+    delete:
+      tags:
+        - groups
+      summary: Removes groups
+      description: Removes the groups owned by you
+      operationId: deleteGroups
+      requestBody:
+        description: Groups to remove as a comma-separated list of group identifiers;
+          note that by not providing this parameter it means all groups owned by you
+          are removed
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupsPayload'
+          application/octet-stream:
+            schema:
+              $ref: '#/components/schemas/GroupsPayload'
+        required: false
+      responses:
+        "200":
+          description: Groups removing is OK (or no groups to remove)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => a device is currently booked or unremovable built-in group
+              * 404: Not Found => unknown groups
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: groups
+    x-swagger-router-controller: groups
+  /groups/{id}:
+    get:
+      tags:
+        - groups
+      summary: Gets a group
+      description: Returns a group to which you belong
+      operationId: getGroup
+      parameters:
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          description: Comma-separated list of group fields; only listed fields will
+            be returned in response
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Group information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown group
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    put:
+      tags:
+        - groups
+      summary: Updates a group
+      description: Updates a group owned by you
+      operationId: updateGroup
+      parameters:
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Group properties; at least one property is required
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupPayload'
+          application/octet-stream:
+            schema:
+              $ref: '#/components/schemas/GroupPayload'
+        required: true
+      responses:
+        "200":
+          description: Group information (an empty group is returned if no change
+            is made)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        "409":
+          description: Conflicts information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictsResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 400: Bad Request => invalid format or semantic of properties
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => quota is reached or unauthorized property
+              * 404: Not Found => unknown group
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: group
+    delete:
+      tags:
+        - groups
+      summary: Removes a group
+      description: Removes a group owned by you
+      operationId: deleteGroup
+      parameters:
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Group removing is OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => a device is currently booked or unremovable built-in group
+              * 404: Not Found => unknown group
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: groups
+  /groups/{id}/devices:
+    get:
+      tags:
+        - groups
+      summary: Gets the devices of a group
+      description: Returns the devices of the group to which you belong
+      operationId: getGroupDevices
+      parameters:
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+        - name: bookable
+          in: query
+          description: "Selects devices which could be potentially booked by that transient\
+          \ group (true => irrelevant for an origin group!), or selects all devices\
+          \ of the group (false); note that by not providing this parameter all devices\
+          \ of the group are selected"
+          schema:
+            type: boolean
+            default: false
+        - name: fields
+          in: query
+          description: Comma-separated list of device fields; only listed fields will
+            be returned in response
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Group devices information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceListResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 400: Bad request => group is not transient
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown group
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    put:
+      tags:
+        - groups
+      summary: Adds devices into a transient group
+      description: Adds devices into a transient group owned by you
+      operationId: addGroupDevices
+      parameters:
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Devices to add as a comma-separated list of serials; note that
+          by not providing this parameter it means all devices which could be potentially
+          booked by that transient group are added into the latter
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DevicesPayload'
+          application/octet-stream:
+            schema:
+              $ref: '#/components/schemas/DevicesPayload'
+        required: false
+      responses:
+        "200":
+          description: Group information (an empty group is returned if no change
+            is made)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        "409":
+          description: Conflicts information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictsResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 400: Bad Request => group is not transient
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => quota is reached
+              * 404: Not Found => unknown group or devices
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: devices
+    delete:
+      tags:
+        - groups
+      summary: Removes devices from a transient group
+      description: Removes devices from a transient group owned by you
+      operationId: removeGroupDevices
+      parameters:
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Devices to remove as a comma-separated list of serials; note
+          that by not providing this parameter it means all devices of the group are
+          removed
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DevicesPayload'
+          application/octet-stream:
+            schema:
+              $ref: '#/components/schemas/DevicesPayload'
+        required: false
+      responses:
+        "200":
+          description: Group information (an empty group is returned if no change
+            is made)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 400: Bad Request => group is not transient
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown group or devices
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: devices
+    x-swagger-router-controller: groups
+  /groups/{id}/devices/{serial}:
+    get:
+      tags:
+        - groups
+      summary: Gets a device of a group
+      description: Returns a device of a group to which you belong
+      operationId: getGroupDevice
+      parameters:
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          description: Comma-separated list of device fields; only listed fields will
+            be returned in response
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Group device information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown group or device
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    put:
+      tags:
+        - groups
+      summary: Adds a device into a transient group
+      description: Adds a device into a transient group owned by you
+      operationId: addGroupDevice
+      parameters:
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Group information (an empty group is returned if no change
+            is made)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        "409":
+          description: Conflicts information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictsResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 400: Bad Request => group is not transient
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => quota is reached
+              * 404: Not Found => unknown group or device
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    delete:
+      tags:
+        - groups
+      summary: Removes a device from a transient group
+      description: Removes a device from a transient group owned by you
+      operationId: removeGroupDevice
+      parameters:
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Group information (an empty group is returned if no change
+            is made)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 400: Bad Request => group is not transient
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown group or device
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: groups
+  /groups/{id}/users:
+    get:
+      tags:
+        - groups
+      summary: Gets the users of a group
+      description: "Gets the users of a group to which you belong; if you are the\
+        \ administrator user then all user fields are returned, otherwise only 'email',\
+        \ 'name' and 'privilege' user fields are returned"
+      operationId: getGroupUsers
+      parameters:
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          description: Comma-separated list of user fields; only listed fields will
+            be returned in response
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Group users information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserListResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown group
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    put:
+      tags:
+        - groups
+      summary: Adds users into a group
+      description: Adds users into a group owned by you
+      operationId: addGroupUsers
+      parameters:
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Users to add as a comma-separated list of emails; note that by
+          not providing this parameter it means all available users are added into
+          the group
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsersPayload'
+          application/octet-stream:
+            schema:
+              $ref: '#/components/schemas/UsersPayload'
+        required: false
+      responses:
+        "200":
+          description: Group information (an empty group is returned if no change
+            is made)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown group or device or users
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: users
+    delete:
+      tags:
+        - groups
+      summary: Removes users from a group
+      description: Removes users from a group owned by you
+      operationId: removeGroupUsers
+      parameters:
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Users to remove as a comma-separated list of emails; note that
+          by not providing this parameter it means all users of the group are removed
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsersPayload'
+          application/octet-stream:
+            schema:
+              $ref: '#/components/schemas/UsersPayload'
+        required: false
+      responses:
+        "200":
+          description: Group information (an empty group is returned if no change
+            is made)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => owner or administrator user can't be removed
+              * 404: Not Found => unknown group or device or users
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: users
+    x-swagger-router-controller: groups
+  /groups/{id}/users/{email}:
+    get:
+      tags:
+        - groups
+      summary: Gets a user of a group
+      description: "Gets a user of a group to which you belong; if you are the administrator\
+        \ user then all user fields are returned, otherwise only 'email', 'name' and\
+        \ 'privilege' user fields are returned"
+      operationId: getGroupUser
+      parameters:
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          description: Comma-separated list of user fields; only listed fields will
+            be returned in response
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Group user information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown group or device or user
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    put:
+      tags:
+        - groups
+      summary: Adds a user into a group
+      description: Adds a user into a group owned by you
+      operationId: addGroupUser
+      parameters:
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Group information (an empty group is returned if no change
+            is made)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown group or device or user
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    delete:
+      tags:
+        - groups
+      summary: Removes a user from a group
+      description: Removes a user from a group owned by you
+      operationId: removeGroupUser
+      parameters:
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Group information (an empty group is returned if no change
+            is made)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => owner or administrator user can't be removed
+              * 404: Not Found => unknown group or device or user
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: groups
+  /groups/{id}/moderators/{email}:
+    put:
+      tags:
+        - groups
+      summary: Adds a user as a moderator to a group
+      description: Adds a user as a moderator to a group owned by you or if you are an administrator
+      operationId: addGroupModerator
+      parameters:
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Group information (an empty group is returned if no change is made)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => only owner or administrator can add moderators
+              * 404: Not Found => unknown group or user
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    delete:
+      tags:
+        - groups
+      summary: Removes a user as a moderator from a group
+      description: Removes a user as a moderator from a group owned by you or if you are an administrator
+      operationId: removeGroupModerator
+      parameters:
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Group information (an empty group is returned if no change is made)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => only owner or administrator can remove moderators
+              * 404: Not Found => unknown group or user
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: groups
+  /groups/{id}/teams:
+    get:
+      tags:
+        - teams
+      summary: Get group teams
+      description: Get teams where groups stands
+      operationId: getGroupsTeams
+      parameters:
+        - name: id
+          in: path
+          description: group id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Group Teams
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamsResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: teams
+  /users:
+    get:
+      tags:
+        - users
+      summary: Gets users
+      description: "gets users; if you are the administrator user then all user fields\
+        \ are returned, otherwise only 'email', 'name' and 'privilege' user fields\
+        \ are returned"
+      operationId: getUsers
+      parameters:
+        - name: fields
+          in: query
+          description: Comma-separated list of user fields; only listed fields will
+            be returned in response
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Users information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserListResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    delete:
+      tags:
+        - admin
+      summary: Removes users
+      description: Removes users from the database
+      operationId: deleteUsers
+      parameters:
+        - name: groupOwner
+          in: query
+          description: Allows or not the removing of each user depending respectively
+            if the user is a group owner (true) or not (false); note that by not providing
+            the groupOwner parameter it means an unconditionally removing
+          schema:
+            type: boolean
+      requestBody:
+        description: Users to remove as a comma-separated list of emails; note that
+          by not providing this parameter it means all users are selected for removing
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsersPayload'
+          application/octet-stream:
+            schema:
+              $ref: '#/components/schemas/UsersPayload'
+        required: false
+      responses:
+        "200":
+          description: Users removing is OK (or no users to remove)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => administrator user can't be removed
+              * 404: Not Found => unknown users
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: users
+    x-swagger-router-controller: users
+  /users/alertMessage:
+    get:
+      tags:
+        - users
+      summary: Gets the users alert message
+      description: The Users Alert Message endpoint returns the current alert message
+        launched by the administrator user
+      operationId: getUsersAlertMessage
+      parameters:
+        - name: fields
+          in: query
+          description: Fields query parameter takes a comma seperated list of fields.
+            Only listed field will be return in response
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Current Users Alert Message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertMessageResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    put:
+      tags:
+        - admin
+      summary: Updates the users alert message
+      description: Updates the users alert message
+      operationId: updateUsersAlertMessage
+      requestBody:
+        description: Alert message properties
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertMessagePayload'
+          application/octet-stream:
+            schema:
+              $ref: '#/components/schemas/AlertMessagePayload'
+        required: true
+      responses:
+        "200":
+          description: Updated Users Alert Message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertMessageResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 400: Bad Request
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: alertMessage
+    x-swagger-router-controller: users
+  /users/groupsQuotas:
+    put:
+      tags:
+        - admin
+      summary: Updates the default groups quotas of users
+      description: Updates the default groups quotas allocated to each new user
+      operationId: updateDefaultUserGroupsQuotas
+      parameters:
+        - name: number
+          in: query
+          description: Number of groups
+          schema:
+            minimum: 0
+            type: integer
+        - name: duration
+          in: query
+          description: Total duration of groups (milliseconds)
+          schema:
+            minimum: 0
+            type: integer
+        - name: repetitions
+          in: query
+          description: Number of repetitions per Group
+          schema:
+            minimum: 0
+            type: integer
+      responses:
+        "200":
+          description: Administrator user information (an empty user is returned if
+            no change is made)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: users
+  /users/grantAdmin/{email}:
+    post:
+      tags:
+        - admin
+      summary: Gets users
+      description: "gets users; if you are the administrator user then all user fields\
+        \ are returned, otherwise only 'email'"
+      operationId: grantAdmin
+      parameters:
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => user doesnt have admin privilege
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: users
+  /users/revokeAdmin/{email}:
+    delete:
+      tags:
+        - admin
+      summary: Gets users
+      description: "gets users; if you are the administrator user then all user fields\
+        \ are returned, otherwise only 'email'"
+      operationId: revokeAdmin
+      parameters:
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => user doesnt have admin privilege
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: users
+  /users/{email}:
+    get:
+      tags:
+        - users
+      summary: Gets a user
+      description: "Gets a user; if you are the administrator user then all user fields\
+        \ are returned, otherwise only 'email', 'name' and 'privilege' user fields\
+        \ are returned"
+      operationId: getUserByEmail
+      parameters:
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          description: Comma-separated list of user fields; only listed fields will
+            be returned in response
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown user
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    post:
+      tags:
+        - admin
+      summary: Creates a user
+      description: Creates a user in the database
+      operationId: createUser
+      parameters:
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+        - name: name
+          in: query
+          description: User name
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: User information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => user already exists
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    delete:
+      tags:
+        - admin
+      summary: Removes a user
+      description: Removes a user from the database
+      operationId: deleteUser
+      parameters:
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+        - name: groupOwner
+          in: query
+          description: Allows or not the removing of the user depending respectively
+            if the user is a group owner (true) or not (false); note that by not providing
+            this parameter it means an unconditionally removing
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: User removing is OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => administrator user can't be removed
+              * 404: Not Found => unknown user
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: users
+  /users/service/{email}:
+    post:
+      tags:
+        - admin
+      summary: Creates a serviceUser
+      description: Creates a user in the database by parameters
+      operationId: createServiceUser
+      parameters:
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+        - name: name
+          in: query
+          description: User name
+          required: true
+          schema:
+            type: string
+        - name: admin
+          in: query
+          description: Give user admin privilege
+          schema:
+            type: boolean
+        - name: secret
+          in: query
+          description: Secret for jwt
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: User information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceUserResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 400: Bad Request => user already exists
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => user doesnt have admin privilege
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: users
+  /users/{email}/groupsQuotas:
+    put:
+      tags:
+        - admin
+      summary: Updates the groups quotas of a user
+      description: Updates the groups quotas of a user
+      operationId: updateUserGroupsQuotas
+      parameters:
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+        - name: number
+          in: query
+          description: Number of groups
+          schema:
+            minimum: 0
+            type: integer
+        - name: duration
+          in: query
+          description: Total duration of groups (milliseconds)
+          schema:
+            minimum: 0
+            type: integer
+        - name: repetitions
+          in: query
+          description: Number of repetitions per Group
+          schema:
+            minimum: 0
+            type: integer
+      responses:
+        "200":
+          description: User information (an empty user is returned if no change is
+            made)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 400: Bad Request => quotas must be >= actual consumed resources
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown user
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: users
+  /users/{email}/devices:
+    get:
+      tags:
+        - admin
+      summary: Gets the devices controlled by a user
+      description: Gets the devices controlled by a user
+      operationId: getUserDevicesV2
+      parameters:
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          description: Comma-separated list of device fields; only listed fields will
+            be returned in response
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Controlled devices information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceListResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown user
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: users
+  /users/{email}/devices/{serial}:
+    get:
+      tags:
+        - admin
+      summary: Gets a device controlled by a user
+      description: Gets a device controlled by a user
+      operationId: getUserDevice
+      parameters:
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+        - name: serial
+          in: path
+          description: Device identifier (Serial)
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          description: Comma-separated list of device fields; only listed fields will
+            be returned in response
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Controlled device information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => device is not controlled by the user
+              * 404: Not Found => unknown user or device
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    post:
+      tags:
+        - admin
+      summary: Places a device under user control
+      description: Places a device under user control; note this is not completely
+        analogous to press the 'Use' button in the UI because that does not authorize
+        remote connection through ADB
+      operationId: addUserDeviceV3
+      parameters:
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+        - name: timeout
+          in: query
+          description: Means the device will be automatically removed from the user
+            control if it is kept idle for this period (in milliseconds); default value
+            is provided by the provider 'group timeout'
+          required: true
+          schema:
+            minimum: 120
+            type: integer
+      responses:
+        "200":
+          description: Device controlling is OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => Device is already controlled or is not available
+              * 404: Not Found => unknown user or device
+              * 500: Internal Server Error
+              * 504: Gateway Time-out => device is not responding
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    delete:
+      tags:
+        - admin
+      summary: Remove a device from the user control
+      description: Remove a device from the user control; note this is analogous to
+        press the 'Stop Using' button in the UI because that forbids also remote connection
+        through ADB
+      operationId: deleteUserDevice
+      parameters:
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Device releasing is OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => device is not controlled by the user
+              * 404: Not Found => unknown user or device
+              * 500: Internal Server Error
+              * 504: Gateway Time-out => device is not responding
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: users
+  /users/{email}/devices/{serial}/remoteConnect:
+    post:
+      tags:
+        - admin
+      summary: Allows to remotely connect to a device controlled by a user
+      description: Allows to remotely connect to a device controlled by a user; returns
+        the remote debug URL in response for use with ADB
+      operationId: remoteConnectUserDevice
+      parameters:
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Remote debug URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemoteConnectUserDeviceResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => device is not controlled by the user
+              * 404: Not Found => unknown user or device
+              * 500: Internal Server Error
+              * 504: Gateway Time-out => device is not responding
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    delete:
+      tags:
+        - admin
+      summary: Forbids to remotely connect to a device controlled by a user
+      description: Forbids using ADB to remotely connect to a device controlled by
+        a user
+      operationId: remoteDisconnectUserDevice
+      parameters:
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Remote debug URL disabling is OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => device is not controlled by the user
+              * 404: Not Found => unknown user or device
+              * 500: Internal Server Error
+              * 504: Gateway Time-out => device is not responding
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: users
+  /users/{email}/accessTokens:
+    get:
+      tags:
+        - admin
+      summary: Gets the access tokens of a user
+      description: Gets the access tokens of a user
+      operationId: getUserAccessTokensV2
+      parameters:
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Access tokens information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAccessTokensResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown user
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    post:
+      tags:
+        - admin
+      summary: Create an access token for a user
+      description: Creates an access token for a user.
+      operationId: createUserAccessToken
+      parameters:
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+        - name: title
+          in: query
+          description: Access token title
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Access token information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAccessTokenResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown user
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    delete:
+      tags:
+        - admin
+      summary: Remove the access tokens of a user
+      description: Remove the access tokens of a user
+      operationId: deleteUserAccessTokens
+      parameters:
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Access tokens removing is OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown user
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: users
+  /users/{email}/accessTokens/{id}:
+    get:
+      tags:
+        - admin
+      summary: Gets an access token of a user
+      description: Gets an access token of a user
+      operationId: getUserAccessToken
+      parameters:
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: Access token identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Access token information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAccessTokenResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown user or token
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    delete:
+      tags:
+        - admin
+      summary: Removes an access token of a user
+      description: Removes an access token of a user
+      operationId: deleteUserAccessToken
+      parameters:
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: Access token identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Access token removing is OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown user or token
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: users
+  /user:
+    get:
+      tags:
+        - user
+      summary: User Profile
+      description: The User Profile endpoint returns information about current authorized
+        user
+      operationId: getUser
+      responses:
+        "200":
+          description: Current User Profile information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    x-swagger-router-controller: user
+  /user/devices:
+    get:
+      tags:
+        - user
+      summary: User Devices
+      description: The User Devices endpoint returns device list owner by current
+        authorized user
+      operationId: getUserDevices
+      parameters:
+        - name: fields
+          in: query
+          description: Fields query parameter takes a comma seperated list of fields.
+            Only listed field will be return in response
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Current User Devices List
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceListResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    post:
+      tags:
+        - user
+      summary: Add a device to a user
+      description: The User Devices endpoint will request stf server for a new device.
+      operationId: addUserDevice
+      requestBody:
+        description: Device to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddUserDevicePayload'
+          application/octet-stream:
+            schema:
+              $ref: '#/components/schemas/AddUserDevicePayload'
+        required: true
+      responses:
+        "200":
+          description: Add User Device Status
+          content: { }
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => device is already controlled or is not available
+              * 404: Not Found => unknown device
+              * 500: Internal Server Error
+              * 504: Gateway Time-out => device is not responding
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: device
+    x-swagger-router-controller: user
+  /user/devices/{serial}:
+    get:
+      tags:
+        - user
+      summary: User Device
+      description: The devices enpoint return information about device owned by user
+      operationId: getUserDeviceBySerial
+      parameters:
+        - name: serial
+          in: path
+          description: Device Serial
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          description: Fields query parameter takes a comma seperated list of fields.
+            Only listed field will be return in response
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Device Information owned by user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => device is not controlled by the user
+              * 404: Not Found => unknown device
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    post:
+      tags:
+        - user
+      summary: Places a device under user control
+      description: Places a device under user control; note this is not completely
+        analogous to press the 'Use' button in the UI because that does not authorize
+        remote connection through ADB
+      operationId: addUserDeviceV2
+      parameters:
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+        - name: timeout
+          in: query
+          description: Means the device will be automatically removed from the user
+            control if it is kept idle for this period (in milliseconds); default value
+            is provided by the provider 'group timeout'
+          schema:
+            minimum: 0
+            type: integer
+      responses:
+        "200":
+          description: Device controlling is OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => device is already controlled or is not available
+              * 404: Not Found => unknown device
+              * 500: Internal Server Error
+              * 504: Gateway Time-out => device is not responding
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    delete:
+      tags:
+        - user
+      summary: Delete User Device
+      description: The User Devices endpoint will request for device release from
+        stf server. It will return request accepted if device is being used by current
+        user
+      operationId: deleteUserDeviceBySerial
+      parameters:
+        - name: serial
+          in: path
+          description: Device Serial
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Delete User Device Status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => device is not controlled by the user
+              * 404: Not Found => unknown device
+              * 500: Internal Server Error
+              * 504: Gateway Time-out => device is not responding
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: user
+  /user/devices/{serial}/remoteConnect:
+    post:
+      tags:
+        - user
+      summary: Remote Connect
+      description: The device connect endpoint will request stf server to connect
+        remotely
+      operationId: remoteConnectUserDeviceBySerial
+      parameters:
+        - name: serial
+          in: path
+          description: Device Serial
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Remote Connect User Device Request Status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemoteConnectUserDeviceResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => device is not controlled by the user
+              * 404: Not Found => unknown device
+              * 500: Internal Server Error
+              * 504: Gateway Time-out => device is not responding
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    delete:
+      tags:
+        - user
+      summary: Remote Disconnect
+      description: The device connect endpoint will request stf server to disconnect
+        remotely
+      operationId: remoteDisconnectUserDeviceBySerial
+      parameters:
+        - name: serial
+          in: path
+          description: Device Serial
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Remote Disсonnect User Device Request Status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => device is not controlled by the user
+              * 404: Not Found => unknown device
+              * 500: Internal Server Error
+              * 504: Gateway Time-out => device is not responding
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: user
+  /user/fullAccessTokens:
+    get:
+      tags:
+        - user
+      summary: Gets your access tokens
+      description: Gets your access tokens; note that all fields are returned in response
+        including the 'id' one
+      operationId: getAccessTokens
+      responses:
+        "200":
+          description: Access tokens information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAccessTokensResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: user
+  /user/accessTokens:
+    get:
+      tags:
+        - user
+      summary: Access Tokens
+      description: The Access Tokens endpoints returns titles of all the valid access
+        tokens
+      operationId: getUserAccessTokens
+      responses:
+        "200":
+          description: Access Tokens titles
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessTokensResponse'
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - user
+      summary: Create an access token
+      description: Create an access token for you
+      operationId: createAccessToken
+      parameters:
+        - name: title
+          in: query
+          description: Access token title
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Access token information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAccessTokenResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    delete:
+      tags:
+        - user
+      summary: Removes your access tokens
+      description: Removes your access tokens
+      operationId: deleteAccessTokens
+      responses:
+        "200":
+          description: Access tokens removing is OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: user
+  /user/accessTokens/byTitle:
+    post:
+      tags:
+        - user
+      summary: Obtains an access token by its title from an authorized user
+      description: Gets one of your access tokens
+      operationId: getAccessTokenByTitle
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - title
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: Access Token Title
+        required: true
+      responses:
+        "200":
+          description: Access token information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAccessTokenResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown token
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: user
+  /user/accessTokens/{id}:
+    get:
+      tags:
+        - user
+      summary: Gets an access token
+      description: Gets one of your access tokens
+      operationId: getAccessToken
+      parameters:
+        - name: id
+          in: path
+          description: Access token identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Access token information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAccessTokenResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown token
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    delete:
+      tags:
+        - user
+      summary: Removes an access token
+      description: Removes one of your access tokens
+      operationId: deleteAccessToken
+      parameters:
+        - name: id
+          in: path
+          description: Access token identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Access token removing is OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown token
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: user
+  /user/adbPublicKeys:
+    post:
+      tags:
+        - user
+      summary: Adb public keys
+      description: Add adb public key for current user
+      operationId: addAdbPublicKey
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - publickey
+              type: object
+              properties:
+                publickey:
+                  type: string
+                  description: adb public key (~/.android/id_rsa.pub)
+                title:
+                  type: string
+                  description: By default will be extracted from public key
+        required: false
+      responses:
+        "200":
+          description: Add adb key response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdbKeyAddedResponse'
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-codegen-request-body-name: adb
+    delete:
+      tags:
+        - user
+      summary: Remove adb public key
+      description: remove adb public for current user
+      operationId: removeAdbPublicKey
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FingerPrintPayload'
+        required: false
+      responses:
+        "200":
+          description: Add adb key response
+          content: { }
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-codegen-request-body-name: fingerprint
+    x-swagger-router-controller: user
+  /user/{email}/teams:
+    get:
+      tags:
+        - teams
+      summary: Get user teams
+      description: Get teams where user stands
+      operationId: getUserTeams
+      parameters:
+        - name: email
+          in: path
+          description: user email
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User Teams
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamsResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: teams
+  /devices:
+    get:
+      tags:
+        - devices
+      summary: Device List
+      description: The devices endpoint return list of all the STF devices including
+        Disconnected and Offline
+      operationId: getDevices
+      parameters:
+        - name: target
+          in: query
+          description: |
+            Targets devices of your universe:
+             * bookable - devices belonging to a bookable group
+             * standard - devices belonging to a standard group
+             * origin - all devices
+             * standardizable - devices which are not yet booked including those belonging to a standard group
+             * user (default value) - devices which are accessible by you at a given time
+          schema:
+            type: string
+            default: user
+            enum:
+              - bookable
+              - standard
+              - origin
+              - standardizable
+              - user
+        - name: fields
+          in: query
+          description: Fields query parameter takes a comma seperated list of fields.
+            Only listed field will be return in response
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Devices information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceListResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    delete:
+      tags:
+        - admin
+      summary: Removes devices
+      description: Removes devices from the database
+      operationId: deleteDevices
+      parameters:
+        - name: present
+          in: query
+          description: Allows or not the removing of each device depending respectively
+            if the device is present (true) or not (false); note that by not providing
+            this parameter it means an unconditional removing
+          schema:
+            type: boolean
+        - name: booked
+          in: query
+          description: Allows or not the removing of each device depending respectively
+            if the device is booked (true) or not (false); note that by not providing
+            this parameter it means an unconditional removing
+          schema:
+            type: boolean
+        - name: annotated
+          in: query
+          description: Allows or not the removing of each device depending respectively
+            if the device is annotated (true) or not (false); note that by not providing
+            this parameter it means an unconditional removing
+          schema:
+            type: boolean
+        - name: controlled
+          in: query
+          description: Allows or not the removing of each device depending respectively
+            if the device is controlled (true) or not (false); note that by not providing
+            this parameter it means an unconditional removing
+          schema:
+            type: boolean
+      requestBody:
+        description: Devices to remove as a comma-separated list of serials; note
+          that by not providing this parameter it means all devices are selected for
+          removing
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DevicesPayload'
+          application/octet-stream:
+            schema:
+              $ref: '#/components/schemas/DevicesPayload'
+        required: false
+      responses:
+        "200":
+          description: Devices removing is OK (or no devices to remove)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown devices
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: devices
+    x-swagger-router-controller: devices
+  /devices/adbRange:
+    get:
+      tags:
+        - devices
+      summary: AdbRange
+      description: The range whic used to forward adb ports
+      operationId: getAdbRange
+      responses:
+        "200":
+          description: AdbRange
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdbRangeResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: devices
+  /devices/{serial}:
+    get:
+      tags:
+        - devices
+      summary: Device Information
+      description: The devices serial enpoint return information about a single device
+      operationId: getDeviceBySerial
+      parameters:
+        - name: serial
+          in: path
+          description: Device Serial
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          description: Fields query parameter takes a comma seperated list of fields.
+            Only listed field will be return in response
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Device Information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - admin
+      summary: Adds device information
+      description: Adds device information
+      operationId: putDeviceBySerial
+      parameters:
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: |
+          Information to add for device. Supports only notes-field and status change(Disconnected).
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DevicePayload'
+        required: true
+      responses:
+        "200":
+          description: Storing success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 400: Bad Request => invalid request
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown device
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+              * 504: Gateway Time-out => server is not responding
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: device
+    delete:
+      tags:
+        - admin
+      summary: Removes a device
+      description: Removes a device from the database
+      operationId: deleteDevice
+      parameters:
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+        - name: present
+          in: query
+          description: Allows or not the removing of the device depending respectively
+            if the device is present (true) or not (false); note that by not providing
+            this parameter it means an unconditional removing
+          schema:
+            type: boolean
+        - name: booked
+          in: query
+          description: Allows or not the removing of the device depending respectively
+            if the device is booked (true) or not (false); note that by not providing
+            this parameter it means an unconditional removing
+          schema:
+            type: boolean
+        - name: annotated
+          in: query
+          description: Allows or not the removing of the device depending respectively
+            if the device is annotated (true) or not (false); note that by not providing
+            this parameter it means an unconditional removing
+          schema:
+            type: boolean
+        - name: controlled
+          in: query
+          description: Allows or not the removing of the device depending respectively
+            if the device is controlled (true) or not (false); note that by not providing
+            this parameter it means an unconditional removing
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Device removing is OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown device
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: devices
+  /devices/{serial}/updateStorageInfo:
+    put:
+      tags:
+        - admin
+      summary: update device storage info
+      description: update device storage info
+      operationId: updateStorageInfo
+      parameters:
+        - name: serial
+          in: path
+          description: Device Serial
+          required: true
+          schema:
+            type: string
+        - name: place
+          in: query
+          description: Device place
+          schema:
+            type: string
+        - name: storageId
+          in: query
+          description: Device storageId
+          schema:
+            type: string
+        - name: adbPort
+          in: query
+          description: Device adbPort
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Storing success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 400: Bad Request => invalid request
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown device
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+              * 504: Gateway Time-out => server is not responding
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: devices
+  /devices/{serial}/size:
+    get:
+      tags:
+        - user
+      summary: Gets the size of a device
+      description: Gets the size of a device
+      operationId: getDeviceSize
+      parameters:
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Device size information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SizeResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 404: Not Found => unknown device
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    x-swagger-router-controller: devices
+  /devices/{serial}/use:
+    post:
+      tags:
+        - admin
+      summary: Use device by specified user.
+      description: Use device by specified user. Admin privilege required.
+      operationId: useDeviceByUser
+      parameters:
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Email of the desired user
+        content:
+          application/json:
+            schema:
+              required:
+                - email
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: Email of the desired user
+        required: true
+      responses:
+        "200":
+          description: Device is in use and remote connection is enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemoteConnectUserDeviceResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown data
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: serial
+    x-swagger-router-controller: devices
+  /devices/groups/{id}:
+    put:
+      tags:
+        - admin
+      summary: Adds devices into an origin group
+      description: Adds devices into an origin group along with updating each added
+        device; returns the updated devices
+      operationId: addOriginGroupDevices
+      parameters:
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          description: Comma-seperated list of fields; only listed fields will be returned
+            in response
+          schema:
+            type: string
+      requestBody:
+        description: |
+          Devices to add as a comma-separated list of serials; note that by not providing this parameter it means all 'available devices' are selected for adding:
+           * 'availables devices' means all devices in case of a bookable group
+           * 'availables devices' means all not yet booked devices in case of a standard group
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DevicesPayload'
+          application/octet-stream:
+            schema:
+              $ref: '#/components/schemas/DevicesPayload'
+        required: false
+      responses:
+        "200":
+          description: Devices information (an empty device list is returned if no
+            change is made)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceListResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 400: Bad Request => group is not an origin one
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => a device is currently booked
+              * 404: Not Found => unknown group or devices
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+              * 504: Gateway Time-out => server is not responding
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: devices
+    delete:
+      tags:
+        - admin
+      summary: Removes devices from an origin group
+      description: Removes devices from an origin group along with updating each removed
+        device; returns the updated devices
+      operationId: removeOriginGroupDevices
+      parameters:
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          description: Comma-seperated list of fields; only listed fields will be returned
+            in response
+          schema:
+            type: string
+      requestBody:
+        description: Devices to remove as a comma-separated list of serials; note
+          that by not providing this parameter it means all devices of the group are
+          selected for removing
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DevicesPayload'
+          application/octet-stream:
+            schema:
+              $ref: '#/components/schemas/DevicesPayload'
+        required: false
+      responses:
+        "200":
+          description: Devices information (an empty device list is returned if no
+            change is made)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceListResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 400: Bad Request => group is not an origin one
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => a device is currently booked
+              * 404: Not Found => unknown group or devices
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+              * 504: Gateway Time-out => server is not responding
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: devices
+    x-swagger-router-controller: devices
+  /devices/{serial}/adbPort:
+    put:
+      tags:
+        - admin
+      summary: Renews adb port for device
+      description: Renews adb port for device
+      operationId: renewAdbPort
+      parameters:
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Storing success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdbPortResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 400: Bad Request => invalid request
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown device
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+              * 504: Gateway Time-out => server is not responding
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: devices
+  /devices/{serial}/owner:
+    get:
+      tags:
+        - user
+      summary: Gets the group owner of a device
+      description: Gets the group owner of a device
+      operationId: getDeviceOwner
+      parameters:
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Device size information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OwnerResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 404: Not Found => unknown device
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    x-swagger-router-controller: devices
+  /devices/{serial}/groups:
+    get:
+      tags:
+        - admin
+      summary: Gets the groups to which the device belongs
+      description: Gets the groups to which the device belongs
+      operationId: getDeviceGroups
+      parameters:
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          description: Comma-seperated list of fields; only listed fields will be returned
+            in response
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Groups information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupListResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown device
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: devices
+  /devices/{serial}/type:
+    get:
+      tags:
+        - user
+      summary: Gets the type of a device
+      description: Gets the type of a device
+      operationId: getDeviceType
+      parameters:
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Device type information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TypeResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 404: Not Found => unknown device
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    x-swagger-router-controller: devices
+  /devices/{serial}/bookings:
+    get:
+      tags:
+        - devices
+      summary: Gets the bookings to which the device belongs
+      description: Gets the bookings (i.e. transient groups) to which the device belongs
+      operationId: getDeviceBookings
+      parameters:
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          description: Fields query parameter takes a comma seperated list of fields.
+            Only listed field will be return in response
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Bookings information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupListResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown device
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: devices
+  /devices/{serial}/groups/{id}:
+    put:
+      tags:
+        - admin
+      summary: Adds a device into an origin group
+      description: Adds a device into an origin group along with updating the added
+        device; returns the updated device
+      operationId: addOriginGroupDevice
+      parameters:
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Device information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 400: Bad Request => group is not an origin one
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => the device is currently booked
+              * 404: Not Found => unknown group or device
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+              * 504: Gateway Time-out => server is not responding
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    delete:
+      tags:
+        - admin
+      summary: Removes a device from an origin group
+      description: Removes a device from an origin group along with updating the removed
+        device; returns the updated device
+      operationId: removeOriginGroupDevice
+      parameters:
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Device information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 400: Bad Request => group is not an origin one
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => the device is currently booked
+              * 404: Not Found => unknown group or device
+              * 500: Internal Server Error
+              * 503: Service Unavailable => server too busy or a lock on a resource is pending
+              * 504: Gateway Time-out => server is not responding
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: devices
+  /devices/fake:
+    get:
+      tags:
+        - devices
+        - admin
+      summary: Device List
+      description: Method generates fake devices ame as stf generate-fake-device
+      operationId: generateFakeDevice
+      parameters:
+        - name: number
+          in: query
+          description: How many devices to create
+          schema:
+            type: number
+            default: 1
+      responses:
+        "200":
+          description: Devices information
+          content:
+            application/json:
+              schema:
+                required:
+                  - description
+                  - success
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  description:
+                    type: string
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: devices
+  /autotests:
+    get:
+      tags:
+        - autotests
+      summary: Get devices for autotests run
+      description: Create group and return serials of captured devices
+      operationId: captureDevices
+      parameters:
+        - name: timeout
+          in: query
+          description: timeout for group in seconds
+          required: true
+          schema:
+            minimum: 60
+            maximum: 10800
+            type: integer
+        - name: amount
+          in: query
+          description: Device amount needed for autotests run
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+        - name: need_amount
+          in: query
+          description: "need only specified amount, not less"
+          schema:
+            type: boolean
+        - name: abi
+          in: query
+          description: device abi
+          schema:
+            type: string
+        - name: sdk
+          in: query
+          description: device sdk
+          schema:
+            type: string
+        - name: model
+          in: query
+          description: device model
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: device type
+          schema:
+            type: string
+        - name: version
+          in: query
+          description: device os version
+          schema:
+            type: string
+        - name: run
+          in: query
+          description: run identificator
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Group created for run
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutoTestResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown data
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    delete:
+      tags:
+        - autotests
+      summary: delete autotests run data
+      description: delete group and data created for autotests
+      operationId: freeDevices
+      parameters:
+        - name: group
+          in: query
+          description: Device amount needed for autotests run
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Group created for run
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown data
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: autotests
+  /autotests/{id}/addDevices/:
+    get:
+      tags:
+        - autotests
+      summary: Add devices for autotests group
+      description: Filter and add devices to autotests group
+      operationId: addDevices
+      parameters:
+        - name: id
+          in: path
+          description: Group identifier
+          required: true
+          schema:
+            type: string
+        - name: amount
+          in: query
+          description: Device amount needed for autotests run
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+        - name: need_amount
+          in: query
+          description: "need only specified amount, not less"
+          schema:
+            type: boolean
+        - name: abi
+          in: query
+          description: device abi
+          schema:
+            type: string
+        - name: sdk
+          in: query
+          description: device sdk
+          schema:
+            type: string
+        - name: model
+          in: query
+          description: device model
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: device type
+          schema:
+            type: string
+        - name: version
+          in: query
+          description: device os version
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Updated group with new devices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutoTestResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown data
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: addDevices
+    x-swagger-router-controller: autotests
+  /autotests/install/{serial}:
+    post:
+      tags:
+        - autotests
+      summary: install apk on device by serial
+      description: Installing apk to device from url
+      operationId: installOnDevice
+      parameters:
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: List of flags for adb install
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdbInstallFlagsPayload'
+          application/octet-stream:
+            schema:
+              $ref: '#/components/schemas/AdbInstallFlagsPayload'
+        required: true
+      responses:
+        "200":
+          description: Remote Connect User Device Request Status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemoteConnectUserDeviceResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => device is not controlled by the user
+              * 404: Not Found => unknown device
+              * 500: Internal Server Error
+              * 504: Gateway Time-out => device is not responding
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: installProperties
+    x-swagger-router-controller: autotests
+  /autotests/useDevice:
+    post:
+      tags:
+        - autotests
+      summary: Use device and remote controll it in one method
+      description: Use device and remote controll it in one method
+      operationId: useAndConnectDevice
+      requestBody:
+        description: "serial of device, which used in action"
+        content:
+          application/json:
+            schema:
+              required:
+                - serial
+              type: object
+              properties:
+                serial:
+                  type: string
+                  description: device serial
+                title:
+                  type: string
+                  description: adb device serial
+        required: true
+      responses:
+        "200":
+          description: stats added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemoteConnectUserDeviceResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown data
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: serial
+    x-swagger-router-controller: autotests
+  /stats:
+    post:
+      tags:
+        - stats
+      summary: Write action to stats
+      description: Write action with device and user to stats table
+      operationId: writeStats
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - action
+                - serial
+              type: object
+              properties:
+                serial:
+                  type: string
+                  description: "serial of device, which used in action"
+                action:
+                  type: string
+                  description: action which happened
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+                - action
+                - serial
+              type: object
+              properties:
+                serial:
+                  type: string
+                  description: "serial of device, which used in action"
+                action:
+                  type: string
+                  description: action which happened
+        required: true
+      responses:
+        "200":
+          description: stats added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupListResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown data
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: stats
+  /swagger.json:
+    x-swagger-pipe: swagger_raw
+  /teams:
+    get:
+      tags:
+        - teams
+        - admin
+      summary: Get all teams
+      description: Get all existing teams
+      operationId: getTeams
+      responses:
+        "200":
+          description: All teams
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamsResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: teams
+  /team:
+    post:
+      tags:
+        - teams
+        - admin
+      summary: Create team
+      description: create team with users and groups belongs to it
+      operationId: createTeam
+      requestBody:
+        description: team to create with name, users and groups as arrays
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamPayload'
+          application/octet-stream:
+            schema:
+              $ref: '#/components/schemas/TeamPayload'
+        required: true
+      responses:
+        "200":
+          description: Team information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: team
+    x-swagger-router-controller: teams
+  /team/{id}:
+    get:
+      tags:
+        - teams
+        - admin
+      summary: Get team info by id
+      description: Get full team object by id
+      operationId: getTeamById
+      parameters:
+        - name: id
+          in: path
+          description: Team identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Team information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown group or device or user or team
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: teams
+    post:
+      tags:
+        - teams
+        - admin
+      summary: Update team with users or groups
+      description: Update team with users or groups
+      operationId: updateTeam
+      parameters:
+        - name: id
+          in: path
+          description: Team identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: fields need to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamPayload'
+          application/octet-stream:
+            schema:
+              $ref: '#/components/schemas/TeamPayload'
+        required: true
+      responses:
+          "200":
+            description: Team information
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/TeamResponse'
+          default:
+            description: |
+              Unexpected Error:
+                * 401: Unauthorized => bad credentials
+                * 400: Team with this name already exists
+                * 500: Internal Server Error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: team
+      x-swagger-router-controller: teams
+    delete:
+      tags:
+        - teams
+        - admin
+      summary: Remove users or groups from team
+      description:  Remove users or groups from team
+      operationId: removeFromTeam
+      parameters:
+        - name: id
+          in: path
+          description: Team identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: fields need to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamPayload'
+          application/octet-stream:
+            schema:
+              $ref: '#/components/schemas/TeamPayload'
+        required: true
+      responses:
+        "200":
+          description: Team information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 400: Team with this name already exists
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: team
+      x-swagger-router-controller: teams
+  /team/{id}/user/{email}:
+    delete:
+      tags:
+        - teams
+        - admin
+      summary: remove user from team
+      description: remove user from team
+      operationId: removeUserFromTeam
+      parameters:
+        - name: id
+          in: path
+          description: Team identifier
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: path
+          description: email identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Team information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: teams
+  /team/{id}/group/{group}:
+    delete:
+      tags:
+        - teams
+        - admin
+      summary: remove group from team
+      description: remove group from team
+      operationId: removeGroupFromTeam
+      parameters:
+        - name: id
+          in: path
+          description: Team identifier
+          required: true
+          schema:
+            type: string
+        - name: group
+          in: path
+          description: group id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Team information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: teams
+  /team/{id}/delete:
+    delete:
+      tags:
+        - teams
+        - admin
+      summary: Delete team by id
+      description: Delete team by id
+      operationId: deleteTeam
+      parameters:
+        - name: id
+          in: path
+          description: Team identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Team removed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown group or device or user or team
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: teams
+components:
+  schemas:
+    UnexpectedErrorResponse:
+      required:
+      - description
+      - success
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: false
+        description:
+          type: string
+    DefaultResponse:
+      required:
+      - description
+      - success
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        description:
+          type: string
+    AdbPortResponse:
+      required:
+      - description
+      - success
+      - port
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        description:
+          type: string
+        port:
+          type: number
+    AdbRangeResponse:
+      required:
+      - description
+      - success
+      - adbRange
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        description:
+          type: string
+        adbRange:
+          type: string
+    GroupResponse:
+      required:
+      - description
+      - group
+      - success
+      type: object
+      properties:
+        success:
+          type: boolean
+        description:
+          type: string
+        group:
+          $ref: '#/components/schemas/Group'
+    TeamResponse:
+      required:
+        - description
+        - team
+        - success
+      type: object
+      properties:
+        success:
+          type: boolean
+        description:
+          type: string
+        team:
+          $ref: '#/components/schemas/Team'
+    TeamsResponse:
+      required:
+        - description
+        - team
+        - success
+      type: object
+      properties:
+        success:
+          type: boolean
+        description:
+          type: string
+        teams:
+          type: array
+          items:
+            $ref: '#/components/schemas/Team'
+    Conflict:
+      type: object
+      properties:
+        devices:
+          type: array
+          description: Devices in conflict
+          items:
+            type: string
+        date:
+          type: object
+          properties:
+            start:
+              type: string
+              format: date-time
+            stop:
+              type: string
+              format: date-time
+          description: Timeslot in conflict
+        group:
+          type: string
+          description: Name of the group in conflict
+        owner:
+          type: object
+          properties:
+            email:
+              type: string
+            name:
+              type: string
+          description: Owner of the group in conflict
+    Device:
+      type: object
+      properties:
+        _id:
+          type: string
+        present:
+          type: boolean
+        presenceChangedAt:
+          type: string
+          format: date-time
+        provider:
+          type: object
+          properties:
+            channel:
+              type: string
+            name:
+              type: string
+            screenWsUrlPattern:
+              type: string
+        owner:
+          type: object
+          properties:
+            email:
+              type: string
+            name:
+              type: string
+            group:
+              type: string
+          nullable: true
+        status:
+          type: integer
+        statusChangedAt:
+          type: string
+          format: date-time
+        bookedBefore:
+          type: integer
+        ready:
+          type: boolean
+        reverseForwards:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              devicePort:
+                type: integer
+                minimum: 0
+              targetHost:
+                type: string
+              targetPort:
+                type: integer
+                minimum: 0
+        remoteConnect:
+          type: boolean
+        remoteConnectUrl:
+          type: string
+          nullable: true
+        usage:
+          type: string
+          nullable: true
+        logs_enabled:
+          type: boolean
+        serial:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        group:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            lifeTime:
+              type: object
+              nullable: true
+              properties:
+                start:
+                  type: string
+                  format: date-time
+                stop:
+                  type: string
+                  format: date-time
+            owner:
+              type: object
+              nullable: true
+              properties:
+                email:
+                  type: string
+                name:
+                  type: string
+            origin:
+              type: string
+            class:
+              type: string
+            repetitions:
+              type: integer
+            originName:
+              type: string
+            lock:
+              type: boolean
+            runUrl:
+              type: string
+              nullable: true
+        adbPort:
+          type: integer
+        network:
+          type: object
+          properties:
+            connected:
+              type: boolean
+            type:
+              type: string
+              nullable: true
+            subtype:
+              type: string
+              nullable: true
+            failover:
+              type: boolean
+            roaming:
+              type: boolean
+        display:
+          type: object
+          properties:
+            id:
+              type: integer
+            width:
+              type: integer
+            height:
+              type: integer
+            rotation:
+              type: integer
+            xdpi:
+              type: number
+            ydpi:
+              type: number
+            fps:
+              type: number
+            density:
+              type: number
+            secure:
+              type: boolean
+            url:
+              type: string
+            size:
+              type: number
+            inches:
+              type: number
+            scale:
+              type: number
+        airplaneMode:
+          type: boolean
+        battery:
+          type: object
+          properties:
+            status:
+              type: string
+            health:
+              type: string
+            source:
+              type: string
+            level:
+              type: integer
+            scale:
+              type: integer
+            temp:
+              type: integer
+            voltage:
+              type: integer
+        browser:
+          type: object
+          properties:
+            selected:
+              type: boolean
+            apps:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  type:
+                    type: string
+                  name:
+                    type: string
+                  selected:
+                    type: boolean
+                  system:
+                    type: boolean
+        service:
+          type: object
+          properties:
+            hasHMS:
+              type: boolean
+            hasGMS:
+              type: boolean
+            hasAPNS:
+                type: boolean
+        channel:
+          type: string
+        abi:
+          type: string
+        cpuPlatform:
+          type: string
+        macAddress:
+          type: string
+        manufacturer:
+          type: string
+        marketName:
+          type: string
+        model:
+          type: string
+        openGLESVersion:
+          type: string
+        operator:
+          type: string
+          nullable: true
+        phone:
+          type: object
+          properties:
+            imei:
+              type: string
+            imsi:
+              type: string
+              nullable: true
+            phoneNumber:
+              type: string
+              nullable: true
+            iccid:
+              type: string
+              nullable: true
+            network:
+              type: string
+              nullable: true
+        platform:
+          type: string
+        iosClientChannel:
+          type: string
+        product:
+          type: string
+        ram:
+          type: string
+        sdk:
+          type: string
+        version:
+          type: string
+        usageChangedAt:
+          type: string
+          format: date-time
+        notes:
+          type: string
+        place:
+          type: string
+        storageId:
+          type: string
+        screenPort:
+          type: number
+        connectPort:
+          type: number
+        cpu:
+          type: object
+          properties:
+            cores:
+              type: integer
+            freq:
+              type: integer
+            name:
+              type: string
+        memory:
+          type: object
+          properties:
+            ram:
+              type: integer
+            rom:
+              type: integer
+        image:
+          type: string
+        releasedAt:
+          type: string
+          format: date-time
+        name:
+          type: string
+        deviceType:
+          type: string
+        likelyLeaveReason:
+          type: string
+        using:
+          type: boolean
+        capabilities:
+            type: object
+            required:
+            - hasTouch
+            - hasCursor
+            properties:
+                hasTouch:
+                    type: boolean
+                hasCursor:
+                    type: boolean
+    ConflictsResponse:
+      required:
+      - conflicts
+      - description
+      - success
+      type: object
+      properties:
+        success:
+          type: boolean
+        description:
+          type: string
+        conflicts:
+          type: array
+          description: |
+            List of conflicts with the current group operation:
+             * adding a device into the group
+             * updating the schedule of the group
+          items:
+            $ref: '#/components/schemas/Conflict'
+    GroupListResponse:
+      required:
+      - description
+      - groups
+      - success
+      type: object
+      properties:
+        success:
+          type: boolean
+        description:
+          type: string
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+    Group:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        owner:
+          type: object
+          properties:
+            email:
+              type: string
+              format: email
+            name:
+              type: string
+        users:
+          type: array
+          items:
+            type: string
+        privilege:
+          type: string
+        class:
+          type: string
+          description: "Group class; privileged value => debug, bookable, standard"
+          enum:
+            - once
+            - bookable
+            - hourly
+            - daily
+            - weekly
+            - monthly
+            - quaterly
+            - halfyearly
+            - yearly
+            - debug
+            - standard
+        repetitions:
+          type: integer
+          minimum: 0
+          description: "Group repetitions; default value => 0"
+        duration:
+          type: integer
+        isActive:
+          type: boolean
+        state:
+          type: string
+          description: "Group state; default value => pending or ready for bookable/standard classes"
+          enum:
+            - pending
+            - ready
+        dates:
+          type: array
+          items:
+            type: object
+            properties:
+              start:
+                type: string
+                format: date-time
+              stop:
+                type: string
+                format: date-time
+        envUserGroupsNumber:
+          type: integer
+        envUserGroupsDuration:
+          type: integer
+        envUserGroupsRepetitions:
+          type: integer
+        id:
+          type: string
+        devices:
+          type: array
+          items:
+            type: string
+        lock:
+          type: object
+          properties:
+            user:
+              type: boolean
+            admin:
+              type: boolean
+        runUrl:
+          type: string
+          nullable: true
+        moderators:
+          type: array
+          items:
+            type: string
+      description: A null value means the group is unchanged
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        ip:
+          type: string
+        group:
+          type: string
+        lastLoggedInAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        forwards:
+          type: array
+          items: {}
+        groupDeviceData:
+          type: object
+          properties:
+            columns:
+              type: object
+              properties:
+                name:
+                  type: string
+                selected:
+                  type: boolean
+                sort:
+                  type: string
+            sort:
+              type: object
+              properties:
+                index:
+                  type: number
+                reverse:
+                  type: boolean
+        adbKeys:
+          type: array
+          items:
+            type: object
+            properties:
+                fingerprint:
+                    type: string
+                title:
+                    type: string
+        settings:
+          type: object
+          properties:
+            lastUsedDevice:
+              type: string
+            dateFormat:
+              type: string
+            emailAddressSeparator:
+              type: string
+            alertMessage:
+                type: object
+                properties:
+                    activation:
+                        type: string
+                    data:
+                        type: string
+                    level:
+                        type: string
+                        enum:
+                        - Information
+                        - Warning
+                        - Critical
+            platform:
+              type: string
+            groupItemsPerPage:
+              type: object
+              properties:
+                name:
+                  type: string
+                value:
+                  type: integer
+            deviceListColumns:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  selected:
+                    type: boolean
+            selectedLanguage:
+              type: string
+            deviceListSort:
+                type: object
+                properties:
+                  fixed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        order:
+                          type: string
+                  user:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        order:
+                          type: string
+        acceptedPolicy:
+          type: boolean
+        privilege:
+          type: string
+        groups:
+          type: object
+          properties:
+            subscribed:
+              type: array
+              items:
+                type: string
+            lock:
+              type: boolean
+            quotas:
+              type: object
+              properties:
+                allocated:
+                  type: object
+                  properties:
+                    number:
+                      type: number
+                    duration:
+                      type: number
+                consumed:
+                  type: object
+                  properties:
+                    number:
+                      type: number
+                    duration:
+                      type: number
+                defaultGroupsNumber:
+                  type: number
+                defaultGroupsDuration:
+                  type: number
+                defaultGroupsRepetitions:
+                  type: number
+                repetitions:
+                  type: integer
+    Team:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        users:
+          type: array
+          items:
+            type: string
+        groups:
+          type: array
+          items:
+            type: string
+    AdbKeyAddedResponse:
+      required:
+      - success
+      - fingerprint
+      type: object
+      properties:
+        success:
+          type: boolean
+        fingerprint:
+          type: string
+    AutoTestResponse:
+      required:
+        - description
+        - groups
+        - success
+      type: object
+      properties:
+        success:
+          type: boolean
+        description:
+          type: string
+        group:
+          type: object
+          properties:
+            id:
+              type: string
+            devices:
+              type: array
+              items:
+                $ref: '#/components/schemas/Device'
+    UserListResponse:
+      required:
+      - description
+      - success
+      - users
+      type: object
+      properties:
+        success:
+          type: boolean
+        description:
+          type: string
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    UserResponse:
+      required:
+      - description
+      - success
+      type: object
+      properties:
+        success:
+          type: boolean
+        description:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+    ServiceUserResponse:
+      required:
+      - serviceUserInfo
+      - success
+      type: object
+      properties:
+        success:
+          type: boolean
+        description:
+          type: string
+        serviceUserInfo:
+          type: object
+          properties: {}
+    AlertMessage:
+      type: object
+      properties:
+        activation:
+          type: string
+          description: Enable or disablee the alert message
+        data:
+          type: string
+          description: Alert message text to display
+        level:
+          type: string
+          description: Alert message level
+          enum:
+          - Critical
+          - Information
+          - Warning
+    AlertMessageResponse:
+      required:
+      - alertMessage
+      - description
+      - success
+      type: object
+      properties:
+        success:
+          type: boolean
+        description:
+          type: string
+        alertMessage:
+          $ref: '#/components/schemas/AlertMessage'
+    AlertMessagePayload:
+      type: object
+      properties:
+        activation:
+          type: string
+          description: Enable or disablee the alert message
+          enum:
+          - "True"
+          - "False"
+        data:
+          type: string
+          description: Alert message text to display
+        level:
+          type: string
+          description: Alert message level
+          enum:
+          - Information
+          - Warning
+          - Critical
+      description: Payload object for updating the alert message
+    Token:
+      type: object
+      properties:
+        email:
+          type: string
+        id:
+          type: string
+        title:
+          type: string
+        jwt:
+          type: string
+    UserAccessTokenResponse:
+      required:
+      - description
+      - success
+      - token
+      type: object
+      properties:
+        success:
+          type: boolean
+        description:
+          type: string
+        token:
+          $ref: '#/components/schemas/Token'
+    UserAccessTokensResponse:
+      required:
+      - description
+      - success
+      - tokens
+      type: object
+      properties:
+        success:
+          type: boolean
+        description:
+          type: string
+        tokens:
+          type: array
+          items:
+            $ref: '#/components/schemas/Token'
+    AccessTokensResponse:
+      required:
+      - description
+      - success
+      - tokens
+      type: object
+      properties:
+        success:
+          type: boolean
+        titles:
+          type: array
+          items:
+            type: string
+    DeviceListResponse:
+      required:
+      - description
+      - devices
+      - success
+      type: object
+      properties:
+        success:
+          type: boolean
+        description:
+          type: string
+        devices:
+          type: array
+          items:
+            $ref: '#/components/schemas/Device'
+    SizeResponse:
+      required:
+      - height
+      - width
+      type: object
+      properties:
+        height:
+          type: integer
+        width:
+          type: integer
+    OwnerResponse:
+      required:
+      - email
+      - name
+      type: object
+      properties:
+        email:
+          type: string
+        name:
+          type: string
+    TypeResponse:
+      required:
+      - type
+      type: object
+      properties:
+        type:
+          type: string
+    DeviceResponse:
+      required:
+      - description
+      - device
+      - success
+      type: object
+      properties:
+        success:
+          type: boolean
+        description:
+          type: string
+        device:
+          $ref: '#/components/schemas/Device'
+    RemoteConnectUserDeviceResponse:
+      required:
+      - description
+      - remoteConnectUrl
+      - success
+      type: object
+      properties:
+        success:
+          type: boolean
+        description:
+          type: string
+        remoteConnectUrl:
+          type: string
+    AddUserDevicePayload:
+      required:
+      - serial
+      type: object
+      properties:
+        serial:
+          type: string
+          description: Device Serial
+        timeout:
+          type: integer
+          description: "Device timeout in ms. If device is kept idle for this period,\
+            \ it will be automatically disconnected. Default is provider group timeout"
+      description: payload object for adding device to user
+    GroupPayload:
+      type: object
+      properties:
+        name:
+          pattern: "^[0-9a-zA-Z-_./: ]{1,50}$"
+          type: string
+          description: Group Name; default value => generated at runtime
+        startTime:
+          type: string
+          description: "Group starting time (in UTC, conforming to RFC 3339 section\
+            \ 5.6); default value => group creation time"
+          format: date-time
+        stopTime:
+          type: string
+          description: "Group expiration time (in UTC, conforming to RFC 3339 section\
+            \ 5.6); default value => startTime + 1 hour"
+          format: date-time
+        class:
+          type: string
+          description: "Group class; privileged value => debug, bookable, standard"
+          enum:
+          - once
+          - bookable
+          - hourly
+          - daily
+          - weekly
+          - monthly
+          - quaterly
+          - halfyearly
+          - yearly
+          - debug
+          - standard
+        repetitions:
+          minimum: 0
+          type: integer
+          description: Group repetitions; default value => 0
+        state:
+          type: string
+          description: Group state; default value => pending or ready for bookable/standard
+            classes
+          enum:
+          - pending
+          - ready
+      description: Payload object for creating/updating a group
+    GroupsPayload:
+      type: object
+      properties:
+        ids:
+          type: string
+          description: Comma-separated list of identifiers
+      description: Payload object for adding/removing groups
+    UsersPayload:
+      type: object
+      properties:
+        emails:
+          type: string
+          description: Comma-separated list of emails
+      description: Payload object for adding/removing users
+    TeamPayload:
+      type: object
+      properties:
+        name:
+          type: string
+        users:
+          type: array
+          items:
+            type: string
+        groups:
+          type: array
+          items:
+            type: string
+      description: Payload object for adding new team
+    DevicePayload:
+      type: object
+      properties:
+        note:
+          type: string
+          description: Device Note
+        status:
+          type: string
+          description: Device status
+          enum:
+          - Disconnected
+      description: payload object for adding device information
+    DevicesPayload:
+      type: object
+      properties:
+        serials:
+          type: string
+          description: Comma-separated list of serials
+      description: Payload object for adding/removing devices
+    ErrorResponse:
+      required:
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+    FingerPrintPayload:
+      type: object
+      properties:
+        fingerprint:
+          type: string
+          description: string with fingerprint
+      description: Payload object for fingerprint
+    AdbInstallFlagsPayload:
+      required:
+      - url
+      type: object
+      properties:
+        installFlags:
+          type: array
+          items:
+            type: string
+        url:
+          type: string
+      description: List of flags for adb install
+x-original-swagger-version: "2.0"

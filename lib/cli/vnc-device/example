@@ -1,0 +1,14 @@
+stf vnc-device \
+    --serial "346AEE38-F1C5-4FE2-BBCC-7B75786A44EE" \
+    --device-name "Generic VNC" \
+    --host localhost \
+    --screen-port 7409 \
+    --vnc-port 5900 \
+    --provider di-smirnov \
+    --public-ip localhost \
+    --screen-ws-url-pattern "ws://localhost:7409" \
+    --storage-url http://localhost:7100/ \
+    --connect-sub tcp://127.0.0.1:7114 \
+    --connect-push tcp://127.0.0.1:7116 \
+    --connect-app-dealer tcp://127.0.0.1:7112 \
+    --connect-dev-dealer  tcp://127.0.0.1:7115 \

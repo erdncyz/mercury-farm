@@ -1,0 +1,419 @@
+import { t } from 'i18next'
+import { makeAutoObservable, runInAction } from 'mobx'
+import { inject, injectable } from 'inversify'
+
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
+import { DeviceBySerialStore } from '@/store/device-by-serial-store'
+import { deviceErrorModalStore } from '@/store/device-error-modal-store'
+import { deviceConnectionRequired } from '@/config/inversify/decorators'
+import { authStore } from '@/store/auth-store'
+
+import type { ElementBoundSize, StartScreenStreamingMessage } from './types'
+import type { Device } from '@/generated/types'
+
+@injectable()
+@deviceConnectionRequired()
+export class DeviceScreenStore {
+  private readonly websocketReconnectionBaseInterval = 1500
+  private readonly websocketReconnectionMaxInterval = 15000
+  private websocket: WebSocket | null = null
+  private websocketReconnecting = false
+  private websocketReconnectionAttempt = 0
+  private websocketReconnectionTimeoutID: ReturnType<typeof setTimeout> | null = null
+  private disposed = false
+
+  private context: ImageBitmapRenderingContext | null = null
+  private canvasWrapper: HTMLDivElement | null = null
+  private device: Device | null = null
+  private showScreen = true
+  private options = {
+    autoScaleForRetina: false,
+    density: 1,
+    minScale: 0.2,
+  }
+  private adjustedBoundSize = {
+    width: 720,
+    height: 1280,
+  }
+  private screenRotation = 0
+  private isScreenStreamingJustStarted = false
+
+  isAspectRatioModeLetterbox = false
+  isScreenLoading = false
+  isScreenRotated = false
+
+  constructor(@inject(CONTAINER_IDS.deviceBySerialStore) private deviceBySerialStore: DeviceBySerialStore) {
+    this.updateBounds = this.updateBounds.bind(this)
+    this.messageListener = this.messageListener.bind(this)
+    this.openListener = this.openListener.bind(this)
+
+    makeAutoObservable(this)
+  }
+
+  get getDevice(): Device | null {
+    return this.device
+  }
+
+  get getCanvasWrapper(): HTMLDivElement | null {
+    return this.canvasWrapper
+  }
+
+  get getScreenRotation(): number {
+    const liveRotation = this.deviceBySerialStore.deviceQueryResult().data?.display?.rotation
+    if (liveRotation === 0 || liveRotation === 90 || liveRotation === 180 || liveRotation === 270) {
+      return liveRotation
+    }
+
+    return this.screenRotation
+  }
+
+  setIsScreenLoading(value: boolean): void {
+    this.isScreenLoading = value
+  }
+
+  async init(): Promise<void> {
+    this.device = await this.deviceBySerialStore.fetch()
+  }
+
+  async startScreenStreaming(canvas: HTMLCanvasElement, canvasWrapper: HTMLDivElement): Promise<void> {
+    runInAction(() => {
+      this.setIsScreenLoading(true)
+    })
+
+    // NOTE: Prevents ws connection if stopScreenStreaming was called earlier
+    if (this.disposed) {
+      this.disposed = false
+
+      return
+    }
+
+    this.context = canvas.getContext('bitmaprenderer')
+    this.canvasWrapper = canvasWrapper
+
+    this.connectWebsocket()
+  }
+
+  stopScreenStreaming(): void {
+    this.disposed = true
+    this.stopWebsocket()
+    this.websocketReconnecting = false
+    this.websocketReconnectionAttempt = 0
+
+    if (this.websocketReconnectionTimeoutID) {
+      clearTimeout(this.websocketReconnectionTimeoutID)
+      this.websocketReconnectionTimeoutID = null
+    }
+  }
+
+  updateBounds(): void {
+    if (!this.canvasWrapper) {
+      throw new Error('Unable to read bounds; container must have dimensions')
+    }
+
+    const newAdjustedBoundSize = this.getNewAdjustedBoundSize(
+      this.canvasWrapper.offsetWidth,
+      this.canvasWrapper.offsetHeight
+    )
+
+    if (
+      !this.adjustedBoundSize ||
+      newAdjustedBoundSize.width !== this.adjustedBoundSize.width ||
+      newAdjustedBoundSize.height !== this.adjustedBoundSize.height
+    ) {
+      this.adjustedBoundSize = newAdjustedBoundSize
+      this.onScreenInterestAreaChanged()
+    }
+  }
+
+  determineAspectRatioMode(): void {
+    if (this.canvasWrapper && this.context) {
+      const canvasAspect = this.context.canvas.width / this.context.canvas.height
+      const canvasWrapperAspect = this.canvasWrapper.offsetWidth / this.canvasWrapper.offsetHeight
+
+      this.isAspectRatioModeLetterbox = canvasWrapperAspect < canvasAspect
+    }
+  }
+
+  private shouldUpdateScreen(): boolean {
+    return Boolean(
+      // NO if the user has disabled the screen.
+      this.showScreen &&
+        // NO if the page is not visible (e.g. background tab).
+        document.visibilityState === 'visible' &&
+        // NO if we don't have a connection yet.
+        this.websocket &&
+        this.websocket.readyState === WebSocket.OPEN
+      // YES otherwise
+    )
+  }
+
+  private onScreenInterestGained(): void {
+    if (this.websocket && this.websocket.readyState === WebSocket.OPEN) {
+      this.websocket.send('on')
+    }
+  }
+
+  private onScreenInterestAreaChanged(): void {
+    if (
+      this.websocket &&
+      this.websocket.readyState === WebSocket.OPEN &&
+      this.adjustedBoundSize.width > 0 &&
+      this.adjustedBoundSize.height > 0
+    ) {
+      this.websocket.send('size ' + this.adjustedBoundSize.width + 'x' + this.adjustedBoundSize.height)
+    }
+  }
+
+  private onScreenInterestLost(): void {
+    if (this.websocket && this.websocket.readyState === WebSocket.OPEN) {
+      this.websocket.send('off')
+    }
+  }
+
+  private adjustBoundedSize(width: number, height: number): ElementBoundSize {
+    if (width <= 0 || height <= 0) {
+      return this.adjustedBoundSize
+    }
+
+    // Some Android providers may briefly report null width/height.
+    // Keep streaming by falling back to the current container bounds.
+    if (!this.device?.display?.width || !this.device?.display?.height) {
+      return {
+        width: Math.ceil(width * this.options.density),
+        height: Math.ceil(height * this.options.density),
+      }
+    }
+
+    const scaledWidth = this.device.display.width * this.options.minScale
+    const scaledHeight = this.device.display.height * this.options.minScale
+
+    let sw = width * this.options.density
+    let sh = height * this.options.density
+
+    if (sw < scaledWidth) {
+      sw *= scaledWidth / sw
+      sh *= scaledWidth / sh
+    }
+
+    if (sh < scaledHeight) {
+      sw *= scaledHeight / sw
+      sh *= scaledHeight / sh
+    }
+
+    return {
+      width: Math.ceil(sw),
+      height: Math.ceil(sh),
+    }
+  }
+
+  private getNewAdjustedBoundSize(width: number, height: number): ElementBoundSize {
+    const isIosDevice =
+      (this.device?.manufacturer || '').toLowerCase() === 'apple' || (this.device?.platform || '').toLowerCase() === 'ios'
+
+    // iOS stream projection already accounts for orientation on provider side.
+    // Swapping width/height here can cause sideways/letterboxed squashing.
+    if (isIosDevice) {
+      return this.adjustBoundedSize(width, height)
+    }
+
+    switch (this.screenRotation) {
+      case 90:
+      case 270:
+        return this.adjustBoundedSize(height, width)
+      case 0:
+      case 180:
+
+      /* falls through */
+      default:
+        return this.adjustBoundedSize(width, height)
+    }
+  }
+
+  private isRotated(): boolean {
+    const rotation = this.getScreenRotation
+    return rotation === 90 || rotation === 270
+  }
+
+  private updateImageArea(imageWidth: number, imageHeight: number): void {
+    if (!this.context) {
+      throw new Error('Context is not set')
+    }
+
+    if (this.options.autoScaleForRetina) {
+      this.context.canvas.width = imageWidth * (devicePixelRatio || 1)
+      this.context.canvas.height = imageHeight * (devicePixelRatio || 1)
+    }
+
+    if (!this.options.autoScaleForRetina) {
+      this.context.canvas.width = imageWidth
+      this.context.canvas.height = imageHeight
+    }
+
+    const isRotated = this.isRotated()
+
+    if (isRotated) {
+      this.isScreenRotated = true
+    }
+
+    if (!isRotated) {
+      this.isScreenRotated = false
+    }
+
+    this.determineAspectRatioMode()
+  }
+
+  private connectWebsocket(): void {
+    if (!this.device?.display?.url) {
+      throw new Error('No display url')
+    }
+
+    if (!authStore.jwt) {
+      console.warn('No JWT token available in authStore')
+      throw new Error('Authentication token required')
+    }
+
+    // Pass JWT token securely via WebSocket subprotocol
+    this.websocket = new WebSocket(this.device.display.url, `access_token.${authStore.jwt}`)
+
+    this.websocket.binaryType = 'blob'
+    this.websocket.onopen = this.openListener.bind(this)
+    this.websocket.onmessage = this.messageListener.bind(this)
+    this.websocket.onerror = this.errorListener.bind(this)
+    this.websocket.onclose = this.closeListener.bind(this)
+  }
+
+  private stopWebsocket(): void {
+    if (this.websocket) {
+      this.websocket.close()
+      this.websocket = null
+    }
+  }
+
+  private reconnectWebsocket(): void {
+    // NOTE: No need reconnect if it is already in progress
+    if (this.websocketReconnecting || this.websocketReconnectionTimeoutID) return
+
+    this.websocketReconnecting = true
+    this.websocketReconnectionAttempt += 1
+    this.connectWebsocket()
+  }
+
+  private openListener(): void {
+    if (this.websocketReconnecting) {
+      this.websocketReconnecting = false
+      this.websocketReconnectionAttempt = 0
+    }
+
+    this.isScreenStreamingJustStarted = true
+  }
+
+  private messageListener(message: MessageEvent<Blob | string>): void {
+    if (message.data instanceof Blob) {
+      createImageBitmap(message.data).then((image) => {
+        if (!this.context) {
+          throw new Error('Context is not set')
+        }
+
+        // Some providers (especially iOS/WDA pipelines) may change frame dimensions
+        // without a full stream restart message. Keep canvas dimensions in sync.
+        if (this.context.canvas.width !== image.width || this.context.canvas.height !== image.height) {
+          this.updateImageArea(image.width, image.height)
+        }
+
+        if (this.isScreenStreamingJustStarted) {
+          this.updateImageArea(image.width, image.height)
+
+          this.setIsScreenLoading(false)
+          this.isScreenStreamingJustStarted = false
+        }
+
+        this.context.transferFromImageBitmap(image)
+      })
+
+      return
+    }
+
+    if (message.data === 'secure_on') {
+      // NOTE: The current view is marked secure and cannot be viewed remotely
+
+      return
+    }
+
+    // Handle authentication messages
+    if (typeof message.data === 'string') {
+      try {
+        const authMessage = JSON.parse(message.data)
+
+        if (authMessage.type === 'auth_success') {
+          console.info('WebSocket authentication successful')
+
+          if (this.shouldUpdateScreen()) {
+            this.updateBounds()
+            // Ensure provider receives a valid projection size even when the
+            // first layout pass reports 0x0 and adjustedBoundSize does not change.
+            this.onScreenInterestAreaChanged()
+            this.onScreenInterestGained()
+
+            return
+          }
+
+          this.onScreenInterestLost()
+
+          return
+        }
+
+        if (authMessage.type === 'auth_error') {
+          console.error('WebSocket authentication failed:', authMessage.message)
+
+          return
+        }
+      } catch {
+        /* empty */
+      }
+    }
+
+    const startRegex = /^start /
+
+    if (startRegex.test(message.data)) {
+      const startData: StartScreenStreamingMessage = JSON.parse(message.data.replace(startRegex, ''))
+
+      this.isScreenStreamingJustStarted = true
+
+      this.screenRotation = startData.orientation
+
+      // Rotation changes the expected projection geometry; request a fresh size immediately.
+      if (this.websocket && this.websocket.readyState === WebSocket.OPEN) {
+        this.updateBounds()
+        this.onScreenInterestAreaChanged()
+      }
+    }
+  }
+
+  private errorListener(): void {}
+
+  private closeListener(event: CloseEvent): void {
+    if (this.disposed) {
+      return
+    }
+
+    this.setIsScreenLoading(true)
+    this.websocketReconnecting = false
+
+    if (event.code === 1008) {
+      deviceErrorModalStore.setError(t('Unauthorized'))
+
+      return
+    }
+
+    const currentAttempt = Math.max(1, this.websocketReconnectionAttempt + 1)
+    const reconnectDelay = Math.min(
+      this.websocketReconnectionMaxInterval,
+      this.websocketReconnectionBaseInterval * 2 ** (currentAttempt - 1)
+    )
+
+    this.websocketReconnectionTimeoutID = setTimeout(() => {
+      this.websocketReconnectionTimeoutID = null
+      this.reconnectWebsocket()
+    }, reconnectDelay)
+  }
+}

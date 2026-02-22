@@ -1,0 +1,44 @@
+.sliderWrapper {
+  position: relative;
+  padding-bottom: 20px;
+
+  .slider {
+    width: 250px;
+  }
+
+  :global(.sliderTrack) {
+    top: 0;
+    height: 8px;
+    background: var(--vkui--color_accent_gray);
+  }
+
+  :global(.sliderTrack-0) {
+    background: var(--slider-mark-outline);
+  }
+
+  .sliderThumb {
+    cursor: pointer;
+
+    top: -4px;
+
+    width: 15px;
+    height: 15px;
+
+    background: var(--slider-mark-background);
+    border-radius: 100%;
+    outline: 5px solid var(--vkui--color_accent_azure);
+  }
+
+  .sliderMark {
+    cursor: pointer;
+
+    top: -4px;
+
+    width: 15px;
+    height: 15px;
+
+    background-color: var(--slider-mark-background);
+    border-radius: 100%;
+    outline: 3px solid var(--slider-mark-outline);
+  }
+}

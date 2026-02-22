@@ -1,0 +1,10 @@
+.generalTabContainer {
+  container-type: inline-size;
+  contain: layout;
+}
+
+.generalTab {
+  overflow: hidden;
+  display: block;
+  max-width: 420px;
+}

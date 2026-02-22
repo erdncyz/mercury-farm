@@ -1,0 +1,2 @@
+scripts/* text eol=lf
+bin/stf text eol=lf

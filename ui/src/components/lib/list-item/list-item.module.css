@@ -1,0 +1,5 @@
+.listItem {
+  background: var(--vkui--color_background_tertiary_alpha);
+  border: 1px solid var(--vkui--color_image_border_alpha);
+  border-radius: var(--vkui--size_border_radius--regular);
+}

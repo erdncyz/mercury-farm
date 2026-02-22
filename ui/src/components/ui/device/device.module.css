@@ -1,0 +1,11 @@
+.device {
+  width: var(--device-shell-width, 100%);
+  max-width: 100%;
+  min-height: 0;
+  height: var(--device-shell-height, 100%);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-xl);
+  background: var(--app-surface);
+  box-shadow: var(--app-shadow-soft);
+  overflow: hidden;
+}

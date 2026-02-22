@@ -1,0 +1,94 @@
+@import './reset.css';
+@import './variables/global.css';
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+.pageWrapper {
+  position: relative;
+  min-height: 100%;
+  margin: 0 auto;
+  padding: calc(var(--vkui_internal--panel_header_height) + 40px) 14px 20px;
+}
+
+.marqueeOffset {
+  padding-top: calc(var(--vkui_internal--panel_header_height) + var(--marquee-height) + 40px);
+}
+
+body {
+  position: relative;
+  overflow-x: hidden;
+  font-family: var(--app-font-family);
+  color: var(--app-text-primary);
+  background:
+    radial-gradient(circle at 7% 2%, var(--app-bg-accent), transparent 32%),
+    radial-gradient(circle at 94% 6%, var(--app-bg-accent-soft), transparent 36%),
+    linear-gradient(180deg, #f9fbff 0%, var(--app-bg-base) 100%);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgb(18 34 56 / 3%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(18 34 56 / 3%) 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: 0.18;
+}
+
+:global(.vkuiPanel__in) {
+  background: transparent;
+}
+
+:global(.vkuiHeadline--level-1),
+:global(.vkuiTitle),
+:global(.vkuiDisplayTitle) {
+  font-family: var(--app-font-family-heading);
+}
+
+:global(.vkuiCard),
+:global(.vkuiGroup) {
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-l);
+  background: var(--app-surface);
+  box-shadow: var(--app-shadow-soft);
+}
+
+:global(.vkuiGroup--mode-card) {
+  background: var(--app-surface);
+}
+
+:global(.vkuiButton--mode-tertiary) {
+  border: 1px solid transparent;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+:global(.vkuiButton--mode-tertiary:hover) {
+  border-color: var(--app-border);
+  background-color: rgb(255 255 255 / 88%);
+  transform: translateY(-1px);
+}
+
+@media (width >=1280px) {
+  .pageWrapper {
+    max-width: 1800px;
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+}
+
+@media (width <=767px) {
+  .pageWrapper {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+}

@@ -1,0 +1,8 @@
+.fileInput {
+  cursor: pointer;
+
+  &::before {
+    border: 1px dashed var(--vkui--color_accent_gray);
+    border-radius: var(--vkui--size_border_radius--regular);
+  }
+}

@@ -1,0 +1,20 @@
+.deviceControlPanel {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  width: 100%;
+  padding: 6px;
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-xl);
+  background: var(--app-surface);
+  box-shadow: var(--app-shadow-soft);
+
+  :global(.vkuiPanel__in) {
+    overflow: auto;
+    min-height: 0;
+    height: 100%;
+    padding: 0 2px 2px;
+  }
+}

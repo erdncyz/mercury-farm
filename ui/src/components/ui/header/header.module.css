@@ -1,0 +1,180 @@
+.header {
+  position: fixed;
+  z-index: var(--header-z-index);
+  top: 12px;
+  right: 14px;
+  left: 14px;
+
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) auto minmax(260px, 1fr);
+  gap: 10px;
+  align-items: center;
+
+  padding: 10px;
+  border: 1px solid var(--app-border);
+  border-radius: 22px;
+  backdrop-filter: blur(14px);
+  background: rgb(255 255 255 / 77%);
+  box-shadow: 0 16px 35px rgb(14 32 58 / 15%);
+}
+
+.leftSide {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+}
+
+.logoLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 10px;
+  border: 1px solid var(--app-border);
+  border-radius: 14px;
+  background: rgb(255 255 255 / 78%);
+}
+
+.logo {
+  display: block;
+}
+
+.brandMeta {
+  min-width: 0;
+}
+
+.brandTitle {
+  display: block;
+  overflow: hidden;
+  font-family: var(--app-font-family-heading);
+  font-size: 14px;
+  font-weight: 700;
+  color: #15263b;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.brandSubtitle {
+  display: block;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 600;
+  color: #57708f;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.navRail {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: 1px solid var(--app-border);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 88%);
+}
+
+.navPill {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 36px;
+  padding: 0 13px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 700;
+  color: #395676;
+  text-decoration: none;
+
+  transition:
+    border-color 0.22s ease,
+    background-color 0.22s ease,
+    color 0.22s ease;
+}
+
+.navPill:hover {
+  border-color: var(--app-border);
+  background: rgb(255 255 255 / 92%);
+  color: #173c6f;
+}
+
+.activePill {
+  border-color: rgb(13 108 223 / 26%);
+  background: linear-gradient(180deg, rgb(13 123 255 / 15%) 0%, rgb(13 123 255 / 8%) 100%);
+  color: #0b4d99;
+}
+
+.rightSide {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.actionButton {
+  :global(.vkuiButton) {
+    min-height: 36px;
+    padding-inline: 12px;
+    border: 1px solid var(--app-border);
+    border-radius: 12px;
+    background: rgb(255 255 255 / 82%);
+    color: #3c5878;
+    font-weight: 700;
+  }
+}
+
+.logoutButton {
+  :global(.vkuiButton) {
+    min-height: 36px;
+    padding-inline: 12px;
+    border: 1px solid rgb(13 108 223 / 22%);
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgb(13 123 255 / 13%) 0%, rgb(13 123 255 / 6%) 100%);
+    color: #0c509f;
+    font-weight: 700;
+  }
+}
+
+@media (width <= 1200px) {
+  .header {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    top: 8px;
+    right: 8px;
+    left: 8px;
+  }
+
+  .leftSide,
+  .rightSide {
+    justify-content: center;
+  }
+}
+
+@media (width <= 767px) {
+  .brandMeta {
+    display: none;
+  }
+
+  .navRail {
+    flex-wrap: wrap;
+    border-radius: 14px;
+  }
+
+  .navPill {
+    min-height: 33px;
+    padding-inline: 10px;
+    font-size: 12px;
+  }
+
+  .actionButton :global(.vkuiButton),
+  .logoutButton :global(.vkuiButton) {
+    min-height: 33px;
+    padding-inline: 9px;
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,118 @@
+.tableWrapper {
+  position: relative;
+
+  overflow: auto;
+
+  max-height: 80vh;
+  margin-top: 11px;
+  padding: 0 11px 11px;
+}
+
+.table {
+  position: relative;
+
+  table-layout: fixed;
+  border-collapse: collapse;
+
+  width: 100%;
+  height: 100%;
+
+  th {
+    position: sticky;
+    top: 0;
+    text-align: center;
+    background-color: var(--vkui--color_background_tertiary);
+  }
+
+  thead tr {
+    user-select: none;
+  }
+
+  tr:not(:nth-last-of-type(2)) {
+    box-shadow: 0 1px 0 var(--vkui--color_field_border_alpha);
+  }
+
+  td {
+    font-family: monospace;
+    font-size: var(--vkui--font_caption2--font_size--regular);
+    line-height: var(--vkui--font_caption2--line_height--regular);
+  }
+
+  th,
+  td {
+    padding: 5px;
+    vertical-align: center;
+  }
+
+  td:not(:last-of-type) {
+    text-align: center;
+  }
+
+  tbody {
+    color: var(--vkui--color_text_primary);
+  }
+}
+
+.filter {
+  margin-top: 5px;
+}
+
+.placeholder {
+  min-width: 865px;
+}
+
+.logcatLevel {
+  width: 110px;
+}
+
+.time {
+  width: 95px;
+}
+
+.pid {
+  width: 80px;
+}
+
+.tid {
+  width: 80px;
+}
+
+.tag {
+  width: 150px;
+}
+
+.text {
+  width: 350px;
+}
+
+.unknown {
+  color: var(--vkui--color_accent_gray);
+}
+
+.verbose {
+  color: var(--vkui--color_accent_violet);
+}
+
+.debug {
+  color: var(--vkui--color_accent_azure);
+}
+
+.info {
+  color: var(--vkui--color_accent_green);
+}
+
+.warn {
+  color: var(--vkui--color_accent_orange);
+}
+
+.error {
+  color: var(--vkui--color_accent_red);
+}
+
+.fatal {
+  color: var(--vkui--color_accent_red);
+}
+
+.silent {
+  color: var(--vkui--color_accent_lime);
+}

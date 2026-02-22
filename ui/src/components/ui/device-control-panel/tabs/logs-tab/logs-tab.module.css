@@ -1,0 +1,10 @@
+.logsTab {
+  overflow: hidden;
+  height: 100%;
+}
+
+.search {
+  min-width: 100px;
+  max-width: 350px;
+  margin-right: 10px;
+}

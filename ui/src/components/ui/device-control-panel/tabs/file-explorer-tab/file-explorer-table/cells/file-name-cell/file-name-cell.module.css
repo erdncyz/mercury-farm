@@ -1,0 +1,4 @@
+.name {
+  font-size: var(--vkui--font_caption1--font_size--regular);
+  line-height: var(--vkui--font_caption1--line_height--regular);
+}

@@ -1,0 +1,15 @@
+.commandInput {
+  padding: 0 10px;
+}
+
+.search {
+  max-width: 350px;
+}
+
+.pagination {
+  margin: 20px 0;
+}
+
+.titledValue {
+  margin-right: var(--vkui--size_base_padding_horizontal--regular);
+}

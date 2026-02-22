@@ -1,0 +1,15 @@
+.status {
+  margin-top: 7px;
+  text-align: center;
+}
+
+.loader {
+  clip-path: inset(0 1.5ch 0 0);
+  animation: l 1.5s steps(4, jump-none) infinite;
+}
+
+@keyframes l {
+  to {
+    clip-path: inset(0);
+  }
+}

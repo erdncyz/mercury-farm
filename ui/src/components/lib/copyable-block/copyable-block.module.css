@@ -1,0 +1,16 @@
+.copyableBlock {
+  color: var(--vkui--color_background_accent);
+  background: var(--info-block-color);
+}
+
+.outputContainer {
+  padding: 20px 5px 15px 0;
+}
+
+.outputField {
+  flex-grow: 1;
+}
+
+.outputButton {
+  margin-left: 10px;
+}

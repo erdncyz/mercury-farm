@@ -1,0 +1,20 @@
+.appShell {
+  position: relative;
+  min-height: 100dvh;
+  background: linear-gradient(180deg, #f6f9ff 0%, #eef4ff 100%);
+}
+
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 12% 18%, rgb(23 123 255 / 15%), transparent 36%),
+    radial-gradient(circle at 86% 14%, rgb(20 171 112 / 12%), transparent 34%);
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+}

@@ -1,0 +1,12 @@
+.infoBlock {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 8px 12px;
+}
+
+.content {
+  font-size: var(--vkui--font_headline1--font_size--compact);
+  line-height: var(--vkui--font_headline1--line_height--compact);
+  color: var(--vkui--color_text_secondary);
+  text-align: right;
+}

@@ -1,0 +1,83 @@
+.infoTabContainer {
+  container-type: inline-size;
+  contain: layout;
+}
+
+.infoTab {
+  overflow: hidden;
+  display: grid;
+  grid-template-areas:
+    'physicalDevice battery display'
+    'network        battery display'
+    'network        cpu     display'
+    'hardware       sim     platform'
+    'hardware       sim     memory';
+  grid-template-columns: repeat(3, minmax(300px, 1fr));
+  gap: 10px;
+  align-items: start;
+
+  @container (max-width: 920px) {
+    grid-template-areas:
+      'physicalDevice battery'
+      'network        battery'
+      'network        cpu'
+      'hardware       sim'
+      'platform       display'
+      'memory         display';
+    grid-template-columns: repeat(2, minmax(300px, 1fr));
+    align-items: stretch;
+  }
+
+  @container (max-width: 610px) {
+    grid-template-areas:
+      'physicalDevice'
+      'network'
+      'hardware'
+      'display'
+      'battery'
+      'platform'
+      'memory'
+      'cpu'
+      'sim';
+    grid-template-columns: minmax(300px, 1fr);
+    align-items: stretch;
+  }
+}
+
+.physicalDevice {
+  grid-area: physicalDevice;
+}
+
+.battery {
+  grid-area: battery;
+}
+
+.display {
+  grid-area: display;
+  align-self: stretch;
+}
+
+.network {
+  grid-area: network;
+  align-self: stretch;
+}
+
+.hardware {
+  grid-area: hardware;
+}
+
+.sim {
+  grid-area: sim;
+}
+
+.memory {
+  grid-area: memory;
+}
+
+.platform {
+  grid-area: platform;
+}
+
+.cpu {
+  grid-area: cpu;
+}

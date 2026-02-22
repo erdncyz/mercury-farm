@@ -1,0 +1,22 @@
+*.mo
+.DS_Store
+.eslintcache
+.idea/
+*.iml
+.python-version
+/*.tgz
+/.env
+/node_modules/
+/rethinkdb_data/
+/temp/
+/tmp/
+.mypy_cache
+
+idb-applications
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

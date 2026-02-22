@@ -1,0 +1,29 @@
+.deviceHeader {
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-xl) var(--app-radius-xl) 0 0;
+  backdrop-filter: blur(8px);
+  background: rgb(255 255 255 / 84%);
+  box-shadow: var(--app-shadow-soft);
+}
+
+.deviceName {
+  overflow: hidden;
+  margin-left: 10px;
+  font-weight: 700;
+  color: var(--app-text-primary);
+
+  .icon {
+    flex-shrink: 0;
+    margin-right: 6px;
+  }
+}
+
+.topButton {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--app-radius-s);
+}
+
+.landscape {
+  transform: rotate(90deg);
+}

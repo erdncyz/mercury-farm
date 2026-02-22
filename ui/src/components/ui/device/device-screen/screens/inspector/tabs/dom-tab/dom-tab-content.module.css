@@ -1,0 +1,110 @@
+.container {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.domTree {
+  height: 100%;
+  font-family: Monaco, Menlo, 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.elementNode {
+  position: relative;
+}
+
+.elementHeader {
+  cursor: pointer;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  padding: 2px 0;
+
+  border-radius: 2px;
+
+  transition: background-color 0.1s ease;
+}
+
+.elementHeader:hover {
+  background-color: var(--vkui--color_background_secondary);
+}
+
+.toggleIcon {
+  display: inline-flex;
+  align-items: center;
+
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+
+  color: var(--vkui--color_text_secondary);
+}
+
+.tagName {
+  font-weight: 500;
+  color: var(--vkui--color_text_accent);
+}
+
+.attribute {
+  margin-left: 6px;
+  white-space: nowrap;
+}
+
+.attributeName {
+  color: var(--vkui--color_text_secondary);
+}
+
+.attributeEquals {
+  color: var(--vkui--color_text_primary);
+}
+
+.attributeValue {
+  color: var(--vkui--color_background_accent);
+}
+
+.children {
+  position: relative;
+}
+
+.closingTag {
+  padding: 2px 0;
+}
+
+.textNode {
+  padding: 2px 0;
+}
+
+.textContent {
+  padding: 1px 4px;
+  color: var(--vkui--color_text_primary);
+  background-color: var(--vkui--color_background_secondary);
+  border-radius: 2px;
+}
+
+.commentNode {
+  padding: 2px 0;
+}
+
+.commentContent {
+  font-style: italic;
+  color: var(--vkui--color_text_secondary);
+}
+
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
+  padding: 48px 24px;
+}
+
+.emptyText {
+  font-size: 14px;
+  color: var(--vkui--color_text_secondary);
+}

@@ -1,0 +1,78 @@
+.dashboardTabContainer {
+  container-type: inline-size;
+  contain: layout;
+}
+
+.dashboardTab {
+  overflow: hidden;
+  display: grid;
+  align-items: start;
+  grid-auto-rows: min-content;
+  grid-template:
+    'deviceButtons deviceBooking'
+    'deviceButtons remoteDebug'
+    'deviceButtons linkOpener'
+    'appUpload shell'
+    'appUpload shell'
+    'clipboard shell' / minmax(300px, 1fr) 1fr;
+  gap: 8px;
+
+  @container (max-width: 760px) {
+    grid-template:
+      'deviceButtons'
+      'shell'
+      'linkOpener'
+      'clipboard'
+      'deviceBooking'
+      'appUpload'
+      'remoteDebug' / minmax(0, 1fr);
+  }
+}
+
+.dashboardTabNoShell {
+  grid-template:
+    'deviceButtons deviceBooking'
+    'deviceButtons remoteDebug'
+    'deviceButtons linkOpener'
+    'appUpload clipboard' / minmax(300px, 1fr) 1fr;
+
+  @container (max-width: 760px) {
+    grid-template:
+      'deviceButtons'
+      'linkOpener'
+      'clipboard'
+      'deviceBooking'
+      'appUpload'
+      'remoteDebug' / minmax(0, 1fr);
+  }
+}
+
+.deviceButtons {
+  grid-area: deviceButtons;
+}
+
+.appUpload {
+  grid-area: appUpload;
+  align-self: start;
+}
+
+.linkOpener {
+  grid-area: linkOpener;
+}
+
+.shell {
+  grid-area: shell;
+  align-self: start;
+}
+
+.clipboard {
+  grid-area: clipboard;
+}
+
+.deviceBooking {
+  grid-area: deviceBooking;
+}
+
+.remoteDebug {
+  grid-area: remoteDebug;
+}

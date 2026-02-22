@@ -1,0 +1,218 @@
+.container {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+
+  background-color: var(--vkui--color_background);
+}
+
+.content {
+  overflow: hidden;
+  flex: 1;
+}
+
+.tabContent {
+  overflow: hidden;
+  height: 100%;
+  padding: 8px 12px;
+}
+
+.tabsContainer {
+  display: flex;
+  flex-direction: column;
+
+  height: 45px;
+
+  background-color: var(--vkui--color_background);
+  border-top: 1px solid var(--vkui--color_separator_primary);
+}
+
+.splitContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.splitContainer .gutter {
+  cursor: row-resize;
+  background-color: var(--vkui--color_separator_primary);
+}
+
+.splitContainer .gutter:hover {
+  background-color: var(--vkui--color_background_accent);
+}
+
+.consolePanel {
+  overflow: hidden;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+  border-top: 1px solid var(--vkui--color_separator_primary);
+}
+
+.consoleFeed {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.consoleInput {
+  display: flex;
+  gap: 8px;
+
+  padding: 8px 12px;
+
+  background-color: var(--vkui--color_background);
+  border-top: 1px solid var(--vkui--color_separator_primary);
+}
+
+.consoleInput input {
+  flex: 1;
+}
+
+.domContent {
+  height: 100%;
+}
+
+.htmlDisplay {
+  overflow-x: auto;
+
+  margin: 0;
+  padding: 12px;
+
+  font-family: Monaco, Menlo, 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--vkui--color_text_primary);
+  word-wrap: break-word;
+  white-space: pre-wrap;
+
+  background-color: var(--vkui--color_background_secondary);
+  border: 1px solid var(--vkui--color_separator_primary);
+  border-radius: 8px;
+}
+
+.assetsContent {
+  height: 100%;
+}
+
+.assetsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.assetItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 12px 0;
+
+  border-bottom: 1px solid var(--vkui--color_separator_primary);
+}
+
+.assetItem:last-child {
+  border-bottom: none;
+}
+
+.assetInfo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+
+  min-width: 0;
+}
+
+.assetName {
+  overflow: hidden;
+
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--vkui--color_text_primary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.assetType {
+  font-size: 12px;
+  color: var(--vkui--color_text_secondary);
+}
+
+.downloadButton {
+  cursor: pointer;
+
+  padding: 6px 12px;
+
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+
+  background-color: var(--vkui--color_background_accent);
+  border: none;
+  border-radius: 6px;
+
+  transition: background-color 0.2s ease;
+}
+
+.downloadButton:hover {
+  background-color: var(--vkui--color_background_accent_themed);
+}
+
+.downloadButton:active {
+  transform: scale(0.95);
+}
+
+.emptyContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 200px;
+
+  font-size: 14px;
+  color: var(--vkui--color_text_secondary);
+}
+
+.consoleTabActive {
+  color: var(--vkui--color_background_accent) !important;
+}
+
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+
+  height: 200px;
+}
+
+.loadingText {
+  font-size: 14px;
+  color: var(--vkui--color_text_secondary);
+}
+
+.errorState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 200px;
+  padding: 16px;
+}
+
+.errorText {
+  padding: 12px 16px;
+
+  font-size: 14px;
+  color: var(--vkui--color_text_negative);
+  text-align: center;
+
+  background-color: var(--vkui--color_background_negative);
+  border: 1px solid var(--vkui--color_stroke_negative);
+  border-radius: 8px;
+}
