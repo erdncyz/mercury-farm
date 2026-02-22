@@ -14,8 +14,8 @@ import type { Device } from '@/generated/types'
 @injectable()
 @deviceConnectionRequired()
 export class DeviceScreenStore {
-  private readonly websocketReconnectionBaseInterval = 1500
-  private readonly websocketReconnectionMaxInterval = 15000
+  private readonly websocketReconnectionInterval = 5000 // NOTE: 5s
+  private readonly websocketReconnectionMaxAttempts = 3 // NOTE: 5s * 3 -> 15s total delay
   private websocket: WebSocket | null = null
   private websocketReconnecting = false
   private websocketReconnectionAttempt = 0
@@ -27,13 +27,13 @@ export class DeviceScreenStore {
   private device: Device | null = null
   private showScreen = true
   private options = {
-    autoScaleForRetina: false,
-    density: 1,
-    minScale: 0.2,
+    autoScaleForRetina: true,
+    density: Math.max(1, Math.min(1.5, devicePixelRatio || 1)),
+    minScale: 0.36,
   }
   private adjustedBoundSize = {
-    width: 720,
-    height: 1280,
+    width: 0,
+    height: 0,
   }
   private screenRotation = 0
   private isScreenStreamingJustStarted = false
@@ -59,11 +59,6 @@ export class DeviceScreenStore {
   }
 
   get getScreenRotation(): number {
-    const liveRotation = this.deviceBySerialStore.deviceQueryResult().data?.display?.rotation
-    if (liveRotation === 0 || liveRotation === 90 || liveRotation === 180 || liveRotation === 270) {
-      return liveRotation
-    }
-
     return this.screenRotation
   }
 
@@ -96,8 +91,6 @@ export class DeviceScreenStore {
   stopScreenStreaming(): void {
     this.disposed = true
     this.stopWebsocket()
-    this.websocketReconnecting = false
-    this.websocketReconnectionAttempt = 0
 
     if (this.websocketReconnectionTimeoutID) {
       clearTimeout(this.websocketReconnectionTimeoutID)
@@ -154,12 +147,7 @@ export class DeviceScreenStore {
   }
 
   private onScreenInterestAreaChanged(): void {
-    if (
-      this.websocket &&
-      this.websocket.readyState === WebSocket.OPEN &&
-      this.adjustedBoundSize.width > 0 &&
-      this.adjustedBoundSize.height > 0
-    ) {
+    if (this.websocket && this.websocket.readyState === WebSocket.OPEN) {
       this.websocket.send('size ' + this.adjustedBoundSize.width + 'x' + this.adjustedBoundSize.height)
     }
   }
@@ -171,17 +159,8 @@ export class DeviceScreenStore {
   }
 
   private adjustBoundedSize(width: number, height: number): ElementBoundSize {
-    if (width <= 0 || height <= 0) {
-      return this.adjustedBoundSize
-    }
-
-    // Some Android providers may briefly report null width/height.
-    // Keep streaming by falling back to the current container bounds.
     if (!this.device?.display?.width || !this.device?.display?.height) {
-      return {
-        width: Math.ceil(width * this.options.density),
-        height: Math.ceil(height * this.options.density),
-      }
+      throw new Error('No display width or height')
     }
 
     const scaledWidth = this.device.display.width * this.options.minScale
@@ -207,15 +186,6 @@ export class DeviceScreenStore {
   }
 
   private getNewAdjustedBoundSize(width: number, height: number): ElementBoundSize {
-    const isIosDevice =
-      (this.device?.manufacturer || '').toLowerCase() === 'apple' || (this.device?.platform || '').toLowerCase() === 'ios'
-
-    // iOS stream projection already accounts for orientation on provider side.
-    // Swapping width/height here can cause sideways/letterboxed squashing.
-    if (isIosDevice) {
-      return this.adjustBoundedSize(width, height)
-    }
-
     switch (this.screenRotation) {
       case 90:
       case 270:
@@ -230,8 +200,7 @@ export class DeviceScreenStore {
   }
 
   private isRotated(): boolean {
-    const rotation = this.getScreenRotation
-    return rotation === 90 || rotation === 270
+    return this.screenRotation === 90 || this.screenRotation === 270
   }
 
   private updateImageArea(imageWidth: number, imageHeight: number): void {
@@ -314,12 +283,6 @@ export class DeviceScreenStore {
           throw new Error('Context is not set')
         }
 
-        // Some providers (especially iOS/WDA pipelines) may change frame dimensions
-        // without a full stream restart message. Keep canvas dimensions in sync.
-        if (this.context.canvas.width !== image.width || this.context.canvas.height !== image.height) {
-          this.updateImageArea(image.width, image.height)
-        }
-
         if (this.isScreenStreamingJustStarted) {
           this.updateImageArea(image.width, image.height)
 
@@ -349,9 +312,6 @@ export class DeviceScreenStore {
 
           if (this.shouldUpdateScreen()) {
             this.updateBounds()
-            // Ensure provider receives a valid projection size even when the
-            // first layout pass reports 0x0 and adjustedBoundSize does not change.
-            this.onScreenInterestAreaChanged()
             this.onScreenInterestGained()
 
             return
@@ -380,22 +340,12 @@ export class DeviceScreenStore {
       this.isScreenStreamingJustStarted = true
 
       this.screenRotation = startData.orientation
-
-      // Rotation changes the expected projection geometry; request a fresh size immediately.
-      if (this.websocket && this.websocket.readyState === WebSocket.OPEN) {
-        this.updateBounds()
-        this.onScreenInterestAreaChanged()
-      }
     }
   }
 
   private errorListener(): void {}
 
   private closeListener(event: CloseEvent): void {
-    if (this.disposed) {
-      return
-    }
-
     this.setIsScreenLoading(true)
     this.websocketReconnecting = false
 
@@ -405,15 +355,17 @@ export class DeviceScreenStore {
       return
     }
 
-    const currentAttempt = Math.max(1, this.websocketReconnectionAttempt + 1)
-    const reconnectDelay = Math.min(
-      this.websocketReconnectionMaxInterval,
-      this.websocketReconnectionBaseInterval * 2 ** (currentAttempt - 1)
-    )
+    if (!event.wasClean && this.websocketReconnectionAttempt < this.websocketReconnectionMaxAttempts) {
+      this.websocketReconnectionTimeoutID = setTimeout(() => {
+        this.websocketReconnectionTimeoutID = null
+        this.reconnectWebsocket()
+      }, this.websocketReconnectionInterval)
 
-    this.websocketReconnectionTimeoutID = setTimeout(() => {
-      this.websocketReconnectionTimeoutID = null
-      this.reconnectWebsocket()
-    }, reconnectDelay)
+      return
+    }
+
+    if (this.websocketReconnectionAttempt >= this.websocketReconnectionMaxAttempts) {
+      deviceErrorModalStore.setError(t('Service is currently unavailable'))
+    }
   }
 }
