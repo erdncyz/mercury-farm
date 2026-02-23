@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite'
 import { InterfaceSettings } from './interface-settings'
+import { RuntimeSettings } from './runtime-settings'
 
 import styles from './general-tab.module.css'
 
@@ -8,6 +9,7 @@ export const GeneralTab = observer(() => {
     <div className={styles.generalTabContainer}>
       <div className={styles.generalTab}>
         <InterfaceSettings />
+        <RuntimeSettings />
       </div>
     </div>
   )

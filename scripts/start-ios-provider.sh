@@ -8,22 +8,22 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # Keep STF_DOMAIN aligned with current LAN IP unless manual mode is enabled.
-if [ -x "$PROJECT_DIR/scripts/auto-configure-network.sh" ]; then
-  "$PROJECT_DIR/scripts/auto-configure-network.sh" >/dev/null || true
+if [ -f "$PROJECT_DIR/scripts/auto-configure-network.sh" ]; then
+  /bin/bash "$PROJECT_DIR/scripts/auto-configure-network.sh" >/dev/null || true
 fi
 
 # Load shared env files if present so iOS provider uses the same values as Docker services.
-if [ -f "$PROJECT_DIR/scripts/variables.env" ]; then
-  set -a
-  # shellcheck disable=SC1091
-  . "$PROJECT_DIR/scripts/variables.env"
-  set +a
-fi
-
 if [ -f "$PROJECT_DIR/.env" ]; then
   set -a
   # shellcheck disable=SC1091
   . "$PROJECT_DIR/.env"
+  set +a
+fi
+
+if [ -f "$PROJECT_DIR/scripts/variables.env" ]; then
+  set -a
+  # shellcheck disable=SC1091
+  . "$PROJECT_DIR/scripts/variables.env"
   set +a
 fi
 
@@ -34,9 +34,12 @@ export IOS_DISABLE_ESP32="${IOS_DISABLE_ESP32:-1}"
 export IOS_TOUCH_ACTION_TIMEOUT_MS="${IOS_TOUCH_ACTION_TIMEOUT_MS:-6000}"
 export IOS_WDA_REQUEST_TIMEOUT_MS="${IOS_WDA_REQUEST_TIMEOUT_MS:-8000}"
 export IOS_WDA_SESSION_TIMEOUT_MS="${IOS_WDA_SESSION_TIMEOUT_MS:-20000}"
-export IOS_TYPE_KEY_DELAY_MS="${IOS_TYPE_KEY_DELAY_MS:-120}"
-export IOS_WDA_MJPEG_QUALITY="${IOS_WDA_MJPEG_QUALITY:-10}"
-export IOS_WDA_MJPEG_SCALING="${IOS_WDA_MJPEG_SCALING:-70}"
+export IOS_TYPE_KEY_DELAY_MS="${IOS_TYPE_KEY_DELAY_MS:-80}"
+export IOS_WDA_MJPEG_QUALITY="${IOS_WDA_MJPEG_QUALITY:-5}"
+export IOS_WDA_MJPEG_SCALING="${IOS_WDA_MJPEG_SCALING:-50}"
+export IOS_WDA_LEAN_MODE="${IOS_WDA_LEAN_MODE:-1}"
+export IOS_WDA_TREE_CACHE_MS="${IOS_WDA_TREE_CACHE_MS:-500}"
+export IOS_WDA_ELEMENT_RESPONSE_ATTRIBUTES="${IOS_WDA_ELEMENT_RESPONSE_ATTRIBUTES:-type,label,name,enabled,visible,rect}"
 export IOS_ACTION_TIMEOUT_RECOVERY_THRESHOLD="${IOS_ACTION_TIMEOUT_RECOVERY_THRESHOLD:-1}"
 export IOS_TOUCH_RECOVERY_COOLDOWN_MS="${IOS_TOUCH_RECOVERY_COOLDOWN_MS:-3000}"
 export MONGODB_PORT_27017_TCP="mongodb://127.0.0.1:27017"
@@ -113,6 +116,9 @@ echo "  WDA session timeout: ${IOS_WDA_SESSION_TIMEOUT_MS}ms"
 echo "  Type key delay: ${IOS_TYPE_KEY_DELAY_MS}ms"
 echo "  WDA MJPEG quality: ${IOS_WDA_MJPEG_QUALITY}"
 echo "  WDA MJPEG scaling: ${IOS_WDA_MJPEG_SCALING}%"
+echo "  WDA lean mode: ${IOS_WDA_LEAN_MODE}"
+echo "  WDA tree cache: ${IOS_WDA_TREE_CACHE_MS}ms"
+echo "  WDA element attrs: ${IOS_WDA_ELEMENT_RESPONSE_ATTRIBUTES}"
 echo "  Action timeout recovery threshold: ${IOS_ACTION_TIMEOUT_RECOVERY_THRESHOLD}"
 echo "  Touch recovery cooldown: ${IOS_TOUCH_RECOVERY_COOLDOWN_MS}ms"
 echo "  Port ranges:"

@@ -60,6 +60,23 @@ Check provider logs:
 docker logs -f mercury-provider
 ```
 
+### Optional: Faster WDA Profile
+
+Use the default lean profile:
+
+```bash
+./scripts/start-ios-provider.sh
+```
+
+Tune it manually for more/less aggressive behavior:
+
+```bash
+IOS_WDA_LEAN_MODE=1 \
+IOS_WDA_TREE_CACHE_MS=250 \
+IOS_WDA_ELEMENT_RESPONSE_ATTRIBUTES="type,label,name,enabled,visible,rect" \
+./scripts/start-ios-provider.sh
+```
+
 ---
 
 ## Türkçe
@@ -113,6 +130,23 @@ Provider loglarını izle:
 
 ```bash
 docker logs -f mercury-provider
+```
+
+### Opsiyonel: Daha Hızlı WDA Profili
+
+Varsayılan lean profil için:
+
+```bash
+./scripts/start-ios-provider.sh
+```
+
+Daha agresif/daha yumuşak davranış için manuel ayar:
+
+```bash
+IOS_WDA_LEAN_MODE=1 \
+IOS_WDA_TREE_CACHE_MS=250 \
+IOS_WDA_ELEMENT_RESPONSE_ATTRIBUTES="type,label,name,enabled,visible,rect" \
+./scripts/start-ios-provider.sh
 ```
 
 ---

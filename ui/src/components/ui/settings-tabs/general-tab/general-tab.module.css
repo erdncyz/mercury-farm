@@ -5,6 +5,7 @@
 
 .generalTab {
   overflow: hidden;
-  display: block;
-  max-width: 420px;
+  display: grid;
+  gap: 16px;
+  max-width: 520px;
 }

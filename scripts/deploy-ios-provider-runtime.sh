@@ -8,9 +8,9 @@ RUNTIME_DIR="$HOME/.mercury-farm-runtime"
 LABEL="com.mercury.ios-provider"
 USER_UID="$(id -u)"
 
-if [ -x "$PROJECT_DIR/scripts/auto-configure-network.sh" ]; then
+if [ -f "$PROJECT_DIR/scripts/auto-configure-network.sh" ]; then
   echo "Auto-configuring STF_DOMAIN from LAN IP..."
-  "$PROJECT_DIR/scripts/auto-configure-network.sh"
+  /bin/bash "$PROJECT_DIR/scripts/auto-configure-network.sh"
 fi
 
 mkdir -p "$RUNTIME_DIR"

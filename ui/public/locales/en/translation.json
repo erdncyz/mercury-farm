@@ -64,5 +64,22 @@
   "Not in group": "Not in group",
   "Devices": "Devices",
   "No devices connected": "No devices connected",
-  "Something went wrong": "Something went wrong"
+  "Something went wrong": "Something went wrong",
+  "Device Runtime Settings": "Device Runtime Settings",
+  "Android Profile": "Android Profile",
+  "iOS Profile": "iOS Profile",
+  "Android Screen Frame Rate": "Android Screen Frame Rate",
+  "Android Screen JPEG Quality": "Android Screen JPEG Quality",
+  "iOS WDA Lean Mode": "iOS WDA Lean Mode",
+  "Compact WDA responses and reduced payload": "Compact WDA responses and reduced payload",
+  "iOS WDA MJPEG Quality": "iOS WDA MJPEG Quality",
+  "iOS WDA MJPEG Scaling": "iOS WDA MJPEG Scaling",
+  "iOS WDA Tree Cache (ms)": "iOS WDA Tree Cache (ms)",
+  "iOS Type Key Delay (ms)": "iOS Type Key Delay (ms)",
+  "Runtime profile.aggressive": "Speed",
+  "Runtime profile.balanced": "Balanced",
+  "Runtime profile.quality": "Image Quality",
+  "Runtime profile.description.aggressive": "lower latency",
+  "Runtime profile.description.balanced": "balanced defaults",
+  "Runtime profile.description.quality": "sharper image"
 }

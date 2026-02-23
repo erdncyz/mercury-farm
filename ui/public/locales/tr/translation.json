@@ -97,5 +97,22 @@
   "Busy Devices": "Meşgul Cihazlar",
   "Something went wrong": "Bir hata oluştu",
   "Unauthorized": "Yetkisiz",
-  "Service is currently unavailable": "Servis şu anda kullanılamıyor"
+  "Service is currently unavailable": "Servis şu anda kullanılamıyor",
+  "Device Runtime Settings": "Cihaz Çalışma Zamanı Ayarları",
+  "Android Profile": "Android Profili",
+  "iOS Profile": "iOS Profili",
+  "Android Screen Frame Rate": "Android Ekran Kare Hızı",
+  "Android Screen JPEG Quality": "Android Ekran JPEG Kalitesi",
+  "iOS WDA Lean Mode": "iOS WDA Hızlı Mod",
+  "Compact WDA responses and reduced payload": "Daha küçük WDA yanıtları ve azaltılmış veri",
+  "iOS WDA MJPEG Quality": "iOS WDA MJPEG Kalitesi",
+  "iOS WDA MJPEG Scaling": "iOS WDA MJPEG Ölçekleme",
+  "iOS WDA Tree Cache (ms)": "iOS WDA Ağaç Önbelleği (ms)",
+  "iOS Type Key Delay (ms)": "iOS Tuş Yazma Gecikmesi (ms)",
+  "Runtime profile.aggressive": "Hız",
+  "Runtime profile.balanced": "Dengeli",
+  "Runtime profile.quality": "Görüntü Kalitesi",
+  "Runtime profile.description.aggressive": "daha düşük gecikme",
+  "Runtime profile.description.balanced": "dengeli varsayılanlar",
+  "Runtime profile.description.quality": "daha net görüntü"
 }
