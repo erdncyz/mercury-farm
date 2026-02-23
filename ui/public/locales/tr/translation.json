@@ -112,7 +112,7 @@
   "Runtime profile.aggressive": "Hız",
   "Runtime profile.balanced": "Dengeli",
   "Runtime profile.quality": "Görüntü Kalitesi",
-  "Runtime profile.description.aggressive": "daha düşük gecikme",
-  "Runtime profile.description.balanced": "dengeli varsayılanlar",
-  "Runtime profile.description.quality": "daha net görüntü"
+  "Runtime profile.description.aggressive": "hızlı ve riskten kaçınan",
+  "Runtime profile.description.balanced": "stabilite ve standart kullanım",
+  "Runtime profile.description.quality": "görsel analiz için yüksek netlik"
 }

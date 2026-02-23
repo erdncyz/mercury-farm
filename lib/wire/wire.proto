@@ -517,6 +517,19 @@ message TouchResetMessage {
   required uint32 seq = 1;
 }
 
+message ApplyIosRuntimeSettingsMessage {
+  required uint32 touchWatchdogTimeoutMs = 1;
+  required uint32 wdaRequestTimeoutMs = 2;
+  required uint32 wdaSessionTimeoutMs = 3;
+  required uint32 actionTimeoutRecoveryThreshold = 4;
+  required uint32 touchRecoveryCooldownMs = 5;
+  required bool wdaLeanMode = 6;
+  required uint32 wdaMjpegQuality = 7;
+  required uint32 wdaMjpegScaling = 8;
+  required uint32 wdaTreeCacheMs = 9;
+  required uint32 typeKeyDelayMs = 10;
+}
+
 message GestureStartMessage {
   required uint32 seq = 1;
 }

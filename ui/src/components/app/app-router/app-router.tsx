@@ -26,9 +26,6 @@ export const appRouter = createHashRouter(
             <Route element={<DevicesPage />} path={getMainRoute()} />
             <Route element={<DevicesPage />} path={getDevicesRoute()} />
             <Route element={<ControlPage />} path={getControlRoute(':serial')}>
-              <Route element={<ControlPage />} path='logs' />
-              <Route element={<ControlPage />} path='advanced' />
-              <Route element={<ControlPage />} path='file-explorer' />
               <Route element={<ControlPage />} path='info' />
             </Route>
             <Route element={<SettingsPage />} path={getSettingsRoute()}>

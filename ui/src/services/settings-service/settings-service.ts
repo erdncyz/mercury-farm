@@ -39,6 +39,8 @@ const IOS_RUNTIME_PRESETS: Record<
     touchWatchdogTimeoutMs: number
     wdaRequestTimeoutMs: number
     wdaSessionTimeoutMs: number
+    actionTimeoutRecoveryThreshold: number
+    touchRecoveryCooldownMs: number
     wdaLeanMode: boolean
     wdaMjpegQuality: number
     wdaMjpegScaling: number
@@ -48,18 +50,22 @@ const IOS_RUNTIME_PRESETS: Record<
 > = {
   aggressive: {
     touchWatchdogTimeoutMs: 7000,
-    wdaRequestTimeoutMs: 10000,
+    wdaRequestTimeoutMs: 12000,
     wdaSessionTimeoutMs: 25000,
+    actionTimeoutRecoveryThreshold: 2,
+    touchRecoveryCooldownMs: 3000,
     wdaLeanMode: true,
-    wdaMjpegQuality: 10,
+    wdaMjpegQuality: 15,
     wdaMjpegScaling: 30,
     wdaTreeCacheMs: 500,
-    typeKeyDelayMs: 30,
+    typeKeyDelayMs: 60,
   },
   balanced: {
     touchWatchdogTimeoutMs: 10000,
     wdaRequestTimeoutMs: 15000,
     wdaSessionTimeoutMs: 30000,
+    actionTimeoutRecoveryThreshold: 3,
+    touchRecoveryCooldownMs: 5000,
     wdaLeanMode: true,
     wdaMjpegQuality: 40,
     wdaMjpegScaling: 50,
@@ -70,6 +76,8 @@ const IOS_RUNTIME_PRESETS: Record<
     touchWatchdogTimeoutMs: 15000,
     wdaRequestTimeoutMs: 25000,
     wdaSessionTimeoutMs: 45000,
+    actionTimeoutRecoveryThreshold: 4,
+    touchRecoveryCooldownMs: 7000,
     wdaLeanMode: false,
     wdaMjpegQuality: 85,
     wdaMjpegScaling: 100,
@@ -160,12 +168,9 @@ export class SettingsService {
         const incomingAndroidProfile = String(androidRuntimeSettings.profile || '')
         if (RUNTIME_PROFILE_OPTIONS.includes(incomingAndroidProfile as RuntimeProfileOption)) {
           this.androidRuntimeProfile = incomingAndroidProfile as RuntimeProfileOption
-        }
-
-        this.androidRuntimeSettings = {
-          ...this.androidRuntimeSettings,
-          screenFrameRate: Number(androidRuntimeSettings.screenFrameRate || this.androidRuntimeSettings.screenFrameRate),
-          screenJpegQuality: Number(androidRuntimeSettings.screenJpegQuality || this.androidRuntimeSettings.screenJpegQuality),
+          this.androidRuntimeSettings = { ...ANDROID_RUNTIME_PRESETS[this.androidRuntimeProfile] }
+        } else {
+          this.androidRuntimeSettings = { ...ANDROID_RUNTIME_PRESETS[this.androidRuntimeProfile] }
         }
       }
 
@@ -173,26 +178,9 @@ export class SettingsService {
         const incomingIosProfile = String(iosRuntimeSettings.profile || '')
         if (RUNTIME_PROFILE_OPTIONS.includes(incomingIosProfile as RuntimeProfileOption)) {
           this.iosRuntimeProfile = incomingIosProfile as RuntimeProfileOption
-        }
-
-        this.iosRuntimeSettings = {
-          ...this.iosRuntimeSettings,
-          touchWatchdogTimeoutMs: Number(
-            iosRuntimeSettings.touchWatchdogTimeoutMs || this.iosRuntimeSettings.touchWatchdogTimeoutMs
-          ),
-          wdaRequestTimeoutMs: Number(
-            iosRuntimeSettings.wdaRequestTimeoutMs || this.iosRuntimeSettings.wdaRequestTimeoutMs
-          ),
-          wdaSessionTimeoutMs: Number(
-            iosRuntimeSettings.wdaSessionTimeoutMs || this.iosRuntimeSettings.wdaSessionTimeoutMs
-          ),
-          wdaLeanMode: iosRuntimeSettings.wdaLeanMode !== undefined
-            ? String(iosRuntimeSettings.wdaLeanMode) === 'true' || String(iosRuntimeSettings.wdaLeanMode) === '1'
-            : this.iosRuntimeSettings.wdaLeanMode,
-          wdaMjpegQuality: Number(iosRuntimeSettings.wdaMjpegQuality || this.iosRuntimeSettings.wdaMjpegQuality),
-          wdaMjpegScaling: Number(iosRuntimeSettings.wdaMjpegScaling || this.iosRuntimeSettings.wdaMjpegScaling),
-          wdaTreeCacheMs: Number(iosRuntimeSettings.wdaTreeCacheMs || this.iosRuntimeSettings.wdaTreeCacheMs),
-          typeKeyDelayMs: Number(iosRuntimeSettings.typeKeyDelayMs || this.iosRuntimeSettings.typeKeyDelayMs),
+          this.iosRuntimeSettings = { ...IOS_RUNTIME_PRESETS[this.iosRuntimeProfile] }
+        } else {
+          this.iosRuntimeSettings = { ...IOS_RUNTIME_PRESETS[this.iosRuntimeProfile] }
         }
       }
     })

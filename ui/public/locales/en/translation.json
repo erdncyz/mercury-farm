@@ -79,7 +79,7 @@
   "Runtime profile.aggressive": "Speed",
   "Runtime profile.balanced": "Balanced",
   "Runtime profile.quality": "Image Quality",
-  "Runtime profile.description.aggressive": "lower latency",
-  "Runtime profile.description.balanced": "balanced defaults",
-  "Runtime profile.description.quality": "sharper image"
+  "Runtime profile.description.aggressive": "fast and risk-averse",
+  "Runtime profile.description.balanced": "stability and default usage",
+  "Runtime profile.description.quality": "high clarity for visual analysis"
 }
