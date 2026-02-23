@@ -259,6 +259,115 @@ curl -H "Authorization: Bearer YOUR-TOKEN-HERE" \
 
 The unified API works seamlessly for both platforms through the same endpoints, with Mercury automatically handling the underlying protocol differences (ADB vs WDA). Regular users are limited to 2 devices per test run. The system supports device filtering by architecture, model, SDK level, and platform type for precise device allocation.
 
+## Ruby Example (Single Device)
+
+The following Ruby script captures one Android device, runs your test command, then releases the device.
+
+```ruby
+require 'json'
+require 'net/http'
+require 'uri'
+
+BASE_URL = ENV.fetch('MERCURY_BASE_URL') # e.g. https://mercury.example.com
+TOKEN = ENV.fetch('MERCURY_TOKEN')
+
+def request(method:, path:, params: {})
+    uri = URI("#{BASE_URL}#{path}")
+    uri.query = URI.encode_www_form(params) unless params.empty?
+
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = uri.scheme == 'https'
+
+    klass = {
+        get: Net::HTTP::Get,
+        delete: Net::HTTP::Delete
+    }.fetch(method)
+
+    req = klass.new(uri)
+    req['Authorization'] = "Bearer #{TOKEN}"
+    req['Content-Type'] = 'application/json'
+
+    res = http.request(req)
+    raise "HTTP #{res.code}: #{res.body}" unless res.is_a?(Net::HTTPSuccess)
+
+    JSON.parse(res.body)
+end
+
+capture = request(
+    method: :get,
+    path: '/api/v1/autotests',
+    params: {
+        amount: 1,
+        timeout: 600,
+        run: "ruby-run-#{Time.now.to_i}",
+        need_amount: true,
+        type: 'android'
+    }
+)
+
+group_id = capture.dig('group', 'id')
+device = capture.dig('group', 'devices', 0)
+raise 'No device captured' unless group_id && device
+
+serial = device['serial']
+remote_url = device['remoteConnectUrl']
+puts "Captured device serial=#{serial}, remoteConnectUrl=#{remote_url}"
+
+begin
+    # Replace this with your actual test command.
+    # Example: system("bundle exec rspec spec/mobile_spec.rb")
+    ok = system('echo "Run your Ruby/Appium tests here"')
+    raise 'Test command failed' unless ok
+ensure
+    request(
+        method: :delete,
+        path: '/api/v1/autotests',
+        params: { group: group_id }
+    )
+    puts "Released group=#{group_id}"
+end
+```
+
+Run:
+
+```bash
+MERCURY_BASE_URL="https://mercury.example.com" \
+MERCURY_TOKEN="YOUR_TOKEN" \
+ruby mercury_single_device.rb
+```
+
+## Azure Pipeline Example (Ruby + Mercury)
+
+```yaml
+trigger:
+- main
+
+pool:
+    vmImage: 'macOS-latest'
+
+variables:
+    MERCURY_BASE_URL: 'https://mercury.example.com'
+
+steps:
+- task: UseRubyVersion@0
+    inputs:
+        versionSpec: '3.2'
+
+- script: |
+        gem install bundler
+        bundle install
+    displayName: 'Install Ruby dependencies'
+
+- script: |
+        ruby mercury_single_device.rb
+    displayName: 'Run Ruby mobile tests on 1 Mercury device'
+    env:
+        MERCURY_BASE_URL: $(MERCURY_BASE_URL)
+        MERCURY_TOKEN: $(MERCURY_TOKEN)
+```
+
+Store `MERCURY_TOKEN` as a secret pipeline variable.
+
 # Using the Mercury API to Run Automated Tests
 
 Mercury provides a dedicated API for automated testing, allowing you to capture devices for test runs and release them once the tests are complete.
@@ -442,6 +551,115 @@ curl -H "Authorization: Bearer BURAYA_TOKEN_YAZIN" \
 ## Notlar
 
 Birleşik API, her iki platform için aynı uç noktalardan (endpoints) sorunsuz çalışır ve Mercury altta yatan protokol farklılıklarını (ADB / WDA) otomatik olarak yönetir. Düzenli kullanıcılar test çalıştırması başına en fazla 2 cihazla sınırlandırılmıştır. Sistem; mimariye, modele, SDK sürümüne ve platform türüne göre hassas cihaz ataması (device allocation) yapabilmek için cihaz filtrelemeyi destekler.
+
+## Ruby Örneği (Tek Cihaz)
+
+Aşağıdaki Ruby scripti 1 Android cihaz alır, test komutunu çalıştırır ve iş bitince cihazı bırakır.
+
+```ruby
+require 'json'
+require 'net/http'
+require 'uri'
+
+BASE_URL = ENV.fetch('MERCURY_BASE_URL') # örn: https://mercury.example.com
+TOKEN = ENV.fetch('MERCURY_TOKEN')
+
+def request(method:, path:, params: {})
+    uri = URI("#{BASE_URL}#{path}")
+    uri.query = URI.encode_www_form(params) unless params.empty?
+
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = uri.scheme == 'https'
+
+    klass = {
+        get: Net::HTTP::Get,
+        delete: Net::HTTP::Delete
+    }.fetch(method)
+
+    req = klass.new(uri)
+    req['Authorization'] = "Bearer #{TOKEN}"
+    req['Content-Type'] = 'application/json'
+
+    res = http.request(req)
+    raise "HTTP #{res.code}: #{res.body}" unless res.is_a?(Net::HTTPSuccess)
+
+    JSON.parse(res.body)
+end
+
+capture = request(
+    method: :get,
+    path: '/api/v1/autotests',
+    params: {
+        amount: 1,
+        timeout: 600,
+        run: "ruby-run-#{Time.now.to_i}",
+        need_amount: true,
+        type: 'android'
+    }
+)
+
+group_id = capture.dig('group', 'id')
+device = capture.dig('group', 'devices', 0)
+raise 'Cihaz alınamadı' unless group_id && device
+
+serial = device['serial']
+remote_url = device['remoteConnectUrl']
+puts "Alınan cihaz serial=#{serial}, remoteConnectUrl=#{remote_url}"
+
+begin
+    # Burayı kendi test komutunuzla değiştirin.
+    # Örn: system("bundle exec rspec spec/mobile_spec.rb")
+    ok = system('echo "Ruby/Appium testlerinizi burada çalıştırın"')
+    raise 'Test komutu başarısız' unless ok
+ensure
+    request(
+        method: :delete,
+        path: '/api/v1/autotests',
+        params: { group: group_id }
+    )
+    puts "Bırakılan grup=#{group_id}"
+end
+```
+
+Çalıştırma:
+
+```bash
+MERCURY_BASE_URL="https://mercury.example.com" \
+MERCURY_TOKEN="YOUR_TOKEN" \
+ruby mercury_single_device.rb
+```
+
+## Azure Pipeline Örneği (Ruby + Mercury)
+
+```yaml
+trigger:
+- main
+
+pool:
+    vmImage: 'macOS-latest'
+
+variables:
+    MERCURY_BASE_URL: 'https://mercury.example.com'
+
+steps:
+- task: UseRubyVersion@0
+    inputs:
+        versionSpec: '3.2'
+
+- script: |
+        gem install bundler
+        bundle install
+    displayName: 'Ruby bağımlılıklarını kur'
+
+- script: |
+        ruby mercury_single_device.rb
+    displayName: '1 Mercury cihazında Ruby mobil testlerini çalıştır'
+    env:
+        MERCURY_BASE_URL: $(MERCURY_BASE_URL)
+        MERCURY_TOKEN: $(MERCURY_TOKEN)
+```
+
+`MERCURY_TOKEN` değerini pipeline'da secret variable olarak saklayın.
 
 ## Otomatik Testleri Çalıştırmak İçin Mercury API'sini Kullanmak
 

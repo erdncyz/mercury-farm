@@ -24,6 +24,11 @@ We have consolidated the setup guides and instructions in the `docs` directory:
 - **[Automation API](docs/automation-api.md)**: Guide on using Mercury devices with Appium and our autotest API.
 - **[API Reference](docs/API.md)**: Complete REST API documentation.
 
+## Quick Automation Examples
+
+- Ruby (single device): see [Ruby Example (Single Device)](docs/automation-api.md#ruby-example-single-device)
+- Azure DevOps: see [Azure Pipeline Example (Ruby + Mercury)](docs/automation-api.md#azure-pipeline-example-ruby--mercury)
+
 ## License
 
 Apache License 2.0.
@@ -55,6 +60,11 @@ Tüm kurulum ve kullanım rehberlerini `docs` dizininde birleştirdik:
 - **[Ölçekleme Rehberi](docs/scaling.md)**: 10+ iOS/Android cihaz için kapasite ve shard mimarisi.
 - **[Otomasyon API'si](docs/automation-api.md)**: Mercury cihazlarını Appium ve otomatik test API'miz ile kullanma rehberi.
 - **[API Referansı](docs/API.md)**: Kapsamlı REST API dokümantasyonu.
+
+## Hızlı Otomasyon Örnekleri
+
+- Ruby (tek cihaz): [Ruby Örneği (Tek Cihaz)](docs/automation-api.md#ruby-örneği-tek-cihaz)
+- Azure DevOps: [Azure Pipeline Örneği (Ruby + Mercury)](docs/automation-api.md#azure-pipeline-örneği-ruby--mercury)
 
 ## Lisans
 
