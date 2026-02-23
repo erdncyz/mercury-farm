@@ -36,6 +36,9 @@ const ANDROID_RUNTIME_PRESETS: Record<RuntimeProfileOption, { screenFrameRate: n
 const IOS_RUNTIME_PRESETS: Record<
   RuntimeProfileOption,
   {
+    touchWatchdogTimeoutMs: number
+    wdaRequestTimeoutMs: number
+    wdaSessionTimeoutMs: number
     wdaLeanMode: boolean
     wdaMjpegQuality: number
     wdaMjpegScaling: number
@@ -44,25 +47,34 @@ const IOS_RUNTIME_PRESETS: Record<
   }
 > = {
   aggressive: {
+    touchWatchdogTimeoutMs: 7000,
+    wdaRequestTimeoutMs: 10000,
+    wdaSessionTimeoutMs: 25000,
     wdaLeanMode: true,
-    wdaMjpegQuality: 5,
+    wdaMjpegQuality: 10,
+    wdaMjpegScaling: 30,
+    wdaTreeCacheMs: 500,
+    typeKeyDelayMs: 30,
+  },
+  balanced: {
+    touchWatchdogTimeoutMs: 10000,
+    wdaRequestTimeoutMs: 15000,
+    wdaSessionTimeoutMs: 30000,
+    wdaLeanMode: true,
+    wdaMjpegQuality: 40,
     wdaMjpegScaling: 50,
     wdaTreeCacheMs: 500,
     typeKeyDelayMs: 80,
   },
-  balanced: {
-    wdaLeanMode: true,
-    wdaMjpegQuality: 10,
-    wdaMjpegScaling: 70,
-    wdaTreeCacheMs: 250,
-    typeKeyDelayMs: 120,
-  },
   quality: {
+    touchWatchdogTimeoutMs: 15000,
+    wdaRequestTimeoutMs: 25000,
+    wdaSessionTimeoutMs: 45000,
     wdaLeanMode: false,
-    wdaMjpegQuality: 25,
+    wdaMjpegQuality: 85,
     wdaMjpegScaling: 100,
-    wdaTreeCacheMs: 100,
-    typeKeyDelayMs: 150,
+    wdaTreeCacheMs: 1000,
+    typeKeyDelayMs: 120,
   },
 }
 
@@ -165,6 +177,15 @@ export class SettingsService {
 
         this.iosRuntimeSettings = {
           ...this.iosRuntimeSettings,
+          touchWatchdogTimeoutMs: Number(
+            iosRuntimeSettings.touchWatchdogTimeoutMs || this.iosRuntimeSettings.touchWatchdogTimeoutMs
+          ),
+          wdaRequestTimeoutMs: Number(
+            iosRuntimeSettings.wdaRequestTimeoutMs || this.iosRuntimeSettings.wdaRequestTimeoutMs
+          ),
+          wdaSessionTimeoutMs: Number(
+            iosRuntimeSettings.wdaSessionTimeoutMs || this.iosRuntimeSettings.wdaSessionTimeoutMs
+          ),
           wdaLeanMode: iosRuntimeSettings.wdaLeanMode !== undefined
             ? String(iosRuntimeSettings.wdaLeanMode) === 'true' || String(iosRuntimeSettings.wdaLeanMode) === '1'
             : this.iosRuntimeSettings.wdaLeanMode,
