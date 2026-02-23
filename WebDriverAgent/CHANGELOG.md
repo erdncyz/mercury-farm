@@ -1,3 +1,9 @@
+## [11.1.6](https://github.com/appium/WebDriverAgent/compare/v11.1.5...v11.1.6) (2026-02-23)
+
+### Bug Fixes
+
+* bump the minimum deployment target and apply recommend settings with xcode 26 ([#1112](https://github.com/appium/WebDriverAgent/issues/1112)) ([681ffcc](https://github.com/appium/WebDriverAgent/commit/681ffccd04fe5b23295d72f23cb94df9e385af48))
+
 ## [11.1.5](https://github.com/appium/WebDriverAgent/compare/v11.1.4...v11.1.5) (2026-02-16)
 
 ### Bug Fixes
