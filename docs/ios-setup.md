@@ -1,159 +1,135 @@
-# iOS Specific Setup (EN + TR)
+# iOS Setup (EN + TR)
 
-This document explains the **current iOS flow** in Mercury.
-
-For full install/start/restart steps, always follow:
-- **[Getting Started (EN + TR)](./getting-started.md)**
+This document focuses on iOS-specific setup and troubleshooting.
 
 ---
 
 ## English
 
-### Important Update
+### What runs where?
 
-iOS devices are **not added manually** anymore.
+- Docker services: API/UI/WebSocket/provider (Android path)
+- Host macOS service: iOS provider (`./scripts/start-ios-provider.sh`)
+- Why host: iOS automation depends on Xcode tooling and USB access
 
-- No manual `stf ios-provider ...` command is required in normal usage.
-- No manual "add device" step exists in UI.
-- iOS devices are detected automatically when connected and trusted.
+### Minimum checks
 
-### Current iOS Flow (WDA)
+```bash
+xcodebuild -version
+idevice_id -l
+```
 
-1. Connect iPhone/iPad via USB.
-2. Tap **Trust This Computer** on the device.
-3. Start stack with `npm run stack:up:macos` (see Getting Started).
-4. Start iOS provider with:
+If no device appears, trust prompt and cable/hub quality are the first things to check.
+
+### Start iOS provider (manual)
 
 ```bash
 ./scripts/start-ios-provider.sh
 ```
 
-5. Mercury iOS provider launches device worker and handles WDA flow automatically.
-6. Device appears in Mercury UI and can be used directly.
-
-### Requirements
-
-- macOS
-- Xcode installed (opened at least once)
-- `xcode-select --install` completed
-- `libimobiledevice` + `usbmuxd` installed
-- Project dependencies installed (`npm ci`)
-
-### iOS Troubleshooting (Quick)
-
-Restart iOS provider:
+### Start iOS provider (persistent LaunchAgent)
 
 ```bash
-./scripts/start-ios-provider.sh
+./scripts/deploy-ios-provider-runtime.sh
 ```
 
-If port conflict or stale process occurs:
+### Useful runtime variables
+
+- `IOS_PROVIDER_SHARD` (default: `0`)
+- `IOS_PORT_STRIDE` (default: `1000`)
+- `IOS_ALLOW_SIMULATORS` (default: `0`)
+- `IOS_SERIALS` (comma-separated UDIDs)
+- `IOS_WDA_REQUEST_TIMEOUT_MS`
+- `IOS_WDA_SESSION_TIMEOUT_MS`
+- `IOS_WDA_LEAN_MODE`
+
+Example:
 
 ```bash
-/bin/zsh -lc 'pkill -f "stf.mjs ios-provider|mercury-ios-provider|lib/cli ios-device" || true'
-./scripts/start-ios-provider.sh
+IOS_PROVIDER_SHARD=1 IOS_ALLOW_SIMULATORS=0 ./scripts/start-ios-provider.sh
 ```
 
-Check provider logs:
+### Common problems
+
+Provider still auto-starts after Docker is stopped:
 
 ```bash
-docker logs -f mercury-provider
+launchctl bootout gui/$(id -u)/com.mercury.ios-provider || true
+launchctl disable gui/$(id -u)/com.mercury.ios-provider || true
+rm -f "$HOME/Library/LaunchAgents/com.mercury.ios-provider.plist"
+pkill -f "stf.mjs ios-provider" || true
+pkill -f WebDriverAgentRunner || true
 ```
 
-### Optional: Faster WDA Profile
-
-Use the default lean profile:
+### Logs
 
 ```bash
-./scripts/start-ios-provider.sh
-```
-
-Tune it manually for more/less aggressive behavior:
-
-```bash
-IOS_WDA_LEAN_MODE=1 \
-IOS_WDA_TREE_CACHE_MS=250 \
-IOS_WDA_ELEMENT_RESPONSE_ATTRIBUTES="type,label,name,enabled,visible,rect" \
-./scripts/start-ios-provider.sh
+tail -f "$HOME/.mercury-farm-runtime/ios-provider.launchd.out.log"
+tail -f "$HOME/.mercury-farm-runtime/ios-provider.launchd.err.log"
 ```
 
 ---
 
 ## Türkçe
 
-### Önemli Güncelleme
+### Ne nerede çalışır?
 
-iOS cihazlar artık **manuel eklenmiyor**.
+- Docker servisleri: API/UI/WebSocket/provider (Android yolu)
+- Host macOS servisi: iOS provider (`./scripts/start-ios-provider.sh`)
+- Neden host: iOS otomasyonu Xcode araçları ve USB erişimi gerektirir
 
-- Normal kullanımda manuel `stf ios-provider ...` komutu gerekmez.
-- Arayüzde manuel "cihaz ekle" adımı yoktur.
-- iOS cihazlar bağlanıp güven verildiğinde otomatik algılanır.
+### Minimum kontroller
 
-### Güncel iOS Akışı (WDA)
+```bash
+xcodebuild -version
+idevice_id -l
+```
 
-1. iPhone/iPad'i USB ile bağla.
-2. Cihazdan **Bu Bilgisayara Güven** onayını ver.
-3. `npm run stack:up:macos` ile sistemi başlat (detay: Getting Started).
-4. iOS provider'ı şu komutla başlat:
+Cihaz görünmüyorsa önce güven onayı ve kablo/hub kalitesini kontrol edin.
+
+### iOS provider başlatma (manuel)
 
 ```bash
 ./scripts/start-ios-provider.sh
 ```
 
-5. Mercury iOS provider, cihaz worker ve WDA akışını otomatik yönetir.
-6. Cihaz Mercury arayüzünde görünür ve doğrudan kullanılabilir.
-
-### Gereksinimler
-
-- macOS
-- Xcode kurulu (en az bir kez açılmış)
-- `xcode-select --install` tamamlanmış
-- `libimobiledevice` + `usbmuxd` kurulu
-- Proje bağımlılıkları kurulmuş (`npm ci`)
-
-### iOS Sorun Giderme (Hızlı)
-
-iOS provider yeniden başlat:
+### iOS provider başlatma (kalıcı LaunchAgent)
 
 ```bash
-./scripts/start-ios-provider.sh
+./scripts/deploy-ios-provider-runtime.sh
 ```
 
-Port çakışması/eski süreç kaldıysa:
+### Önemli runtime değişkenleri
+
+- `IOS_PROVIDER_SHARD` (varsayılan: `0`)
+- `IOS_PORT_STRIDE` (varsayılan: `1000`)
+- `IOS_ALLOW_SIMULATORS` (varsayılan: `0`)
+- `IOS_SERIALS` (virgülle ayrılmış UDID)
+- `IOS_WDA_REQUEST_TIMEOUT_MS`
+- `IOS_WDA_SESSION_TIMEOUT_MS`
+- `IOS_WDA_LEAN_MODE`
+
+Örnek:
 
 ```bash
-/bin/zsh -lc 'pkill -f "stf.mjs ios-provider|mercury-ios-provider|lib/cli ios-device" || true'
-./scripts/start-ios-provider.sh
+IOS_PROVIDER_SHARD=1 IOS_ALLOW_SIMULATORS=0 ./scripts/start-ios-provider.sh
 ```
 
-Provider loglarını izle:
+### Sık sorun
+
+Docker dursa da provider otomatik açılıyorsa:
 
 ```bash
-docker logs -f mercury-provider
+launchctl bootout gui/$(id -u)/com.mercury.ios-provider || true
+launchctl disable gui/$(id -u)/com.mercury.ios-provider || true
+rm -f "$HOME/Library/LaunchAgents/com.mercury.ios-provider.plist"
+pkill -f "stf.mjs ios-provider" || true
+pkill -f WebDriverAgentRunner || true
 ```
 
-### Opsiyonel: Daha Hızlı WDA Profili
-
-Varsayılan lean profil için:
+### Loglar
 
 ```bash
-./scripts/start-ios-provider.sh
+tail -f "$HOME/.mercury-farm-runtime/ios-provider.launchd.out.log"
+tail -f "$HOME/.mercury-farm-runtime/ios-provider.launchd.err.log"
 ```
-
-Daha agresif/daha yumuşak davranış için manuel ayar:
-
-```bash
-IOS_WDA_LEAN_MODE=1 \
-IOS_WDA_TREE_CACHE_MS=250 \
-IOS_WDA_ELEMENT_RESPONSE_ATTRIBUTES="type,label,name,enabled,visible,rect" \
-./scripts/start-ios-provider.sh
-```
-
----
-
-## Optional: ESP32 Mouse Controller
-
-ESP32 support is optional and only needed for advanced iOS pointer-like interaction.
-
-- EN: see `docs/esp32.md`
-- TR: `docs/esp32.md` dosyasına bakın

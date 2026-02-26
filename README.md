@@ -1,71 +1,97 @@
 # Mercury Device Farm (macOS)
 
-Mercury Device Farm is a browser-based real-device lab for Android and iOS. This lab lets you manage and interact with connected physical devices right from your web browser. 
+Mercury is a browser-based real-device lab for Android and iOS.
+This repository is optimized for **macOS** because iOS automation requires Xcode tooling on host.
 
-This repository and its setup guides are currently targeted towards **macOS**, as macOS is required to manage iOS devices with Xcode tooling.
+## Quick Start
 
-## Key Features
+```bash
+npm ci
+npm run stack:up:macos
+./scripts/start-ios-provider.sh
+```
 
-- **Automatic Device Management:**
-  - Android device plug/unplug is detected automatically.
-  - iOS device plug/unplug is detected automatically.
-  - Disconnected devices are hidden from the device list in real-time.
-- **iOS Integration:**
-  - WebDriverAgent (WDA) builds and starts through the iOS provider flow.
-  - iOS devices are exposed in the same web UI as Android devices.
+Open UI:
+
+- `https://localhost`
 
 ## Documentation
 
-We have consolidated the setup guides and instructions in the `docs` directory:
+- [Getting Started (EN + TR)](docs/getting-started.md)
+- [iOS Setup (EN + TR)](docs/ios-setup.md)
+- [Scaling Guide (EN + TR)](docs/scaling.md)
+- [Automation API (EN + TR)](docs/automation-api.md)
+- [API Reference (EN + TR)](docs/API.md)
+- [ESP32 Notes (EN + TR)](docs/esp32.md)
 
-- **[Getting Started](docs/getting-started.md)**: Setup, installation, usage, and troubleshooting.
-- **[iOS Specific Setup](docs/ios-setup.md)**: Details on configuring iOS devices and the ESP32 hardware helper.
-- **[Scaling Guide](docs/scaling.md)**: Capacity planning and sharding patterns for 10+ iOS/Android devices.
-- **[Automation API](docs/automation-api.md)**: Guide on using Mercury devices with Appium and our autotest API.
-- **[API Reference](docs/API.md)**: Complete REST API documentation.
+## Common Issue: iOS switches to Automation after Docker is stopped
 
-## Quick Automation Examples
+If containers are removed but plugging an iOS device still triggers automation mode, a host LaunchAgent is likely still active.
 
-- Ruby (single device): see [Ruby Example (Single Device)](docs/automation-api.md#ruby-example-single-device)
-- Azure DevOps: see [Azure Pipeline Example (Ruby + Mercury)](docs/automation-api.md#azure-pipeline-example-ruby--mercury)
+```bash
+launchctl bootout gui/$(id -u)/com.mercury.ios-provider || true
+launchctl disable gui/$(id -u)/com.mercury.ios-provider || true
+rm -f "$HOME/Library/LaunchAgents/com.mercury.ios-provider.plist"
+pkill -f "stf.mjs ios-provider" || true
+pkill -f WebDriverAgentRunner || true
+```
 
-## License
+Verification:
 
-Apache License 2.0.
+```bash
+launchctl print gui/$(id -u)/com.mercury.ios-provider
+```
+
+Expected output: `Could not find service "com.mercury.ios-provider"`.
 
 ---
 
 # Mercury Device Farm (macOS) [Türkçe]
 
-Mercury Device Farm, Android ve iOS için tarayıcı tabanlı gerçek cihaz laboratuvarıdır. Bu laboratuvar, bağlı fiziksel cihazları doğrudan web tarayıcınızdan yönetmenize ve onlarla etkileşim kurmanıza olanak tanır.
+Mercury, Android ve iOS için tarayıcı tabanlı gerçek cihaz laboratuvarıdır.
+Bu repo iOS tarafı için Xcode gerektiğinden **macOS odaklıdır**.
 
-Bu depo ve kurulum rehberleri şu anda **macOS** sistemlerini hedeflemektedir, çünkü iOS cihazlarını Xcode araçlarıyla yönetmek için macOS gereklidir.
+## Hızlı Başlangıç
 
-## Temel Özellikler
+```bash
+npm ci
+npm run stack:up:macos
+./scripts/start-ios-provider.sh
+```
 
-- **Otomatik Cihaz Yönetimi:**
-  - Android cihazların takılıp/çıkarılması otomatik olarak algılanır.
-  - iOS cihazların takılıp/çıkarılması otomatik olarak algılanır.
-  - Bağlantısı kesilen cihazlar cihaz listesinden gerçek zamanlı olarak gizlenir.
-- **iOS Entegrasyonu:**
-  - WebDriverAgent (WDA), iOS provider akışı üzerinden çalışır.
-  - iOS cihazlar Android cihazlarla birlikte aynı web arayüzünde yönetilir.
+Arayüz:
 
-## Dokümantasyon
+- `https://localhost`
 
-Tüm kurulum ve kullanım rehberlerini `docs` dizininde birleştirdik:
+## Dokümanlar
 
-- **[Başlarken](docs/getting-started.md)**: Kurulum, kullanım adımları ve sorun giderme.
-- **[iOS Kurulumu](docs/ios-setup.md)**: iOS cihazların yapılandırılması ve ESP32 donanım desteği detayları.
-- **[Ölçekleme Rehberi](docs/scaling.md)**: 10+ iOS/Android cihaz için kapasite ve shard mimarisi.
-- **[Otomasyon API'si](docs/automation-api.md)**: Mercury cihazlarını Appium ve otomatik test API'miz ile kullanma rehberi.
-- **[API Referansı](docs/API.md)**: Kapsamlı REST API dokümantasyonu.
+- [Başlangıç Rehberi (EN + TR)](docs/getting-started.md)
+- [iOS Kurulumu (EN + TR)](docs/ios-setup.md)
+- [Ölçekleme Rehberi (EN + TR)](docs/scaling.md)
+- [Otomasyon API (EN + TR)](docs/automation-api.md)
+- [API Referansı (EN + TR)](docs/API.md)
+- [ESP32 Notları (EN + TR)](docs/esp32.md)
 
-## Hızlı Otomasyon Örnekleri
+## Sık Karşılaşılan Durum: Docker kapalıyken iOS yine Automation moduna geçiyor
 
-- Ruby (tek cihaz): [Ruby Örneği (Tek Cihaz)](docs/automation-api.md#ruby-örneği-tek-cihaz)
-- Azure DevOps: [Azure Pipeline Örneği (Ruby + Mercury)](docs/automation-api.md#azure-pipeline-örneği-ruby--mercury)
+Container'lar silinse bile host üzerinde LaunchAgent çalışıyorsa iOS provider tekrar devreye girebilir.
 
-## Lisans
+```bash
+launchctl bootout gui/$(id -u)/com.mercury.ios-provider || true
+launchctl disable gui/$(id -u)/com.mercury.ios-provider || true
+rm -f "$HOME/Library/LaunchAgents/com.mercury.ios-provider.plist"
+pkill -f "stf.mjs ios-provider" || true
+pkill -f WebDriverAgentRunner || true
+```
 
-Apache Lisansı 2.0.
+Doğrulama:
+
+```bash
+launchctl print gui/$(id -u)/com.mercury.ios-provider
+```
+
+Beklenen çıktı: `Could not find service "com.mercury.ios-provider"`.
+
+## License
+
+Apache License 2.0.

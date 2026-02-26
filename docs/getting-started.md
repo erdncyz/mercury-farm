@@ -1,14 +1,12 @@
 # Getting Started (EN + TR)
 
-Mercury Device Farm in this repository is maintained as a **macOS-focused setup**.
+This guide is the fastest path to run Mercury on macOS.
 
 ---
 
 ## English
 
 ### 1) Prerequisites
-
-Install required tools:
 
 ```bash
 brew install --cask docker
@@ -18,78 +16,83 @@ brew install libimobiledevice usbmuxd
 xcode-select --install
 ```
 
-Open Docker Desktop and Xcode at least once after installation.
+Open Docker Desktop and Xcode once after installation.
 
-### 2) Install Project
+### 2) Install Dependencies
 
 ```bash
-git clone https://github.com/erdncyz/mercury.git
-cd mercury
 npm ci
 ```
 
-### 3) Start the System
+### 3) Start Core Stack (Docker)
 
 ```bash
 npm run stack:up:macos
 ```
 
-### 4) Verify Services
+### 4) Start iOS Provider (Host)
+
+```bash
+./scripts/start-ios-provider.sh
+```
+
+### 5) Verify
 
 ```bash
 npm run stack:ps:macos
 ```
 
-All core services should show `Up`.
-
-### 5) Open Web UI
+Open UI:
 
 - `https://localhost`
 
-### 6) Connect Devices
-
-Android:
-1. Enable Developer Options and USB Debugging.
-2. Connect device via USB.
-3. Accept RSA prompt on the device.
-
-iOS:
-1. Connect iPhone/iPad via USB.
-2. Tap **Trust This Computer**.
-3. Make sure Xcode signing for WDA is configured.
-
 ### Restart Commands
 
-Full stack restart:
+Full stack:
 
 ```bash
 npm run stack:up:macos
 ```
 
-Restart Android provider path:
+Android path only:
 
 ```bash
 docker restart mercury-provider mercury-websocket
 ```
 
-Restart iOS provider runtime:
+iOS provider (host):
 
 ```bash
-$HOME/.mercury-farm-runtime/scripts/start-ios-provider.sh
+./scripts/start-ios-provider.sh
 ```
 
-Restart specific stack services:
+### Optional: Auto-start iOS provider with LaunchAgent
 
 ```bash
-docker compose -f docker-compose-macos.yaml up -d mercury-provider mercury-websocket mercury-app
+./scripts/deploy-ios-provider-runtime.sh
+```
+
+This installs `com.mercury.ios-provider` under `~/Library/LaunchAgents` with keep-alive behavior.
+
+### Disable Host iOS Auto-Start
+
+```bash
+launchctl bootout gui/$(id -u)/com.mercury.ios-provider || true
+launchctl disable gui/$(id -u)/com.mercury.ios-provider || true
+rm -f "$HOME/Library/LaunchAgents/com.mercury.ios-provider.plist"
+pkill -f "stf.mjs ios-provider" || true
+pkill -f WebDriverAgentRunner || true
 ```
 
 ### Logs / Troubleshooting
 
 ```bash
+docker logs -f mercury-api
 docker logs -f mercury-provider
 docker logs -f mercury-websocket
 docker logs -f mercury-nginx
+tail -f "$HOME/.mercury-farm-runtime/ios-provider.launchd.out.log"
+tail -f "$HOME/.mercury-farm-runtime/ios-provider.launchd.err.log"
 ```
 
 ---
@@ -97,8 +100,6 @@ docker logs -f mercury-nginx
 ## Türkçe
 
 ### 1) Ön Koşullar
-
-Gerekli araçları kurun:
 
 ```bash
 brew install --cask docker
@@ -110,74 +111,79 @@ xcode-select --install
 
 Kurulumdan sonra Docker Desktop ve Xcode'u en az bir kez açın.
 
-### 2) Projeyi Kur
+### 2) Bağımlılıkları Kur
 
 ```bash
-git clone https://github.com/erdncyz/mercury.git
-cd mercury
 npm ci
 ```
 
-### 3) Sistemi Ayağa Kaldır
+### 3) Çekirdek Stack'i Başlat (Docker)
 
 ```bash
 npm run stack:up:macos
 ```
 
-### 4) Servisleri Kontrol Et
+### 4) iOS Provider'ı Başlat (Host)
+
+```bash
+./scripts/start-ios-provider.sh
+```
+
+### 5) Doğrulama
 
 ```bash
 npm run stack:ps:macos
 ```
 
-Temel servislerin `Up` durumda olması gerekir.
-
-### 5) Web Arayüzünü Aç
+Arayüz:
 
 - `https://localhost`
 
-### 6) Cihazları Bağla
+### Yeniden Başlatma Komutları
 
-Android:
-1. Geliştirici seçenekleri ve USB hata ayıklamayı aç.
-2. Cihazı USB ile bağla.
-3. Cihazdaki RSA onayını kabul et.
-
-iOS:
-1. iPhone/iPad'i USB ile bağla.
-2. **Bu Bilgisayara Güven** onayını ver.
-3. WDA için Xcode signing ayarlarının doğru olduğundan emin ol.
-
-### Restart Komutları
-
-Tüm sistemi yeniden başlat:
+Tam stack:
 
 ```bash
 npm run stack:up:macos
 ```
 
-Android provider tarafını yeniden başlat:
+Sadece Android yolu:
 
 ```bash
 docker restart mercury-provider mercury-websocket
 ```
 
-iOS provider runtime'ını yeniden başlat:
+iOS provider (host):
 
 ```bash
-$HOME/.mercury-farm-runtime/scripts/start-ios-provider.sh
+./scripts/start-ios-provider.sh
 ```
 
-Belirli servisleri yeniden başlat:
+### Opsiyonel: LaunchAgent ile iOS provider otomatik başlatma
 
 ```bash
-docker compose -f docker-compose-macos.yaml up -d mercury-provider mercury-websocket mercury-app
+./scripts/deploy-ios-provider-runtime.sh
+```
+
+Bu komut, `~/Library/LaunchAgents` altında `com.mercury.ios-provider` kaydını `keep-alive` ile kurar.
+
+### Host iOS Otomatik Başlatmayı Kapatma
+
+```bash
+launchctl bootout gui/$(id -u)/com.mercury.ios-provider || true
+launchctl disable gui/$(id -u)/com.mercury.ios-provider || true
+rm -f "$HOME/Library/LaunchAgents/com.mercury.ios-provider.plist"
+pkill -f "stf.mjs ios-provider" || true
+pkill -f WebDriverAgentRunner || true
 ```
 
 ### Log / Sorun Giderme
 
 ```bash
+docker logs -f mercury-api
 docker logs -f mercury-provider
 docker logs -f mercury-websocket
 docker logs -f mercury-nginx
+tail -f "$HOME/.mercury-farm-runtime/ios-provider.launchd.out.log"
+tail -f "$HOME/.mercury-farm-runtime/ios-provider.launchd.err.log"
 ```
