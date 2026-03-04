@@ -24,6 +24,20 @@ For setup and operations, follow the docs below.
 - [API Reference (EN + TR)](docs/API.md)
 - [ESP32 Notes (EN + TR)](docs/esp32.md)
 
+## Package (GHCR)
+
+This repo can publish a Docker package to GitHub Container Registry (GHCR).
+
+- Workflow file: `.github/workflows/publish-ghcr.yml`
+- Trigger: push a tag like `v1.0.0` (or run manually from Actions tab)
+- Published image: `ghcr.io/erdncyz/mercury-farm:<tag>`
+
+Pull example:
+
+```bash
+docker pull ghcr.io/erdncyz/mercury-farm:v1.0.0
+```
+
 ## Admin Login
 
 Use the following admin login:
@@ -58,6 +72,20 @@ Kurulum/calistirma adimlari icin asagidaki dokumanlara gidin.
 - [Otomasyon API (EN + TR)](docs/automation-api.md)
 - [API Referansi (EN + TR)](docs/API.md)
 - [ESP32 Notlari (EN + TR)](docs/esp32.md)
+
+## Package (GHCR)
+
+Bu repo Docker paketini GitHub Container Registry'ye (GHCR) yayinlayabilir.
+
+- Workflow dosyasi: `.github/workflows/publish-ghcr.yml`
+- Tetikleme: `v1.0.0` gibi tag push et (veya Actions'tan manuel calistir)
+- Yayimlanan image: `ghcr.io/erdncyz/mercury-farm:<tag>`
+
+Cekme ornegi:
+
+```bash
+docker pull ghcr.io/erdncyz/mercury-farm:v1.0.0
+```
 
 ## Admin Girisi
 
