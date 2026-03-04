@@ -29,7 +29,7 @@ For setup and operations, follow the docs below.
 This repo can publish a Docker package to GitHub Container Registry (GHCR).
 
 - Workflow file: `.github/workflows/publish-ghcr.yml`
-- Trigger: push a tag like `v1.0.0` (or run manually from Actions tab)
+- Trigger: tags are created automatically on every push to `main` (patch bump), or run publish manually from Actions tab
 - Published image: `ghcr.io/erdncyz/mercury-farm:<tag>`
 
 Pull example:
@@ -78,7 +78,7 @@ Kurulum/calistirma adimlari icin asagidaki dokumanlara gidin.
 Bu repo Docker paketini GitHub Container Registry'ye (GHCR) yayinlayabilir.
 
 - Workflow dosyasi: `.github/workflows/publish-ghcr.yml`
-- Tetikleme: `v1.0.0` gibi tag push et (veya Actions'tan manuel calistir)
+- Tetikleme: `main`e her push'ta patch versiyon tag'i otomatik olusur, veya publish workflow'u Actions'tan manuel calistirilabilir
 - Yayimlanan image: `ghcr.io/erdncyz/mercury-farm:<tag>`
 
 Cekme ornegi:
