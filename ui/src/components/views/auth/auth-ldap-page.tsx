@@ -129,6 +129,14 @@ export const AuthLdapPage = () => {
               </ConditionalRender>
             </form>
           </div>
+          <a
+            className={styles.copyrightLink}
+            href='https://erdincyilmaz.netlify.app/'
+            rel='noopener noreferrer'
+            target='_blank'
+          >
+            Copyright [2026] [Erdinç Yılmaz]
+          </a>
         </Group>
       </Panel>
     </View>

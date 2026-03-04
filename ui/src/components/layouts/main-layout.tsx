@@ -21,6 +21,14 @@ export const MainLayout = observer(() => {
       <main className={cn('pageWrapper', styles.content, { marqueeOffset: settingsService.isAlertMessageActive })}>
         <Outlet />
       </main>
+      <a
+        className={styles.copyrightLink}
+        href='https://erdincyilmaz.netlify.app/'
+        rel='noopener noreferrer'
+        target='_blank'
+      >
+        Copyright [2026] [Erdinç Yılmaz]
+      </a>
     </div>
   )
 })

@@ -18,5 +18,5 @@ updates:
     day: "tuesday"
   open-pull-requests-limit: 5
   commit-message:
-    prefix: "chore"
+    prefix: "ci"
     include: "scope"

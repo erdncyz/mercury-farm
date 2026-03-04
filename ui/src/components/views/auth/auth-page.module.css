@@ -1,4 +1,5 @@
 .authPage {
+  position: relative;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -34,4 +35,39 @@
 .contactButton {
   display: block;
   margin: 14px auto 0;
+}
+
+.copyrightLink {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 120;
+  padding: 8px 10px;
+  border: 1px solid var(--app-border);
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--app-text-primary);
+  text-decoration: none;
+  background: rgb(255 255 255 / 90%);
+  box-shadow: 0 8px 20px rgb(18 34 56 / 14%);
+  backdrop-filter: blur(8px);
+}
+
+.copyrightLink:hover {
+  background: rgb(255 255 255 / 96%);
+}
+
+.copyrightLink:focus-visible {
+  outline: 2px solid var(--app-text-link);
+  outline-offset: 2px;
+}
+
+@media (width <=767px) {
+  .copyrightLink {
+    right: 8px;
+    bottom: 8px;
+    font-size: 11px;
+  }
 }
