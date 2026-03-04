@@ -88,6 +88,7 @@ export const AuthMockPage = () => {
           <div>
             <form className={styles.form} onSubmit={onFormSubmit}>
               <DynamicLogo className={styles.logo} height={55} width={225} />
+              <div className={styles.poweredBy}>Powered by Erdinç Yılmaz</div>
               <FormLayoutGroup>
                 <FormItem bottom={nameError} status={nameError ? 'error' : undefined} top={t('Name')}>
                   <Input

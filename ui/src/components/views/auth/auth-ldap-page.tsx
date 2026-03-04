@@ -83,6 +83,7 @@ export const AuthLdapPage = () => {
           <div>
             <form autoComplete='on' className={styles.form} onSubmit={onFormSubmit}>
               <DynamicLogo className={styles.logo} height={55} width={225} />
+              <div className={styles.poweredBy}>Powered by Erdinç Yılmaz</div>
               <FormLayoutGroup>
                 <FormItem bottom={usernameError} status={usernameError ? 'error' : undefined} top={t('Username')}>
                   <Input

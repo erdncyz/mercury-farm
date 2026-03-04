@@ -32,6 +32,14 @@
   margin: 24px auto 34px;
 }
 
+.poweredBy {
+  margin: -18px 0 18px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #2d7bc7;
+}
+
 .contactButton {
   display: block;
   margin: 14px auto 0;

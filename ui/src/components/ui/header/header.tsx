@@ -51,6 +51,7 @@ export const Header = () => {
         <div className={styles.brandMeta}>
           <Text className={styles.brandTitle}>{t('Mercury Device Farm')}</Text>
           <Text className={styles.brandSubtitle}>{t('Realtime control center')}</Text>
+          <Text className={styles.brandPowered}>Powered by Erdinç Yılmaz</Text>
         </div>
       </div>
 
