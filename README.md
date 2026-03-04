@@ -1,20 +1,116 @@
 # Mercury Device Farm (macOS)
 
 Mercury is a browser-based real-device lab for Android and iOS.
-This repository is optimized for **macOS** because iOS automation depends on Xcode tooling on host.
+This project is optimized for **macOS** because iOS automation requires Xcode tooling on host.
 
-This README is intentionally a high-level overview.
-For setup and operations, follow the docs below.
+---
 
-## Start Here
+## Quick Start (Source Install)
 
-- [Getting Started (EN + TR)](docs/getting-started.md)
-- [Troubleshooting (EN + TR)](docs/troubleshooting.md)
-- New commit/push geldiğinde update adımlari: `docs/getting-started.md` icindeki **Update After New Commits** bolumu.
-- Mock login formu varsayilan olarak bos gelir; her kullanici `Name` ve `Email` alanlarini kendisi doldurur.
-- Mock auth icin sabit admin hesabi yoktur; ilk giris yapan kullanici admin olarak olusturulur.
+### 1) Prerequisites (macOS)
 
-## Main Documentation
+```bash
+brew install --cask docker
+brew install node
+brew install android-platform-tools
+brew install libimobiledevice usbmuxd
+xcode-select --install
+```
+
+Open Docker Desktop and Xcode at least once after installation.
+
+### 2) Clone and install
+
+```bash
+git clone https://github.com/erdncyz/mercury-farm.git
+cd mercury-farm
+npm ci
+```
+
+### 3) Start stack
+
+```bash
+npm run stack:up:macos
+./scripts/start-ios-provider.sh
+```
+
+### 4) Verify
+
+```bash
+npm run stack:ps:macos
+pgrep -af "stf.mjs ios-provider|mercury-ios-provider|lib/cli ios-device"
+```
+
+### 5) Open UI
+
+Mercury uses dynamic domain detection (`STF_DOMAIN`).
+Open with your detected host domain/IP:
+
+- `https://<STF_DOMAIN>`
+- Example: `https://192.168.x.xxx`
+
+---
+
+## Admin Login (Mock Auth)
+
+Use the following admin login:
+
+- Name: `Mercury`
+- Email: `mercury@test.com`
+
+Notes:
+
+- Mock form fields are empty by default; users fill their own values.
+- In mock mode, first successful login is created as admin if no admin exists.
+
+---
+
+## Update After New Commits
+
+When users pull new code, run:
+
+```bash
+git pull --rebase
+npm ci
+npm run stack:up:macos
+./scripts/start-ios-provider.sh
+```
+
+If iOS provider is managed by LaunchAgent:
+
+```bash
+launchctl kickstart -k gui/$(id -u)/com.mercury.ios-provider
+```
+
+---
+
+## Support
+
+- In-app `Contact Support` points to: [GitHub Issues](https://github.com/erdncyz/mercury-farm/issues)
+
+---
+
+## Package (GHCR)
+
+This repo publishes Docker images to GHCR:
+
+- Image: `ghcr.io/erdncyz/mercury-farm:<tag>`
+- `main` pushes create automatic patch tags (`vX.Y.Z`) and publish image.
+
+Pull example:
+
+```bash
+docker pull ghcr.io/erdncyz/mercury-farm:latest
+```
+
+Important:
+
+- For full Mercury usage on macOS (especially iOS), use source install + compose + host iOS provider.
+- Pulling GHCR image alone is not a complete one-command setup for iOS host flows.
+
+---
+
+## Documentation
 
 - [Getting Started (EN + TR)](docs/getting-started.md)
 - [Troubleshooting (EN + TR)](docs/troubleshooting.md)
@@ -24,75 +120,44 @@ For setup and operations, follow the docs below.
 - [API Reference (EN + TR)](docs/API.md)
 - [ESP32 Notes (EN + TR)](docs/esp32.md)
 
-## Package (GHCR)
-
-This repo can publish a Docker package to GitHub Container Registry (GHCR).
-
-- Workflow file: `.github/workflows/publish-ghcr.yml`
-- Trigger: tags are created automatically on every push to `main` (patch bump), or run publish manually from Actions tab
-- Published image: `ghcr.io/erdncyz/mercury-farm:<tag>`
-
-Pull example:
-
-```bash
-docker pull ghcr.io/erdncyz/mercury-farm:v1.0.0
-```
-
-## Admin Login
-
-Use the following admin login:
-
-- Name: `Mercury`
-- Email: `mercury@test.com`
-
 ---
 
-# Mercury Device Farm (macOS) [Turkce]
+## Turkce Ozet
 
-Mercury, Android ve iOS icin tarayici tabanli gercek cihaz laboratuvaridir.
-Bu repo, iOS otomasyonu host tarafinda Xcode gerektirdigi icin **macOS odaklidir**.
-
-Bu README bilerek genel ve kisa tutulmustur.
-Kurulum/calistirma adimlari icin asagidaki dokumanlara gidin.
-
-## Buradan Baslayin
-
-- [Baslangic Rehberi (EN + TR)](docs/getting-started.md)
-- [Sorun Giderme (EN + TR)](docs/troubleshooting.md)
-- Yeni commit/push sonrasi guncelleme adimlari icin `docs/getting-started.md` icindeki ilgili bolume bakin.
-- Mock login formu varsayilan olarak bos gelir; her kullanici `Name` ve `Email` alanlarini kendisi doldurur.
-- Mock auth icin sabit admin hesabi yoktur; ilk giris yapan kullanici admin olarak olusturulur.
-
-## Ana Dokumantasyon
-
-- [Baslangic Rehberi (EN + TR)](docs/getting-started.md)
-- [Sorun Giderme (EN + TR)](docs/troubleshooting.md)
-- [iOS Kurulumu (EN + TR)](docs/ios-setup.md)
-- [Olcekleme Rehberi (EN + TR)](docs/scaling.md)
-- [Otomasyon API (EN + TR)](docs/automation-api.md)
-- [API Referansi (EN + TR)](docs/API.md)
-- [ESP32 Notlari (EN + TR)](docs/esp32.md)
-
-## Package (GHCR)
-
-Bu repo Docker paketini GitHub Container Registry'ye (GHCR) yayinlayabilir.
-
-- Workflow dosyasi: `.github/workflows/publish-ghcr.yml`
-- Tetikleme: `main`e her push'ta patch versiyon tag'i otomatik olusur, veya publish workflow'u Actions'tan manuel calistirilabilir
-- Yayimlanan image: `ghcr.io/erdncyz/mercury-farm:<tag>`
-
-Cekme ornegi:
+### Kurulum
 
 ```bash
-docker pull ghcr.io/erdncyz/mercury-farm:v1.0.0
+git clone https://github.com/erdncyz/mercury-farm.git
+cd mercury-farm
+npm ci
+npm run stack:up:macos
+./scripts/start-ios-provider.sh
 ```
 
-## Admin Girisi
+### Arayuz
 
-Admin login bilgileri su sekildedir:
+- `https://<STF_DOMAIN>` (ornek: `https://192.168.x.xxx`)
+
+### Admin Girisi (Mock)
 
 - Name: `Mercury`
 - Email: `mercury@test.com`
+
+### Guncelleme (pull sonrasi)
+
+```bash
+git pull --rebase
+npm ci
+npm run stack:up:macos
+./scripts/start-ios-provider.sh
+```
+
+### Sorun/Yardim
+
+- [Issue ac](https://github.com/erdncyz/mercury-farm/issues)
+- [Troubleshooting](docs/troubleshooting.md)
+
+---
 
 ## License
 
