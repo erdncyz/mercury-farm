@@ -9,21 +9,21 @@ import { ConditionalRender } from '@/components/lib/conditional-render'
 
 import { authStore } from '@/store/auth-store'
 import { useMockAuth } from '@/lib/hooks/use-mock-auth.hook'
-import { useGetAuthContact } from '@/lib/hooks/use-get-auth-contact.hook'
 
 import styles from './auth-page.module.css'
 
 import type { ChangeEvent, FormEvent } from 'react'
 
+const SUPPORT_ISSUES_URL = 'https://github.com/erdncyz/mercury-farm/issues'
+
 export const AuthMockPage = () => {
   const { t } = useTranslation()
-  const [name, setName] = useState('Mercury')
-  const [email, setEmail] = useState('mercury@test.com')
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
   const [nameError, setNameError] = useState('')
   const [emailError, setEmailError] = useState('')
   const [formError, setFormError] = useState('')
   const { data: authData, error: authError, mutate: auth, isSuccess } = useMockAuth()
-  const { data: authContact } = useGetAuthContact()
 
   const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -124,7 +124,7 @@ export const AuthMockPage = () => {
                   </Button>
                 </FormItem>
               </FormLayoutGroup>
-              <Button className={styles.contactButton} href={authContact} id='contactButton' mode='link'>
+              <Button className={styles.contactButton} href={SUPPORT_ISSUES_URL} id='contactButton' mode='link'>
                 {t('Contact Support')}
               </Button>
             </form>

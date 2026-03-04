@@ -1,100 +1,60 @@
 # Mercury Device Farm (macOS)
 
 Mercury is a browser-based real-device lab for Android and iOS.
-This repository is optimized for **macOS** because iOS automation requires Xcode tooling on host.
+This repository is optimized for **macOS** because iOS automation depends on Xcode tooling on host.
 
-## Quick Start
+This README is intentionally a high-level overview.
+For setup and operations, follow the docs below.
 
-```bash
-npm ci
-npm run stack:up:macos
-./scripts/start-ios-provider.sh
-```
-
-Open UI:
-
-- `https://localhost`
-
-## Documentation
+## Start Here
 
 - [Getting Started (EN + TR)](docs/getting-started.md)
+- [Troubleshooting (EN + TR)](docs/troubleshooting.md)
+- New commit/push geldiğinde update adımlari: `docs/getting-started.md` icindeki **Update After New Commits** bolumu.
+- Mock login formu varsayilan olarak bos gelir; her kullanici `Name` ve `Email` alanlarini kendisi doldurur.
+- Mock auth icin sabit admin hesabi yoktur; ilk giris yapan kullanici admin olarak olusturulur.
+
+## Main Documentation
+
+- [Getting Started (EN + TR)](docs/getting-started.md)
+- [Troubleshooting (EN + TR)](docs/troubleshooting.md)
 - [iOS Setup (EN + TR)](docs/ios-setup.md)
 - [Scaling Guide (EN + TR)](docs/scaling.md)
 - [Automation API (EN + TR)](docs/automation-api.md)
 - [API Reference (EN + TR)](docs/API.md)
 - [ESP32 Notes (EN + TR)](docs/esp32.md)
 
-## Common Issue: iOS switches to Automation after Docker is stopped
-
-If containers are removed but plugging an iOS device still triggers automation mode, a host LaunchAgent is likely still active.
-
-```bash
-launchctl bootout gui/$(id -u)/com.mercury.ios-provider || true
-launchctl disable gui/$(id -u)/com.mercury.ios-provider || true
-rm -f "$HOME/Library/LaunchAgents/com.mercury.ios-provider.plist"
-pkill -f "stf.mjs ios-provider" || true
-pkill -f WebDriverAgentRunner || true
-```
-
-Verification:
-
-```bash
-launchctl print gui/$(id -u)/com.mercury.ios-provider
-```
-
-Expected output: `Could not find service "com.mercury.ios-provider"`.
-
 ---
 
-# Mercury Device Farm (macOS) [Türkçe]
+# Mercury Device Farm (macOS) [Turkce]
 
-Mercury, Android ve iOS için tarayıcı tabanlı gerçek cihaz laboratuvarıdır.
-Bu repo iOS tarafı için Xcode gerektiğinden **macOS odaklıdır**.
+Mercury, Android ve iOS icin tarayici tabanli gercek cihaz laboratuvaridir.
+Bu repo, iOS otomasyonu host tarafinda Xcode gerektirdigi icin **macOS odaklidir**.
 
-## Hızlı Başlangıç
+Bu README bilerek genel ve kisa tutulmustur.
+Kurulum/calistirma adimlari icin asagidaki dokumanlara gidin.
 
-```bash
-npm ci
-npm run stack:up:macos
-./scripts/start-ios-provider.sh
-```
+## Buradan Baslayin
 
-Arayüz:
+- [Baslangic Rehberi (EN + TR)](docs/getting-started.md)
+- [Sorun Giderme (EN + TR)](docs/troubleshooting.md)
+- Yeni commit/push sonrasi guncelleme adimlari icin `docs/getting-started.md` icindeki ilgili bolume bakin.
+- Mock login formu varsayilan olarak bos gelir; her kullanici `Name` ve `Email` alanlarini kendisi doldurur.
+- Mock auth icin sabit admin hesabi yoktur; ilk giris yapan kullanici admin olarak olusturulur.
 
-- `https://localhost`
+## Ana Dokumantasyon
 
-## Dokümanlar
-
-- [Başlangıç Rehberi (EN + TR)](docs/getting-started.md)
+- [Baslangic Rehberi (EN + TR)](docs/getting-started.md)
+- [Sorun Giderme (EN + TR)](docs/troubleshooting.md)
 - [iOS Kurulumu (EN + TR)](docs/ios-setup.md)
-- [Ölçekleme Rehberi (EN + TR)](docs/scaling.md)
+- [Olcekleme Rehberi (EN + TR)](docs/scaling.md)
 - [Otomasyon API (EN + TR)](docs/automation-api.md)
-- [API Referansı (EN + TR)](docs/API.md)
-- [ESP32 Notları (EN + TR)](docs/esp32.md)
-
-## Sık Karşılaşılan Durum: Docker kapalıyken iOS yine Automation moduna geçiyor
-
-Container'lar silinse bile host üzerinde LaunchAgent çalışıyorsa iOS provider tekrar devreye girebilir.
-
-```bash
-launchctl bootout gui/$(id -u)/com.mercury.ios-provider || true
-launchctl disable gui/$(id -u)/com.mercury.ios-provider || true
-rm -f "$HOME/Library/LaunchAgents/com.mercury.ios-provider.plist"
-pkill -f "stf.mjs ios-provider" || true
-pkill -f WebDriverAgentRunner || true
-```
-
-Doğrulama:
-
-```bash
-launchctl print gui/$(id -u)/com.mercury.ios-provider
-```
-
-Beklenen çıktı: `Could not find service "com.mercury.ios-provider"`.
+- [API Referansi (EN + TR)](docs/API.md)
+- [ESP32 Notlari (EN + TR)](docs/esp32.md)
 
 ## License
 
-Copyright 2026 Erdinç Yılmaz
+Copyright 2026 Erdinc Yilmaz
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -24,17 +24,24 @@
   right: 14px;
   bottom: 14px;
   z-index: 120;
-  padding: 8px 10px;
-  border: 1px solid var(--app-border);
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: 600;
+  padding: 10px 14px;
+  border: 1px solid rgb(36 111 255 / 36%);
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 800;
   line-height: 1.25;
-  color: var(--app-text-primary);
+  color: #1742b8;
   text-decoration: none;
-  background: rgb(255 255 255 / 88%);
-  box-shadow: 0 8px 20px rgb(18 34 56 / 14%);
+  background:
+    linear-gradient(135deg, rgb(255 255 255 / 96%), rgb(238 246 255 / 94%)),
+    linear-gradient(115deg, #1a62ff, #1599df 45%, #0f8d62);
+  background-clip: padding-box, border-box;
+  box-shadow:
+    0 10px 24px rgb(18 34 56 / 18%),
+    0 0 0 1px rgb(255 255 255 / 65%) inset;
   backdrop-filter: blur(8px);
+  letter-spacing: 0.2px;
+  text-shadow: 0 1px 0 rgb(255 255 255 / 65%);
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
@@ -42,9 +49,10 @@
 }
 
 .copyrightLink:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 24px rgb(18 34 56 / 18%);
-  background: rgb(255 255 255 / 95%);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow:
+    0 12px 30px rgb(18 34 56 / 22%),
+    0 0 24px rgb(29 122 255 / 20%);
 }
 
 .copyrightLink:focus-visible {

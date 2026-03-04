@@ -8,11 +8,12 @@ import { ConditionalRender } from '@/components/lib/conditional-render'
 
 import { authStore } from '@/store/auth-store'
 import { useLdapAuth } from '@/lib/hooks/use-ldap-auth.hook'
-import { useGetAuthContact } from '@/lib/hooks/use-get-auth-contact.hook'
 
 import styles from './auth-page.module.css'
 
 import type { ChangeEvent, FormEvent } from 'react'
+
+const SUPPORT_ISSUES_URL = 'https://github.com/erdncyz/mercury-farm/issues'
 
 export const AuthLdapPage = () => {
   const { t } = useTranslation()
@@ -22,7 +23,6 @@ export const AuthLdapPage = () => {
   const [passwordError, setPasswordError] = useState('')
   const [formError, setFormError] = useState('')
   const { data: authData, error, mutate: auth, isSuccess } = useLdapAuth()
-  const { data: authContact } = useGetAuthContact()
 
   const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -122,11 +122,9 @@ export const AuthLdapPage = () => {
                   </Button>
                 </FormItem>
               </FormLayoutGroup>
-              <ConditionalRender conditions={[!!authContact, authContact != 'example.com']}>
-                <Button className={styles.contactButton} href={authContact} mode='link'>
-                  {t('Contact Support')}
-                </Button>
-              </ConditionalRender>
+              <Button className={styles.contactButton} href={SUPPORT_ISSUES_URL} mode='link'>
+                {t('Contact Support')}
+              </Button>
             </form>
           </div>
           <a

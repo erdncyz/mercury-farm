@@ -1,6 +1,6 @@
 # Getting Started (EN + TR)
 
-This guide is the fastest path to run Mercury on macOS.
+This is the canonical runbook to bring Mercury up on macOS.
 
 ---
 
@@ -16,7 +16,7 @@ brew install libimobiledevice usbmuxd
 xcode-select --install
 ```
 
-Open Docker Desktop and Xcode once after installation.
+Open Docker Desktop and Xcode at least once after installation.
 
 ### 2) Install Dependencies
 
@@ -40,11 +40,25 @@ npm run stack:up:macos
 
 ```bash
 npm run stack:ps:macos
+pgrep -af "stf.mjs ios-provider|mercury-ios-provider|lib/cli ios-device"
 ```
 
-Open UI:
+### 6) Open UI
 
-- `https://localhost`
+Mercury is configured with dynamic domain detection (`STF_DOMAIN`).
+Open with your detected host IP/domain (not only localhost):
+
+- `https://<STF_DOMAIN>`
+
+Example:
+
+- `https://192.168.x.xxx`
+
+Note:
+
+- In Mock auth mode, `Name` and `Email` fields are empty by default.
+- Each user should fill their own values.
+- There is no fixed admin account in Mock auth; the first logged-in user is created as admin.
 
 ### Restart Commands
 
@@ -52,54 +66,51 @@ Full stack:
 
 ```bash
 npm run stack:up:macos
-```
-
-Android path only:
-
-```bash
-docker restart mercury-provider mercury-websocket
-```
-
-iOS provider (host):
-
-```bash
 ./scripts/start-ios-provider.sh
 ```
 
-### Optional: Auto-start iOS provider with LaunchAgent
+Docker services only:
+
+```bash
+docker restart mercury-provider mercury-websocket mercury-nginx
+```
+
+### Update After New Commits (pull and re-run)
+
+When new code is pushed to your branch/repo, run:
+
+```bash
+git pull --rebase
+npm ci
+npm run stack:up:macos
+./scripts/start-ios-provider.sh
+```
+
+If you use LaunchAgent for iOS provider, reload it:
+
+```bash
+launchctl kickstart -k gui/$(id -u)/com.mercury.ios-provider
+```
+
+### Optional: Auto-start iOS Provider with LaunchAgent
 
 ```bash
 ./scripts/deploy-ios-provider-runtime.sh
 ```
 
-This installs `com.mercury.ios-provider` under `~/Library/LaunchAgents` with keep-alive behavior.
+### Logs and Troubleshooting
 
-### Disable Host iOS Auto-Start
+See dedicated guide:
 
-```bash
-launchctl bootout gui/$(id -u)/com.mercury.ios-provider || true
-launchctl disable gui/$(id -u)/com.mercury.ios-provider || true
-rm -f "$HOME/Library/LaunchAgents/com.mercury.ios-provider.plist"
-pkill -f "stf.mjs ios-provider" || true
-pkill -f WebDriverAgentRunner || true
-```
-
-### Logs / Troubleshooting
-
-```bash
-docker logs -f mercury-api
-docker logs -f mercury-provider
-docker logs -f mercury-websocket
-docker logs -f mercury-nginx
-tail -f "$HOME/.mercury-farm-runtime/ios-provider.launchd.out.log"
-tail -f "$HOME/.mercury-farm-runtime/ios-provider.launchd.err.log"
-```
+- [Troubleshooting (EN + TR)](./troubleshooting.md)
 
 ---
 
-## Türkçe
+## Turkce
 
-### 1) Ön Koşullar
+Bu dokuman, Mercury'yi macOS ortaminda ayaga kaldirmak icin ana calistirma rehberidir.
+
+### 1) On Kosullar
 
 ```bash
 brew install --cask docker
@@ -109,81 +120,90 @@ brew install libimobiledevice usbmuxd
 xcode-select --install
 ```
 
-Kurulumdan sonra Docker Desktop ve Xcode'u en az bir kez açın.
+Kurulumdan sonra Docker Desktop ve Xcode'u en az bir kez acin.
 
-### 2) Bağımlılıkları Kur
+### 2) Bagimliliklari Kur
 
 ```bash
 npm ci
 ```
 
-### 3) Çekirdek Stack'i Başlat (Docker)
+### 3) Cekirdek Stack'i Baslat (Docker)
 
 ```bash
 npm run stack:up:macos
 ```
 
-### 4) iOS Provider'ı Başlat (Host)
+### 4) iOS Provider'i Baslat (Host)
 
 ```bash
 ./scripts/start-ios-provider.sh
 ```
 
-### 5) Doğrulama
+### 5) Dogrula
 
 ```bash
 npm run stack:ps:macos
+pgrep -af "stf.mjs ios-provider|mercury-ios-provider|lib/cli ios-device"
 ```
 
-Arayüz:
+### 6) Arayuzu Ac
 
-- `https://localhost`
+Mercury, domain'i dinamik belirler (`STF_DOMAIN`).
+Sadece localhost degil, tespit edilen host IP/domain ile acin:
 
-### Yeniden Başlatma Komutları
+- `https://<STF_DOMAIN>`
 
-Tam stack:
+Ornek:
+
+- `https://192.168.1.103`
+
+Not:
+
+- Mock auth modunda `Name` ve `Email` alanlari varsayilan olarak bos gelir.
+- Her kullanici kendi bilgilerini doldurmalidir.
+- Mock auth modunda sabit bir admin hesabi yoktur; ilk giris yapan kullanici admin olarak olusur.
+
+### Yeniden Baslatma Komutlari
+
+Tum stack:
 
 ```bash
 npm run stack:up:macos
-```
-
-Sadece Android yolu:
-
-```bash
-docker restart mercury-provider mercury-websocket
-```
-
-iOS provider (host):
-
-```bash
 ./scripts/start-ios-provider.sh
 ```
 
-### Opsiyonel: LaunchAgent ile iOS provider otomatik başlatma
+Sadece Docker servisleri:
+
+```bash
+docker restart mercury-provider mercury-websocket mercury-nginx
+```
+
+### Yeni commit/push sonrasi guncelleme (cekip tekrar calistirma)
+
+Repo'ya yeni kod geldiginde su adimlari calistirin:
+
+```bash
+git pull --rebase
+npm ci
+npm run stack:up:macos
+./scripts/start-ios-provider.sh
+```
+
+Eger iOS provider LaunchAgent ile calisiyorsa su komutla yeniden yukleyin:
+
+```bash
+launchctl kickstart -k gui/$(id -u)/com.mercury.ios-provider
+```
+
+### Opsiyonel: LaunchAgent ile iOS Provider otomatik baslatma
 
 ```bash
 ./scripts/deploy-ios-provider-runtime.sh
 ```
 
-Bu komut, `~/Library/LaunchAgents` altında `com.mercury.ios-provider` kaydını `keep-alive` ile kurar.
+### Loglar ve Sorun Giderme
 
-### Host iOS Otomatik Başlatmayı Kapatma
+Ayrintili hata/cozum rehberi:
 
-```bash
-launchctl bootout gui/$(id -u)/com.mercury.ios-provider || true
-launchctl disable gui/$(id -u)/com.mercury.ios-provider || true
-rm -f "$HOME/Library/LaunchAgents/com.mercury.ios-provider.plist"
-pkill -f "stf.mjs ios-provider" || true
-pkill -f WebDriverAgentRunner || true
-```
-
-### Log / Sorun Giderme
-
-```bash
-docker logs -f mercury-api
-docker logs -f mercury-provider
-docker logs -f mercury-websocket
-docker logs -f mercury-nginx
-tail -f "$HOME/.mercury-farm-runtime/ios-provider.launchd.out.log"
-tail -f "$HOME/.mercury-farm-runtime/ios-provider.launchd.err.log"
-```
+- [Troubleshooting (EN + TR)](./troubleshooting.md)
