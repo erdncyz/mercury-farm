@@ -24,6 +24,13 @@ For setup and operations, follow the docs below.
 - [API Reference (EN + TR)](docs/API.md)
 - [ESP32 Notes (EN + TR)](docs/esp32.md)
 
+## Admin Login
+
+Use the following admin login:
+
+- Name: `Mercury`
+- Email: `mercury@test.com`
+
 ---
 
 # Mercury Device Farm (macOS) [Turkce]
@@ -51,6 +58,13 @@ Kurulum/calistirma adimlari icin asagidaki dokumanlara gidin.
 - [Otomasyon API (EN + TR)](docs/automation-api.md)
 - [API Referansi (EN + TR)](docs/API.md)
 - [ESP32 Notlari (EN + TR)](docs/esp32.md)
+
+## Admin Girisi
+
+Admin login bilgileri su sekildedir:
+
+- Name: `Mercury`
+- Email: `mercury@test.com`
 
 ## License
 
