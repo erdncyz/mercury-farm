@@ -1,7 +1,11 @@
 # Mercury Device Farm (macOS)
 
+
 Mercury is a browser-based real-device lab for Android and iOS.
 This project is optimized for **macOS** because iOS automation requires Xcode tooling on host.
+
+Logo: 
+<img width="2036" height="1086" alt="image" src="https://github.com/user-attachments/assets/4a0ada3e-a56f-40c3-93e1-37306cbb1e41" />
 
 Login Page: 
 <img width="2036" height="1086" alt="image" src="https://github.com/user-attachments/assets/e4f7de0b-0cc7-40fa-9da5-a747b899bc11" />
