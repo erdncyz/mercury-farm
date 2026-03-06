@@ -60,7 +60,7 @@ gtail -n1 -f /tmp/wdalog.txt | grep -q "ServerURLHere" > /dev/null
 # echo "Found line"
 
 cd "$(git rev-parse --show-toplevel)" || exit
-MONGODB_PORT_27017_TCP=mongodb://mercury-mongo:27017 stf ios-device \
+MONGODB_PORT_27017_TCP=mongodb://mercury-mongo:27017 mercury ios-device \
     --serial "$deviceId" \
     --host localhost \
     --screen-port 1800$deviceNum \

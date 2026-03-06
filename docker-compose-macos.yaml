@@ -72,7 +72,7 @@ services:
         container_name: mercury-migrate
         env_file:
             - scripts/variables.env
-        command: stf migrate
+        command: mercury migrate
         depends_on:
             mercury-mongosetup:
                 condition: service_completed_successfully
@@ -84,7 +84,7 @@ services:
         container_name: mercury-app
         env_file:
             - scripts/variables.env
-        command: stf app --port 3000 --auth-url https://${STF_DOMAIN}:${STF_PORT}/${AUTH_URL} --websocket-url https://${STF_DOMAIN}:${STF_PORT}/ --secret=${STF_SECRET}
+        command: mercury app --port 3000 --auth-url https://${MERCURY_DOMAIN}:${MERCURY_PORT}/${AUTH_URL} --websocket-url https://${MERCURY_DOMAIN}:${MERCURY_PORT}/ --secret=${MERCURY_SECRET}
         depends_on:
             mercury-migrate:
                 condition: service_completed_successfully
@@ -97,7 +97,7 @@ services:
         container_name: mercury-auth
         env_file:
             - scripts/variables.env
-        command: stf auth-mock --port 3000 --app-url https://${STF_DOMAIN}:${STF_PORT} --secret=${STF_SECRET}
+        command: mercury auth-mock --port 3000 --app-url https://${MERCURY_DOMAIN}:${MERCURY_PORT} --secret=${MERCURY_SECRET}
         depends_on:
             mercury-migrate:
                 condition: service_completed_successfully
@@ -110,7 +110,7 @@ services:
         container_name: mercury-processor
         env_file:
             - scripts/variables.env
-        command: stf processor --name processor --connect-app-dealer tcp://mercury-triproxy-app:7160 --connect-dev-dealer tcp://mercury-triproxy-dev:7260
+        command: mercury processor --name processor --connect-app-dealer tcp://mercury-triproxy-app:7160 --connect-dev-dealer tcp://mercury-triproxy-dev:7260
         depends_on:
             mercury-migrate:
                 condition: service_completed_successfully
@@ -123,7 +123,7 @@ services:
         container_name: mercury-reaper
         env_file:
             - scripts/variables.env
-        command: stf reaper --name reaper001 --connect-push tcp://mercury-triproxy-dev:7270 --connect-sub tcp://mercury-triproxy-dev:7250 --heartbeat-timeout 30000
+        command: mercury reaper --name reaper001 --connect-push tcp://mercury-triproxy-dev:7270 --connect-sub tcp://mercury-triproxy-dev:7250 --heartbeat-timeout 30000
         depends_on:
             mercury-migrate:
                 condition: service_completed_successfully
@@ -136,7 +136,7 @@ services:
         container_name: mercury-storage-plugin-apk
         env_file:
             - scripts/variables.env
-        command: stf storage-plugin-apk --port 3000 --storage-url http://mercury-storage-temp:3000/ --secret=${STF_SECRET}
+        command: mercury storage-plugin-apk --port 3000 --storage-url http://mercury-storage-temp:3000/ --secret=${MERCURY_SECRET}
         depends_on:
             mercury-migrate:
                 condition: service_completed_successfully
@@ -149,7 +149,7 @@ services:
         container_name: mercury-storage-plugin-image
         env_file:
             - scripts/variables.env
-        command: stf storage-plugin-image --port 3000 --storage-url http://mercury-storage-temp:3000/ --secret=${STF_SECRET}
+        command: mercury storage-plugin-image --port 3000 --storage-url http://mercury-storage-temp:3000/ --secret=${MERCURY_SECRET}
         depends_on:
             mercury-migrate:
                 condition: service_completed_successfully
@@ -162,7 +162,7 @@ services:
         container_name: mercury-storage-temp
         env_file:
             - scripts/variables.env
-        command: stf storage-temp --port 3000 --save-dir /tmp --connect-sub tcp://mercury-triproxy-app:7150 --connect-push tcp://mercury-triproxy-app:7170 --secret=${STF_SECRET}
+        command: mercury storage-temp --port 3000 --save-dir /tmp --connect-sub tcp://mercury-triproxy-app:7150 --connect-push tcp://mercury-triproxy-app:7170 --secret=${MERCURY_SECRET}
         depends_on:
             mercury-migrate:
                 condition: service_completed_successfully
@@ -175,7 +175,7 @@ services:
         container_name: mercury-triproxy-app
         env_file:
             - scripts/variables.env
-        command: stf triproxy app001 --bind-pub "tcp://*:7150" --bind-dealer "tcp://*:7160" --bind-pull "tcp://*:7170"
+        command: mercury triproxy app001 --bind-pub "tcp://*:7150" --bind-dealer "tcp://*:7160" --bind-pull "tcp://*:7170"
         ports:
             - "7150:7150"
             - "7160:7160"
@@ -192,7 +192,7 @@ services:
         container_name: mercury-triproxy-dev
         env_file:
             - scripts/variables.env
-        command: stf triproxy --name dev001 --bind-pub "tcp://*:7250" --bind-dealer "tcp://*:7260" --bind-pull "tcp://*:7270"
+        command: mercury triproxy --name dev001 --bind-pub "tcp://*:7250" --bind-dealer "tcp://*:7260" --bind-pull "tcp://*:7270"
         ports:
             - "7250:7250"
             - "7260:7260"
@@ -209,7 +209,7 @@ services:
         container_name: mercury-websocket
         env_file:
             - scripts/variables.env
-        command: stf websocket --port 3000 --storage-url http://mercury-storage-temp:3000/ --connect-sub tcp://mercury-triproxy-app:7150 --connect-push tcp://mercury-triproxy-app:7170 --connect-sub-dev tcp://mercury-triproxy-dev:7250 --connect-push-dev tcp://mercury-triproxy-dev:7270 --secret=${STF_SECRET}
+        command: mercury websocket --port 3000 --storage-url http://mercury-storage-temp:3000/ --connect-sub tcp://mercury-triproxy-app:7150 --connect-push tcp://mercury-triproxy-app:7170 --connect-sub-dev tcp://mercury-triproxy-dev:7250 --connect-push-dev tcp://mercury-triproxy-dev:7270 --secret=${MERCURY_SECRET}
         depends_on:
             mercury-migrate:
                 condition: service_completed_successfully
@@ -222,7 +222,7 @@ services:
         container_name: mercury-api
         env_file:
             - scripts/variables.env
-        command: stf api --port 3000 --connect-sub tcp://mercury-triproxy-app:7150 --connect-push tcp://mercury-triproxy-app:7170 --connect-sub-dev tcp://mercury-triproxy-dev:7250 --connect-push-dev tcp://mercury-triproxy-dev:7270 --secret=${STF_SECRET}
+        command: mercury api --port 3000 --connect-sub tcp://mercury-triproxy-app:7150 --connect-push tcp://mercury-triproxy-app:7170 --connect-sub-dev tcp://mercury-triproxy-dev:7250 --connect-push-dev tcp://mercury-triproxy-dev:7270 --secret=${MERCURY_SECRET}
         depends_on:
             mercury-migrate:
                 condition: service_completed_successfully
@@ -235,7 +235,7 @@ services:
         container_name: mercury-api-groups-engine
         env_file:
             - scripts/variables.env
-        command: stf groups-engine --connect-push tcp://mercury-triproxy-app:7170 --connect-push-dev tcp://mercury-triproxy-dev:7270
+        command: mercury groups-engine --connect-push tcp://mercury-triproxy-app:7170 --connect-push-dev tcp://mercury-triproxy-dev:7270
         depends_on:
             mercury-migrate:
                 condition: service_completed_successfully
@@ -254,13 +254,13 @@ services:
             mercury-migrate:
                 condition: service_completed_successfully
         restart: unless-stopped
-        command: stf provider --name mercury-provider --adb-host host.docker.internal --no-cleanup --connect-sub tcp://mercury-triproxy-dev:7250 --connect-push tcp://mercury-triproxy-dev:7270 --storage-url http://mercury-storage-plugin-apk:3000/ --public-ip ${STF_DOMAIN} --min-port=12010 --max-port=12100 --heartbeat-interval 10000 --screen-ws-url-pattern "wss://${STF_DOMAIN}:${STF_PORT}/d/mercury-provider/<%= publicPort %>/" --screen-frame-rate 30 --screen-jpeg-quality 15 --secret=${STF_SECRET}
+        command: mercury provider --name mercury-provider --adb-host host.docker.internal --no-cleanup --connect-sub tcp://mercury-triproxy-dev:7250 --connect-push tcp://mercury-triproxy-dev:7270 --storage-url http://mercury-storage-plugin-apk:3000/ --public-ip ${MERCURY_DOMAIN} --min-port=12010 --max-port=12100 --heartbeat-interval 10000 --screen-ws-url-pattern "wss://${MERCURY_DOMAIN}:${MERCURY_PORT}/d/mercury-provider/<%= publicPort %>/" --screen-frame-rate 30 --screen-jpeg-quality 15 --secret=${MERCURY_SECRET}
         networks:
             mercury:
     mercury-ssl:
         image: paulczar/omgwtfssl
         environment:
-            - SSL_SUBJECT=${STF_DOMAIN}:${STF_PORT}
+            - SSL_SUBJECT=${MERCURY_DOMAIN}:${MERCURY_PORT}
         volumes:
             - certs:/certs:rw
 volumes:

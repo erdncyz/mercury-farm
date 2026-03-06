@@ -39,17 +39,17 @@ get_lan_ip() {
 
 IP="$(get_lan_ip || true)"
 if [[ -z "${IP:-}" ]]; then
-  echo "Could not determine LAN IP; keeping current STF_DOMAIN." >&2
+  echo "Could not determine LAN IP; keeping current MERCURY_DOMAIN." >&2
   exit 0
 fi
 
 tmp_file="$(mktemp)"
 awk -v ip="$IP" '
   BEGIN {updated=0}
-  /^STF_DOMAIN=/ {print "STF_DOMAIN=" ip; updated=1; next}
+  /^MERCURY_DOMAIN=/ {print "MERCURY_DOMAIN=" ip; updated=1; next}
   {print}
-  END {if (!updated) print "STF_DOMAIN=" ip}
+  END {if (!updated) print "MERCURY_DOMAIN=" ip}
 ' "$ENV_FILE" > "$tmp_file"
 mv "$tmp_file" "$ENV_FILE"
 
-echo "Updated STF_DOMAIN=$IP in $ENV_FILE"
+echo "Updated MERCURY_DOMAIN=$IP in $ENV_FILE"

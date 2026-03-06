@@ -57,15 +57,15 @@ npm run stack:up:macos
 
 ```bash
 npm run stack:ps:macos
-pgrep -af "stf.mjs ios-provider|mercury-ios-provider|lib/cli ios-device"
+pgrep -af "mercury.mjs ios-provider|mercury-ios-provider|lib/cli ios-device"
 ```
 
 ### 5) Open UI
 
-Mercury uses dynamic domain detection (`STF_DOMAIN`).
+Mercury uses dynamic domain detection (`MERCURY_DOMAIN`).
 Open with your detected host domain/IP:
 
-- `https://<STF_DOMAIN>`
+- `https://<MERCURY_DOMAIN>`
 - Example: `https://192.168.x.xxx`
 
 ---
@@ -157,7 +157,7 @@ npm run stack:up:macos
 
 ### Arayuz
 
-- `https://<STF_DOMAIN>` (ornek: `https://192.168.x.xxx`)
+- `https://<MERCURY_DOMAIN>` (ornek: `https://192.168.x.xxx`)
 
 ### Admin Girisi (Mock)
 

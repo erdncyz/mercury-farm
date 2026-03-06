@@ -1,13 +1,13 @@
 import { useMutation } from '@tanstack/react-query'
 
-import { removeDeviceFromGroup } from '@/api/openstf-api'
+import { removeDeviceFromGroup } from '@/api/mercury-api'
 
 import { queries } from '@/config/queries/query-key-store'
 import { queryClient } from '@/config/queries/query-client'
 
 import type { AxiosError } from 'axios'
 import type { UseMutationResult } from '@tanstack/react-query'
-import type { GroupDeviceWithClassArgs } from '@/api/openstf-api/types'
+import type { GroupDeviceWithClassArgs } from '@/api/mercury-api/types'
 import type { GroupListResponseGroupsItem, UnexpectedErrorResponse } from '@/generated/types'
 
 export const useRemoveDeviceFromGroup = (): UseMutationResult<

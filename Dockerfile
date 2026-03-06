@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
 
 COPY . .
 
-RUN sed -i 's%./node_modules/.bin/tsx%node%g' ./bin/stf.mjs && \
+RUN sed -i 's%./node_modules/.bin/tsx%node%g' ./bin/mercury.mjs && \
     npm_config_python=/usr/bin/python3 npm ci --loglevel http && \
     ./node_modules/.bin/tsc -p tsconfig.node.json && \
     npm prune --production
@@ -49,9 +49,8 @@ COPY --from=builder /app .
 RUN rm -rf ./ui
 COPY --from=builder /app/ui/dist ./ui/dist
 
-RUN ln -s /app/bin/stf.mjs /app/bin/stf && \
-    ln -s /app/bin/stf.mjs /app/bin/mercury && \
-    ln -s /app/bin/stf.mjs /app/bin/dh
+RUN ln -s /app/bin/mercury.mjs /app/bin/mercury && \
+    ln -s /app/bin/mercury.mjs /app/bin/dh
 
 USER mercury-user
 

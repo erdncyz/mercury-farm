@@ -1,4 +1,4 @@
-stf ios-device \
+mercury ios-device \
     --serial "5D43EFDC-B845-4D3D-8465-FAA493C54A2E" \
     --host localhost \
     --screen-port 7409 \

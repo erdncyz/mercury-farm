@@ -1,6 +1,6 @@
 import { createQueryKeyStore } from '@lukemorales/query-key-factory'
 
-import { getAuthContact, getAuthDocs, getManifest, additionalUrl } from '@/api/openstf'
+import { getAuthContact, getAuthDocs, getManifest, additionalUrl } from '@/api/mercury'
 import {
   getAccessTokens,
   getAdbRange,
@@ -19,14 +19,14 @@ import {
   getTeams,
   getTeamUsers,
   getTeamGroups,
-} from '@/api/openstf-api'
+} from '@/api/mercury-api'
 import { getAuthUrl } from '@/api/auth'
 
 import type { GroupUser } from '@/types/group-user.type'
 import type { GroupDevice } from '@/types/group-device.type'
-import type { ParamsWithoutFields } from '@/api/openstf-api/types'
+import type { ParamsWithoutFields } from '@/api/mercury-api/types'
 import type { inferQueryKeyStore } from '@lukemorales/query-key-factory'
-import type { GetManifestResponse } from '@/api/openstf/types'
+import type { GetManifestResponse } from '@/api/mercury/types'
 import type { Device, GetDevicesParams } from '@/generated/types'
 
 export const queries = createQueryKeyStore({

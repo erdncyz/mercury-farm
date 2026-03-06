@@ -124,6 +124,8 @@ export const TeamTable = <T,>({
             boundaryCount={1}
             currentPage={table.getState().pagination.pageIndex + 1}
             navigationButtonsStyle='icon'
+            nextButtonCaption={t('Next')}
+            prevButtonCaption={t('Back')}
             siblingCount={1}
             totalPages={table.getPageCount()}
             onChange={(pageNumber) => table.setPageIndex(pageNumber - 1)}

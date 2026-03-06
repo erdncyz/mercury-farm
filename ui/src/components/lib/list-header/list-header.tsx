@@ -149,6 +149,8 @@ export const ListHeader = observer(
               boundaryCount={1}
               currentPage={listService.currentPage}
               navigationButtonsStyle='both'
+              nextButtonCaption={t('Next')}
+              prevButtonCaption={t('Back')}
               siblingCount={2}
               totalPages={listService.totalPages}
               onChange={(page) => listService.setCurrentPage(page)}

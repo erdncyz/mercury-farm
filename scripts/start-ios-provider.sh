@@ -7,7 +7,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# Keep STF_DOMAIN aligned with current LAN IP unless manual mode is enabled.
+# Keep MERCURY_DOMAIN aligned with current LAN IP unless manual mode is enabled.
 if [ -f "$PROJECT_DIR/scripts/auto-configure-network.sh" ]; then
   /bin/bash "$PROJECT_DIR/scripts/auto-configure-network.sh" >/dev/null || true
 fi
@@ -27,9 +27,9 @@ if [ -f "$PROJECT_DIR/scripts/variables.env" ]; then
   set +a
 fi
 
-export STF_SECRET="${STF_SECRET:-nosecret}"
-export STF_DOMAIN="${STF_DOMAIN:-localhost}"
-export STF_PORT="${STF_PORT:-443}"
+export MERCURY_SECRET="${MERCURY_SECRET:-nosecret}"
+export MERCURY_DOMAIN="${MERCURY_DOMAIN:-localhost}"
+export MERCURY_PORT="${MERCURY_PORT:-443}"
 export IOS_DISABLE_ESP32="${IOS_DISABLE_ESP32:-1}"
 export IOS_TOUCH_ACTION_TIMEOUT_MS="${IOS_TOUCH_ACTION_TIMEOUT_MS:-20000}"
 export IOS_WDA_REQUEST_TIMEOUT_MS="${IOS_WDA_REQUEST_TIMEOUT_MS:-12000}"
@@ -55,7 +55,7 @@ IOS_PORT_STRIDE="${IOS_PORT_STRIDE:-1000}"
 # Provider identity
 IOS_PROVIDER_NAME="${IOS_PROVIDER_NAME:-mercury-ios-provider}"
 
-# Base ranges (max is exclusive on stf side).
+# Base ranges (max is exclusive on mercury side).
 IOS_PORT_RANGE_MIN="${IOS_PORT_RANGE_MIN:-28100}"
 IOS_PORT_RANGE_MAX="${IOS_PORT_RANGE_MAX:-28300}"
 IOS_WDA_RANGE_MIN="${IOS_WDA_RANGE_MIN:-28300}"
@@ -110,7 +110,7 @@ pkill -f WebDriverAgentRunner || true
 echo "Starting Mercury iOS Provider..."
 echo "  Provider: ${IOS_PROVIDER_NAME}"
 echo "  Shard: ${IOS_PROVIDER_SHARD} (offset: ${SHARD_OFFSET})"
-echo "  Domain: ${STF_DOMAIN}:${STF_PORT}"
+echo "  Domain: ${MERCURY_DOMAIN}:${MERCURY_PORT}"
 echo "  Simulators: ${ALLOW_SIMULATORS}"
 echo "  Touch watchdog timeout: ${IOS_TOUCH_ACTION_TIMEOUT_MS}ms"
 echo "  WDA request timeout: ${IOS_WDA_REQUEST_TIMEOUT_MS}ms"
@@ -131,9 +131,9 @@ echo "    wda-range: ${IOS_EFFECTIVE_WDA_RANGE_MIN}-${IOS_EFFECTIVE_WDA_RANGE_MA
 echo "    screen-ws-range: ${IOS_EFFECTIVE_SCREEN_WS_RANGE_MIN}-${IOS_EFFECTIVE_SCREEN_WS_RANGE_MAX}"
 
 ios_provider_args=(
-  ./node_modules/.bin/tsx ./bin/stf.mjs ios-provider
+  ./node_modules/.bin/tsx ./bin/mercury.mjs ios-provider
   --provider "${IOS_PROVIDER_NAME}"
-  --public-ip "$STF_DOMAIN"
+  --public-ip "$MERCURY_DOMAIN"
   --port-range-min "${IOS_EFFECTIVE_PORT_RANGE_MIN}"
   --port-range-max "${IOS_EFFECTIVE_PORT_RANGE_MAX}"
   --wda-range-min "${IOS_EFFECTIVE_WDA_RANGE_MIN}"
@@ -146,9 +146,9 @@ ios_provider_args=(
   --screen-jpeg-quality 15
   --screen-frame-rate 30
   --screen-ping-interval 60000
-  --screen-ws-url-pattern "wss://${STF_DOMAIN}:${STF_PORT}/d/${IOS_PROVIDER_NAME}/<%= publicPort %>/"
+  --screen-ws-url-pattern "wss://${MERCURY_DOMAIN}:${MERCURY_PORT}/d/${IOS_PROVIDER_NAME}/<%= publicPort %>/"
   --host 0.0.0.0
-  --secret "$STF_SECRET"
+  --secret "$MERCURY_SECRET"
 )
 
 if [ "$ALLOW_SIMULATORS" = "1" ]; then

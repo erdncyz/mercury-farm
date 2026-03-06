@@ -10,11 +10,11 @@ read_mode() {
   local mode=""
 
   if [[ -f "$DOTENV_FILE" ]]; then
-    mode="$(awk -F= '/^STF_DOMAIN_MODE=/{print $2; exit}' "$DOTENV_FILE" | tr -d '[:space:]' || true)"
+    mode="$(awk -F= '/^MERCURY_DOMAIN_MODE=/{print $2; exit}' "$DOTENV_FILE" | tr -d '[:space:]' || true)"
   fi
 
   if [[ -z "$mode" && -f "$VARS_FILE" ]]; then
-    mode="$(awk -F= '/^STF_DOMAIN_MODE=/{print $2; exit}' "$VARS_FILE" | tr -d '[:space:]' || true)"
+    mode="$(awk -F= '/^MERCURY_DOMAIN_MODE=/{print $2; exit}' "$VARS_FILE" | tr -d '[:space:]' || true)"
   fi
 
   if [[ -z "$mode" ]]; then
@@ -65,9 +65,9 @@ update_domain_in_file() {
 
   awk -v ip="$ip" '
     BEGIN {updated=0}
-    /^STF_DOMAIN=/ {print "STF_DOMAIN=" ip; updated=1; next}
+    /^MERCURY_DOMAIN=/ {print "MERCURY_DOMAIN=" ip; updated=1; next}
     {print}
-    END {if (!updated) print "STF_DOMAIN=" ip}
+    END {if (!updated) print "MERCURY_DOMAIN=" ip}
   ' "$file" > "$tmp_file"
 
   mv "$tmp_file" "$file"
@@ -80,11 +80,11 @@ fi
 
 LAN_IP="$(get_lan_ip || true)"
 if [[ -z "$LAN_IP" ]]; then
-  echo "Could not determine LAN IP; keeping current STF_DOMAIN." >&2
+  echo "Could not determine LAN IP; keeping current MERCURY_DOMAIN." >&2
   exit 0
 fi
 
 update_domain_in_file "$VARS_FILE" "$LAN_IP"
 update_domain_in_file "$DOTENV_FILE" "$LAN_IP"
 
-echo "Auto-configured STF_DOMAIN=$LAN_IP"
+echo "Auto-configured MERCURY_DOMAIN=$LAN_IP"

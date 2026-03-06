@@ -1,7 +1,7 @@
 import { makeAutoObservable, runInAction } from 'mobx'
 import { inject, injectable } from 'inversify'
 
-import { uploadFile } from '@/api/openstf'
+import { uploadFile } from '@/api/mercury'
 
 import { queries } from '@/config/queries/query-key-store'
 import { queryClient } from '@/config/queries/query-client'
@@ -16,7 +16,7 @@ import type { ActivityOptions, ActivityOptionsSet, RunActivityArgs, SelectOption
 import type { QueryObserverResult } from '@tanstack/react-query'
 import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
 import type { MobxMutationFactory } from '@/types/mobx-mutation-factory.type'
-import type { GetManifestResponse, UploadFileArgs, UploadFileResponse } from '@/api/openstf/types'
+import type { GetManifestResponse, UploadFileArgs, UploadFileResponse } from '@/api/mercury/types'
 
 @injectable()
 @deviceConnectionRequired()

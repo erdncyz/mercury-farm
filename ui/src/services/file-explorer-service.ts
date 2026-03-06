@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 import { inject, injectable } from 'inversify'
 
-import { downloadFile } from '@/api/openstf'
+import { downloadFile } from '@/api/mercury'
 import { FSListMessage } from '@/types/fs-list-message.type'
 
 import { saveFile } from '@/lib/utils/save-file.util'

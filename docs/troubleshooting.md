@@ -23,17 +23,17 @@ npm run stack:up:macos
 
 Why:
 
-- Mercury commonly runs with detected `STF_DOMAIN` (host IP/domain), not strict localhost routing.
+- Mercury commonly runs with detected `MERCURY_DOMAIN` (host IP/domain), not strict localhost routing.
 
 Fix:
 
 ```bash
-npm run -s stf:domain:auto
+npm run -s mercury:domain:auto
 ```
 
 Open:
 
-- `https://<STF_DOMAIN>`
+- `https://<MERCURY_DOMAIN>`
 
 Example:
 
@@ -44,7 +44,7 @@ Example:
 Check:
 
 ```bash
-pgrep -af "stf.mjs ios-provider|mercury-ios-provider|lib/cli ios-device"
+pgrep -af "mercury.mjs ios-provider|mercury-ios-provider|lib/cli ios-device"
 ```
 
 Start:
@@ -65,7 +65,7 @@ Fix:
 launchctl bootout gui/$(id -u)/com.mercury.ios-provider || true
 launchctl disable gui/$(id -u)/com.mercury.ios-provider || true
 rm -f "$HOME/Library/LaunchAgents/com.mercury.ios-provider.plist"
-pkill -f "stf.mjs ios-provider" || true
+pkill -f "mercury.mjs ios-provider" || true
 pkill -f WebDriverAgentRunner || true
 ```
 
@@ -111,17 +111,17 @@ npm run stack:up:macos
 
 Neden:
 
-- Mercury cogunlukla `STF_DOMAIN` (host IP/domain) ile calisir.
+- Mercury cogunlukla `MERCURY_DOMAIN` (host IP/domain) ile calisir.
 
 Cozum:
 
 ```bash
-npm run -s stf:domain:auto
+npm run -s mercury:domain:auto
 ```
 
 Sunu acin:
 
-- `https://<STF_DOMAIN>`
+- `https://<MERCURY_DOMAIN>`
 
 Ornek:
 
@@ -132,7 +132,7 @@ Ornek:
 Kontrol:
 
 ```bash
-pgrep -af "stf.mjs ios-provider|mercury-ios-provider|lib/cli ios-device"
+pgrep -af "mercury.mjs ios-provider|mercury-ios-provider|lib/cli ios-device"
 ```
 
 Baslat:
@@ -153,7 +153,7 @@ Cozum:
 launchctl bootout gui/$(id -u)/com.mercury.ios-provider || true
 launchctl disable gui/$(id -u)/com.mercury.ios-provider || true
 rm -f "$HOME/Library/LaunchAgents/com.mercury.ios-provider.plist"
-pkill -f "stf.mjs ios-provider" || true
+pkill -f "mercury.mjs ios-provider" || true
 pkill -f WebDriverAgentRunner || true
 ```
 

@@ -72,6 +72,8 @@ export const ShellTab = observer(() => {
             boundaryCount={1}
             currentPage={shellSettingsService.currentPage}
             navigationButtonsStyle='both'
+            nextButtonCaption={t('Next')}
+            prevButtonCaption={t('Back')}
             siblingCount={2}
             totalPages={shellSettingsService.totalPages}
             onChange={(page) => shellSettingsService.setCurrentPage(page)}

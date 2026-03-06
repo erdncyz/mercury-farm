@@ -40,15 +40,15 @@ npm run stack:up:macos
 
 ```bash
 npm run stack:ps:macos
-pgrep -af "stf.mjs ios-provider|mercury-ios-provider|lib/cli ios-device"
+pgrep -af "mercury.mjs ios-provider|mercury-ios-provider|lib/cli ios-device"
 ```
 
 ### 6) Open UI
 
-Mercury is configured with dynamic domain detection (`STF_DOMAIN`).
+Mercury is configured with dynamic domain detection (`MERCURY_DOMAIN`).
 Open with your detected host IP/domain (not only localhost):
 
-- `https://<STF_DOMAIN>`
+- `https://<MERCURY_DOMAIN>`
 
 Example:
 
@@ -144,15 +144,15 @@ npm run stack:up:macos
 
 ```bash
 npm run stack:ps:macos
-pgrep -af "stf.mjs ios-provider|mercury-ios-provider|lib/cli ios-device"
+pgrep -af "mercury.mjs ios-provider|mercury-ios-provider|lib/cli ios-device"
 ```
 
 ### 6) Arayuzu Ac
 
-Mercury, domain'i dinamik belirler (`STF_DOMAIN`).
+Mercury, domain'i dinamik belirler (`MERCURY_DOMAIN`).
 Sadece localhost degil, tespit edilen host IP/domain ile acin:
 
-- `https://<STF_DOMAIN>`
+- `https://<MERCURY_DOMAIN>`
 
 Ornek:
 

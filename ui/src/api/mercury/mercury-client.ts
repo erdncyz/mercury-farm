@@ -4,14 +4,14 @@ import { variablesConfig } from '@/config/variables.config'
 
 import { attachTokenOnRequest, extractMessageOnErrorResponse, logoutOnErrorResponse } from '../interceptors'
 
-export const openstfClient = axios.create({
+export const mercuryClient = axios.create({
   baseURL: variablesConfig[import.meta.env.MODE].openStfApiHostUrl,
   withCredentials: true,
 })
 
-openstfClient.interceptors.request.use((config) => attachTokenOnRequest(config))
-openstfClient.interceptors.response.use((response) => response, logoutOnErrorResponse)
-openstfClient.interceptors.response.use(
+mercuryClient.interceptors.request.use((config) => attachTokenOnRequest(config))
+mercuryClient.interceptors.response.use((response) => response, logoutOnErrorResponse)
+mercuryClient.interceptors.response.use(
   (response) => response,
   (error) => extractMessageOnErrorResponse(error)
 )

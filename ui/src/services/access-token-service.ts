@@ -4,7 +4,7 @@ import { QueryObserverResult } from '@tanstack/react-query'
 
 import { socket } from '@/api/socket'
 import { AccessTokenGeneratedMessage } from '@/types/access-token-generated-message.type'
-import { getAccessTokenByTitle } from '@/api/openstf-api'
+import { getAccessTokenByTitle } from '@/api/mercury-api'
 
 import { queries } from '@/config/queries/query-key-store'
 import { queryClient } from '@/config/queries/query-client'

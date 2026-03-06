@@ -11,8 +11,9 @@ import { ErrorToast } from './components/lib/error-toast'
 import type { ReactNode } from 'react'
 
 export const AppWrapper = observer(({ children }: { children: ReactNode }) => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [isToastVisible, setIsToastVisible] = useState(false)
+  const vkuiLocale = i18n.resolvedLanguage || i18n.language || 'en'
 
   useEffect(() => {
     if (globalToast.message && !isToastVisible) {
@@ -21,7 +22,7 @@ export const AppWrapper = observer(({ children }: { children: ReactNode }) => {
   }, [globalToast.message])
 
   return (
-    <ConfigProvider colorScheme='light' platform='vkcom'>
+    <ConfigProvider colorScheme='light' locale={vkuiLocale} platform='vkcom'>
       <AdaptivityProvider>
         <AppRoot>{children}</AppRoot>
         <ConditionalRender conditions={[isToastVisible]}>

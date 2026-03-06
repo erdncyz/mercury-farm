@@ -57,7 +57,7 @@ Provider still auto-starts after Docker is stopped:
 launchctl bootout gui/$(id -u)/com.mercury.ios-provider || true
 launchctl disable gui/$(id -u)/com.mercury.ios-provider || true
 rm -f "$HOME/Library/LaunchAgents/com.mercury.ios-provider.plist"
-pkill -f "stf.mjs ios-provider" || true
+pkill -f "mercury.mjs ios-provider" || true
 pkill -f WebDriverAgentRunner || true
 ```
 
@@ -123,7 +123,7 @@ Docker dursa da provider otomatik açılıyorsa:
 launchctl bootout gui/$(id -u)/com.mercury.ios-provider || true
 launchctl disable gui/$(id -u)/com.mercury.ios-provider || true
 rm -f "$HOME/Library/LaunchAgents/com.mercury.ios-provider.plist"
-pkill -f "stf.mjs ios-provider" || true
+pkill -f "mercury.mjs ios-provider" || true
 pkill -f WebDriverAgentRunner || true
 ```
 

@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 
-import { updateUserGroupQuota } from '@/api/openstf-api'
+import { updateUserGroupQuota } from '@/api/mercury-api'
 
 import { queries } from '@/config/queries/query-key-store'
 import { queryClient } from '@/config/queries/query-client'
@@ -8,7 +8,7 @@ import { queryClient } from '@/config/queries/query-client'
 import type { AxiosError } from 'axios'
 import type { SettingsUser } from '@/types/settings-user.type'
 import type { UseMutationResult } from '@tanstack/react-query'
-import type { UpdateUserGroupQuotaArgs } from '@/api/openstf-api/types'
+import type { UpdateUserGroupQuotaArgs } from '@/api/mercury-api/types'
 import type { UnexpectedErrorResponse, UserGroupsQuotas } from '@/generated/types'
 
 export const useUpdateUserGroupQuota = (): UseMutationResult<

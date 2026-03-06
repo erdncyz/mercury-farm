@@ -9,7 +9,7 @@ LABEL="com.mercury.ios-provider"
 USER_UID="$(id -u)"
 
 if [ -f "$PROJECT_DIR/scripts/auto-configure-network.sh" ]; then
-  echo "Auto-configuring STF_DOMAIN from LAN IP..."
+  echo "Auto-configuring MERCURY_DOMAIN from LAN IP..."
   /bin/bash "$PROJECT_DIR/scripts/auto-configure-network.sh"
 fi
 

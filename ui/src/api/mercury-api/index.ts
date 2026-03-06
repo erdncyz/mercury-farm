@@ -1,4 +1,4 @@
-import { openstfApiClient } from './openstf-api-client'
+import { mercuryApiClient } from './mercury-api-client'
 import { isOriginGroup } from '@/lib/utils/is-origin-group.util'
 
 import {
@@ -12,7 +12,7 @@ import {
   GROUPS_TEAMS_FIELDS,
 } from '@/constants/request-fields'
 
-import { OPENSTF_API_ROUTES } from './routes'
+import { MERCURY_API_ROUTES } from './routes'
 
 import type { ShellDevice } from '@/types/shell-device.type'
 import type { SettingsUser } from '@/types/settings-user.type'
@@ -69,37 +69,37 @@ import type { TeamUser } from '@/types/team-user.type'
 import type { TeamGroup } from '@/types/team-group.type'
 
 const getDevices = async <T>(params?: GetDevicesParams): Promise<T[]> => {
-  const { data } = await openstfApiClient.get<DeviceWithFieldsListResponse<T>>(OPENSTF_API_ROUTES.devices, { params })
+  const { data } = await mercuryApiClient.get<DeviceWithFieldsListResponse<T>>(MERCURY_API_ROUTES.devices, { params })
 
   return data.devices
 }
 
 const getUsers = async <T>(params?: GetUsersParams): Promise<T[]> => {
-  const { data } = await openstfApiClient.get<UsersWithFieldsListResponse<T>>(OPENSTF_API_ROUTES.users, { params })
+  const { data } = await mercuryApiClient.get<UsersWithFieldsListResponse<T>>(MERCURY_API_ROUTES.users, { params })
 
   return data.users
 }
 
 const addOriginGroupDevice = async ({ serial, groupId }: GroupDeviceArgs): Promise<boolean> => {
-  const { data } = await openstfApiClient.put<DeviceResponse>(OPENSTF_API_ROUTES.deviceGroup(groupId, serial))
+  const { data } = await mercuryApiClient.put<DeviceResponse>(MERCURY_API_ROUTES.deviceGroup(groupId, serial))
 
   return data.success
 }
 
 const addTransientGroupDevice = async ({ serial, groupId }: GroupDeviceArgs): Promise<boolean> => {
-  const { data } = await openstfApiClient.put<GroupResponse>(OPENSTF_API_ROUTES.groupDevice(groupId, serial))
+  const { data } = await mercuryApiClient.put<GroupResponse>(MERCURY_API_ROUTES.groupDevice(groupId, serial))
 
   return data.success
 }
 
 const removeTransientGroupDevice = async ({ serial, groupId }: GroupDeviceArgs): Promise<boolean> => {
-  const { data } = await openstfApiClient.delete<GroupResponse>(OPENSTF_API_ROUTES.groupDevice(groupId, serial))
+  const { data } = await mercuryApiClient.delete<GroupResponse>(MERCURY_API_ROUTES.groupDevice(groupId, serial))
 
   return data.success
 }
 
 const removeOriginGroupDevice = async ({ serial, groupId }: GroupDeviceArgs): Promise<boolean> => {
-  const { data } = await openstfApiClient.delete<DeviceResponse>(OPENSTF_API_ROUTES.deviceGroup(groupId, serial))
+  const { data } = await mercuryApiClient.delete<DeviceResponse>(MERCURY_API_ROUTES.deviceGroup(groupId, serial))
 
   return data.success
 }
@@ -123,19 +123,19 @@ export const getSettingsUsers = (params?: ParamsWithoutFields<GetUsersParams>): 
   getUsers({ ...params, fields: USERS_SETTINGS_FIELDS })
 
 export const getGroups = async (params?: GetGroupsParams): Promise<GroupListResponseGroupsItem[]> => {
-  const { data } = await openstfApiClient.get<GroupListResponse>(OPENSTF_API_ROUTES.groups, { params })
+  const { data } = await mercuryApiClient.get<GroupListResponse>(MERCURY_API_ROUTES.groups, { params })
 
   return data.groups
 }
 
 export const createTeam = async (): Promise<boolean> => {
-  const { data } = await openstfApiClient.post<TeamResponse>(OPENSTF_API_ROUTES.team, {})
+  const { data } = await mercuryApiClient.post<TeamResponse>(MERCURY_API_ROUTES.team, {})
 
   return data.success
 }
 
 export const getTeams = async (): Promise<Team[]> => {
-  const { data } = await openstfApiClient.get<TeamsResponse>(OPENSTF_API_ROUTES.teams)
+  const { data } = await mercuryApiClient.get<TeamsResponse>(MERCURY_API_ROUTES.teams)
 
   return data.teams || []
 }
@@ -143,27 +143,27 @@ export const getTeams = async (): Promise<Team[]> => {
 export const updateTeam = async (id: string, data: TeamPayload): Promise<boolean> => {
   const {
     data: { success },
-  } = await openstfApiClient.post<TeamResponse>(`${OPENSTF_API_ROUTES.team}/${id}`, data)
+  } = await mercuryApiClient.post<TeamResponse>(`${MERCURY_API_ROUTES.team}/${id}`, data)
 
   return success
 }
 
 export const removeTeam = async (id: string): Promise<boolean> => {
-  const { data } = await openstfApiClient.delete<DefaultResponse>(OPENSTF_API_ROUTES.teamDelete(id))
+  const { data } = await mercuryApiClient.delete<DefaultResponse>(MERCURY_API_ROUTES.teamDelete(id))
 
   return data.success
 }
 
 export const removeUserFromTeam = async ({ teamId, userEmail }: TeamUserArgs): Promise<boolean> => {
   if (!userEmail) throw new Error('User email is required to remove user')
-  const { data } = await openstfApiClient.delete<TeamResponse>(OPENSTF_API_ROUTES.teamUser(teamId, userEmail))
+  const { data } = await mercuryApiClient.delete<TeamResponse>(MERCURY_API_ROUTES.teamUser(teamId, userEmail))
 
   return data.success
 }
 
 export const removeGroupFromTeam = async ({ teamId, groupId }: TeamGroupArgs): Promise<boolean> => {
   if (!groupId) throw new Error('Group id is required to remove group')
-  const { data } = await openstfApiClient.delete<TeamResponse>(OPENSTF_API_ROUTES.teamGroup(teamId, groupId))
+  const { data } = await mercuryApiClient.delete<TeamResponse>(MERCURY_API_ROUTES.teamGroup(teamId, groupId))
 
   return data.success
 }
@@ -175,53 +175,53 @@ export const getTeamGroups = (params?: ParamsWithoutFields<GetGroupParams>): Pro
   getGroups({ ...params, fields: GROUPS_TEAMS_FIELDS })
 
 export const getDeviceBySerial = async (serial: string, params?: GetDeviceBySerialParams): Promise<Device> => {
-  const { data } = await openstfApiClient.get<DeviceResponse>(`${OPENSTF_API_ROUTES.devices}/${serial}`, { params })
+  const { data } = await mercuryApiClient.get<DeviceResponse>(`${MERCURY_API_ROUTES.devices}/${serial}`, { params })
 
   return data.device
 }
 
 export const getCurrentUserProfile = async (): Promise<User | undefined> => {
-  const { data } = await openstfApiClient.get<UserResponse>(OPENSTF_API_ROUTES.user)
+  const { data } = await mercuryApiClient.get<UserResponse>(MERCURY_API_ROUTES.user)
 
   return data.user
 }
 
 export const getAccessTokens = async (): Promise<string[]> => {
-  const { data } = await openstfApiClient.get<AccessTokensResponse>(OPENSTF_API_ROUTES.accessTokens)
+  const { data } = await mercuryApiClient.get<AccessTokensResponse>(MERCURY_API_ROUTES.accessTokens)
 
   return data.titles?.reverse() || []
 }
 
 export const getAccessTokensByEmail = async (email: string): Promise<string[]> => {
-  const { data } = await openstfApiClient.get<{ success: boolean; titles: string[] }>(
-    OPENSTF_API_ROUTES.accessTokensByEmail(email)
+  const { data } = await mercuryApiClient.get<{ success: boolean; titles: string[] }>(
+    MERCURY_API_ROUTES.accessTokensByEmail(email)
   )
 
   return data.titles || []
 }
 
 export const getAccessTokenByTitle = async (title: string): Promise<Token | null> => {
-  const { data } = await openstfApiClient.post<{ token: Token }>(OPENSTF_API_ROUTES.accessTokenByTitle, { title })
+  const { data } = await mercuryApiClient.post<{ token: Token }>(MERCURY_API_ROUTES.accessTokenByTitle, { title })
 
   return data.token || null
 }
 
 export const getUsersInGroup = async ({ groupId }: GroupUserArgs): Promise<GroupUser[]> => {
-  const { data } = await openstfApiClient.get<UsersWithFieldsListResponse<GroupUser>>(
-    OPENSTF_API_ROUTES.groupUser(groupId)
+  const { data } = await mercuryApiClient.get<UsersWithFieldsListResponse<GroupUser>>(
+    MERCURY_API_ROUTES.groupUser(groupId)
   )
 
   return data.users
 }
 
 export const addUserInGroup = async ({ groupId, userEmail }: GroupUserArgs): Promise<boolean> => {
-  const { data } = await openstfApiClient.put<GroupResponse>(OPENSTF_API_ROUTES.groupUser(groupId, userEmail))
+  const { data } = await mercuryApiClient.put<GroupResponse>(MERCURY_API_ROUTES.groupUser(groupId, userEmail))
 
   return data.success
 }
 
 export const removeUserFromGroup = async ({ groupId, userEmail }: GroupUserArgs): Promise<boolean> => {
-  const { data } = await openstfApiClient.delete<GroupResponse>(OPENSTF_API_ROUTES.groupUser(groupId, userEmail))
+  const { data } = await mercuryApiClient.delete<GroupResponse>(MERCURY_API_ROUTES.groupUser(groupId, userEmail))
 
   return data.success
 }
@@ -247,19 +247,19 @@ export const removeDeviceFromGroup = async ({
 }
 
 export const createGroup = async (): Promise<boolean> => {
-  const { data } = await openstfApiClient.post<GroupResponse>(OPENSTF_API_ROUTES.groups, { state: 'pending' })
+  const { data } = await mercuryApiClient.post<GroupResponse>(MERCURY_API_ROUTES.groups, { state: 'pending' })
 
   return data.success
 }
 
 export const removeGroup = async (id: string): Promise<boolean> => {
-  const { data } = await openstfApiClient.delete<DefaultResponse>(`${OPENSTF_API_ROUTES.groups}/${id}`)
+  const { data } = await mercuryApiClient.delete<DefaultResponse>(`${MERCURY_API_ROUTES.groups}/${id}`)
 
   return data.success
 }
 
 export const removeGroups = async (ids: string): Promise<boolean> => {
-  const { data } = await openstfApiClient.delete<DefaultResponse>(OPENSTF_API_ROUTES.groups, {
+  const { data } = await mercuryApiClient.delete<DefaultResponse>(MERCURY_API_ROUTES.groups, {
     params: { _: Date.now() },
     data: ids ? { ids } : undefined,
   })
@@ -270,20 +270,20 @@ export const removeGroups = async (ids: string): Promise<boolean> => {
 export const updateGroup = async (id: string, data: GroupPayload): Promise<boolean> => {
   const {
     data: { success },
-  } = await openstfApiClient.put<GroupResponse>(`${OPENSTF_API_ROUTES.groups}/${id}`, data)
+  } = await mercuryApiClient.put<GroupResponse>(`${MERCURY_API_ROUTES.groups}/${id}`, data)
 
   return success
 }
 
 export const renewAdbPort = async (serial: string): Promise<number> => {
-  const { data } = await openstfApiClient.put<AdbPortResponse>(OPENSTF_API_ROUTES.adbPort(serial))
+  const { data } = await mercuryApiClient.put<AdbPortResponse>(MERCURY_API_ROUTES.adbPort(serial))
 
   return data.port
 }
 
 export const updateDevice = async ({ serial, ...params }: UpdateDeviceArgs): Promise<boolean> => {
-  const { data } = await openstfApiClient.put<DefaultResponse>(
-    OPENSTF_API_ROUTES.updateStorageInfo(serial),
+  const { data } = await mercuryApiClient.put<DefaultResponse>(
+    MERCURY_API_ROUTES.updateStorageInfo(serial),
     undefined,
     {
       params,
@@ -294,7 +294,7 @@ export const updateDevice = async ({ serial, ...params }: UpdateDeviceArgs): Pro
 }
 
 export const removeDevice = async ({ serial, ...params }: RemoveDeviceArgs): Promise<boolean> => {
-  const { data } = await openstfApiClient.delete<DefaultResponse>(`${OPENSTF_API_ROUTES.devices}/${serial}`, {
+  const { data } = await mercuryApiClient.delete<DefaultResponse>(`${MERCURY_API_ROUTES.devices}/${serial}`, {
     params,
   })
 
@@ -302,7 +302,7 @@ export const removeDevice = async ({ serial, ...params }: RemoveDeviceArgs): Pro
 }
 
 export const removeDevices = async ({ ids, ...params }: RemoveDevicesArgs): Promise<boolean> => {
-  const { data } = await openstfApiClient.delete<DefaultResponse>(OPENSTF_API_ROUTES.devices, {
+  const { data } = await mercuryApiClient.delete<DefaultResponse>(MERCURY_API_ROUTES.devices, {
     params,
     data: ids ? { ids } : undefined,
   })
@@ -311,13 +311,13 @@ export const removeDevices = async ({ ids, ...params }: RemoveDevicesArgs): Prom
 }
 
 export const getAdbRange = async (): Promise<string> => {
-  const { data } = await openstfApiClient.get<AdbRangeResponse>(OPENSTF_API_ROUTES.adbRange)
+  const { data } = await mercuryApiClient.get<AdbRangeResponse>(MERCURY_API_ROUTES.adbRange)
 
   return data.adbRange
 }
 
 export const updateDefaultUserGroupsQuota = async (params: UpdateDefaultUserGroupsQuotasParams): Promise<boolean> => {
-  const { data } = await openstfApiClient.put<UserResponse>(OPENSTF_API_ROUTES.defaultGroupsQuotas, undefined, {
+  const { data } = await mercuryApiClient.put<UserResponse>(MERCURY_API_ROUTES.defaultGroupsQuotas, undefined, {
     params,
   })
 
@@ -325,7 +325,7 @@ export const updateDefaultUserGroupsQuota = async (params: UpdateDefaultUserGrou
 }
 
 export const updateUserGroupQuota = async ({ email, ...params }: UpdateUserGroupQuotaArgs): Promise<boolean> => {
-  const { data } = await openstfApiClient.put<UserResponse>(OPENSTF_API_ROUTES.userGroupQuota(email), undefined, {
+  const { data } = await mercuryApiClient.put<UserResponse>(MERCURY_API_ROUTES.userGroupQuota(email), undefined, {
     params,
   })
 
@@ -333,7 +333,7 @@ export const updateUserGroupQuota = async ({ email, ...params }: UpdateUserGroup
 }
 
 export const createUser = async ({ email, ...params }: CreateUserArgs): Promise<boolean> => {
-  const { data } = await openstfApiClient.post<UserResponse>(`${OPENSTF_API_ROUTES.users}/${email}`, undefined, {
+  const { data } = await mercuryApiClient.post<UserResponse>(`${MERCURY_API_ROUTES.users}/${email}`, undefined, {
     params,
   })
 
@@ -341,7 +341,7 @@ export const createUser = async ({ email, ...params }: CreateUserArgs): Promise<
 }
 
 export const removeUser = async ({ email, ...params }: RemoveUserArgs): Promise<boolean> => {
-  const { data } = await openstfApiClient.delete<DefaultResponse>(`${OPENSTF_API_ROUTES.users}/${email}`, {
+  const { data } = await mercuryApiClient.delete<DefaultResponse>(`${MERCURY_API_ROUTES.users}/${email}`, {
     params,
   })
 
@@ -349,7 +349,7 @@ export const removeUser = async ({ email, ...params }: RemoveUserArgs): Promise<
 }
 
 export const removeUsers = async ({ emails, ...params }: RemoveUsersArgs): Promise<boolean> => {
-  const { data } = await openstfApiClient.delete<DefaultResponse>(OPENSTF_API_ROUTES.users, {
+  const { data } = await mercuryApiClient.delete<DefaultResponse>(MERCURY_API_ROUTES.users, {
     params,
     data: emails ? { emails } : undefined,
   })
@@ -358,19 +358,19 @@ export const removeUsers = async ({ emails, ...params }: RemoveUsersArgs): Promi
 }
 
 export const grantAdmin = async (email: string): Promise<boolean> => {
-  const { data } = await openstfApiClient.post<UserListResponse>(OPENSTF_API_ROUTES.grantAdmin(email))
+  const { data } = await mercuryApiClient.post<UserListResponse>(MERCURY_API_ROUTES.grantAdmin(email))
 
   return data.success
 }
 
 export const revokeAdmin = async (email: string): Promise<boolean> => {
-  const { data } = await openstfApiClient.delete<UserListResponse>(OPENSTF_API_ROUTES.revokeAdmin(email))
+  const { data } = await mercuryApiClient.delete<UserListResponse>(MERCURY_API_ROUTES.revokeAdmin(email))
 
   return data.success
 }
 
 export const getAlertMessage = async (): Promise<AlertMessage> => {
-  const { data } = await openstfApiClient.get<AlertMessageResponse>(OPENSTF_API_ROUTES.alertMessage)
+  const { data } = await mercuryApiClient.get<AlertMessageResponse>(MERCURY_API_ROUTES.alertMessage)
 
   return data.alertMessage
 }
@@ -378,7 +378,7 @@ export const getAlertMessage = async (): Promise<AlertMessage> => {
 export const addUserAsModerator = async ({ groupId, userEmail }: GroupUserArgs): Promise<boolean> => {
   if (!userEmail) throw new Error('User email is required to add moderator')
 
-  const { data } = await openstfApiClient.put<GroupResponse>(OPENSTF_API_ROUTES.groupModerator(groupId, userEmail))
+  const { data } = await mercuryApiClient.put<GroupResponse>(MERCURY_API_ROUTES.groupModerator(groupId, userEmail))
 
   return data.success
 }
@@ -386,7 +386,7 @@ export const addUserAsModerator = async ({ groupId, userEmail }: GroupUserArgs):
 export const removeUserAsModerator = async ({ groupId, userEmail }: GroupUserArgs): Promise<boolean> => {
   if (!userEmail) throw new Error('User email is required to remove moderator')
 
-  const { data } = await openstfApiClient.delete<GroupResponse>(OPENSTF_API_ROUTES.groupModerator(groupId, userEmail))
+  const { data } = await mercuryApiClient.delete<GroupResponse>(MERCURY_API_ROUTES.groupModerator(groupId, userEmail))
 
   return data.success
 }
@@ -401,13 +401,13 @@ export type BookDeviceResponse = {
 }
 
 export const bookDevice = async (serial: string, duration: number): Promise<BookDeviceResponse> => {
-  const { data } = await openstfApiClient.post<BookDeviceResponse>(OPENSTF_API_ROUTES.bookDevice(serial), { duration })
+  const { data } = await mercuryApiClient.post<BookDeviceResponse>(MERCURY_API_ROUTES.bookDevice(serial), { duration })
 
   return data
 }
 
 export const releaseBooking = async (serial: string): Promise<{ success: boolean }> => {
-  const { data } = await openstfApiClient.delete<{ success: boolean }>(OPENSTF_API_ROUTES.bookDevice(serial))
+  const { data } = await mercuryApiClient.delete<{ success: boolean }>(MERCURY_API_ROUTES.bookDevice(serial))
 
   return data
 }

@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Mercury
-  description: Control and manages real Smartphone devices from browser and restful
+  description: Control and manages real Smartphone devices from browser and remercuryul
     apis
   contact:
     name: Mercury Team
@@ -12,6 +12,8 @@ info:
   version: 1.4.7
 servers:
 - url: /api/v1
+security:
+- bearerAuth: []
 tags:
 - name: user
   description: User Operations
@@ -1849,7 +1851,7 @@ paths:
       tags:
         - user
       summary: Add a device to a user
-      description: The User Devices endpoint will request stf server for a new device.
+      description: The User Devices endpoint will request Mercury server for a new device.
       operationId: addUserDevice
       requestBody:
         description: Device to add
@@ -1964,7 +1966,7 @@ paths:
         - user
       summary: Delete User Device
       description: The User Devices endpoint will request for device release from
-        stf server. It will return request accepted if device is being used by current
+        Mercury server. It will return request accepted if device is being used by current
         user
       operationId: deleteUserDeviceBySerial
       parameters:
@@ -1999,7 +2001,7 @@ paths:
       tags:
         - user
       summary: Remote Connect
-      description: The device connect endpoint will request stf server to connect
+      description: The device connect endpoint will request Mercury server to connect
         remotely
       operationId: remoteConnectUserDeviceBySerial
       parameters:
@@ -2032,7 +2034,7 @@ paths:
       tags:
         - user
       summary: Remote Disconnect
-      description: The device connect endpoint will request stf server to disconnect
+      description: The device connect endpoint will request Mercury server to disconnect
         remotely
       operationId: remoteDisconnectUserDeviceBySerial
       parameters:
@@ -2355,7 +2357,7 @@ paths:
       tags:
         - devices
       summary: Device List
-      description: The devices endpoint return list of all the STF devices including
+      description: The devices endpoint return list of all the Mercury devices including
         Disconnected and Offline
       operationId: getDevices
       parameters:
@@ -3255,7 +3257,7 @@ paths:
         - devices
         - admin
       summary: Device List
-      description: Method generates fake devices ame as stf generate-fake-device
+      description: Method generates fake devices ame as mercury generate-fake-device
       operationId: generateFakeDevice
       parameters:
         - name: number
@@ -3899,6 +3901,11 @@ paths:
                 $ref: '#/components/schemas/UnexpectedErrorResponse'
     x-swagger-router-controller: teams
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     UnexpectedErrorResponse:
       required:

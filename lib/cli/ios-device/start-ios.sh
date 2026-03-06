@@ -1,5 +1,5 @@
 #!/bin/bash
-stf ios-device \
+mercury ios-device \
     --serial "2BFBC585-B481-450B-914C-640D114BAAC7" \
     --device-name "iPhone 11" \
     --host localhost \

@@ -7,31 +7,30 @@
     "adb",
     "android",
     "ios",
-    "stf",
+    "mercury",
     "test",
     "remote"
   ],
   "bin": {
-    "stf": "./bin/stf.mjs",
-    "mercury": "./bin/stf.mjs",
-    "dh": "./bin/stf.mjs"
+    "mercury": "./bin/mercury.mjs",
+    "dh": "./bin/mercury.mjs"
   },
   "yargs": {
     "duplicate-arguments-array": false
   },
   "scripts": {
-    "doc": "cli-docs-generator --cli=stf --pretty_cli_name=stf -o ./units.md",
+    "doc": "cli-docs-generator --cli=mercury --pretty_cli_name=mercury -o ./units.md",
     "lint": "eslint ./lib",
     "typecheck": "tsc -p tsconfig.typecheck.json",
     "build:swagger:ui": "cd ./ui && npm run generate-api",
     "build:swagger": "cd ./lib/units/api && python3 ./gen_routes.py & npm run build:swagger:ui",
     "protoc": "npx protoc --ts_out ./lib/wire --ts_opt generate_dependencies --proto_path ./lib/wire ./lib/wire/wire.proto",
     "build": "tsc",
-    "dev": "tsx ./bin/devstf.mjs",
+    "dev": "tsx ./bin/mercury.mjs",
     "ui:build": "npm --prefix ./ui run build:prod",
     "ui:watch": "npm --prefix ./ui run build:prod:watch",
-    "stf:domain:auto": "./scripts/update-stf-domain.sh scripts/variables.env",
-    "prestack:up:macos": "npm run -s stf:domain:auto",
+    "mercury:domain:auto": "./scripts/update-mercury-domain.sh scripts/variables.env",
+    "prestack:up:macos": "npm run -s mercury:domain:auto",
     "stack:up:macos": "docker compose -f docker-compose-macos.yaml --env-file scripts/variables.env up -d --build",
     "stack:ps:macos": "docker compose -f docker-compose-macos.yaml ps"
   },

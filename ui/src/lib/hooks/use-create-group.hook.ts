@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 
-import { createGroup } from '@/api/openstf-api'
+import { createGroup } from '@/api/mercury-api'
 
 import type { AxiosError } from 'axios'
 import type { UseMutationResult } from '@tanstack/react-query'

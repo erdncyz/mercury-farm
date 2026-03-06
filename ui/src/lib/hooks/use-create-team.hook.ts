@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 
-import { createTeam } from '@/api/openstf-api'
+import { createTeam } from '@/api/mercury-api'
 
 import { queryClient } from '@/config/queries/query-client'
 import { queries } from '@/config/queries/query-key-store'

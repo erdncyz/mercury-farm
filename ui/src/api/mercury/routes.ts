@@ -1,4 +1,4 @@
-export const OPENSTF_ROUTES = {
+export const MERCURY_ROUTES = {
   authDocs: '/auth/docs',
   authContact: '/auth/contact',
   uploadFile: '/s/upload',

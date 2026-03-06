@@ -1,13 +1,13 @@
 import { useMutation } from '@tanstack/react-query'
 
-import { removeDevices } from '@/api/openstf-api'
+import { removeDevices } from '@/api/mercury-api'
 
 import { queries } from '@/config/queries/query-key-store'
 import { queryClient } from '@/config/queries/query-client'
 
 import type { AxiosError } from 'axios'
 import type { UseMutationResult } from '@tanstack/react-query'
-import type { RemoveDevicesArgs } from '@/api/openstf-api/types'
+import type { RemoveDevicesArgs } from '@/api/mercury-api/types'
 import type { UnexpectedErrorResponse } from '@/generated/types'
 import type { SettingsDevice } from '@/types/settings-device.type'
 

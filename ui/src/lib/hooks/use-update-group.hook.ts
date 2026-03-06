@@ -1,7 +1,7 @@
 import { useInjection } from 'inversify-react'
 import { useMutation } from '@tanstack/react-query'
 
-import { updateGroup } from '@/api/openstf-api'
+import { updateGroup } from '@/api/mercury-api'
 
 import { queries } from '@/config/queries/query-key-store'
 import { queryClient } from '@/config/queries/query-client'

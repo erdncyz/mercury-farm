@@ -1,4 +1,4 @@
-stf vnc-device \
+mercury vnc-device \
     --serial "346AEE38-F1C5-4FE2-BBCC-7B75786A44EE" \
     --device-name "Generic VNC" \
     --host localhost \

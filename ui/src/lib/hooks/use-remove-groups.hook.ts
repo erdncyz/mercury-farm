@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 
-import { removeGroups } from '@/api/openstf-api'
+import { removeGroups } from '@/api/mercury-api'
 
 import { queries } from '@/config/queries/query-key-store'
 import { queryClient } from '@/config/queries/query-client'

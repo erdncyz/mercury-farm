@@ -1,12 +1,12 @@
 import { useMutation } from '@tanstack/react-query'
 
-import { updateTeam } from '@/api/openstf-api'
+import { updateTeam } from '@/api/mercury-api'
 
 import { queries } from '@/config/queries/query-key-store'
 import { queryClient } from '@/config/queries/query-client'
 
 import type { AxiosError } from 'axios'
-import type { TeamGroupArgs } from '@/api/openstf-api/types'
+import type { TeamGroupArgs } from '@/api/mercury-api/types'
 import type { UseMutationResult } from '@tanstack/react-query'
 import type { Team, UnexpectedErrorResponse } from '@/generated/types'
 

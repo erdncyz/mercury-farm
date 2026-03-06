@@ -22,7 +22,7 @@ const options = {
         }
         return 'mongodb://127.0.0.1:27017'
     },
-    db: process.env.MONGODB_DB_NAME || 'stf',
+    db: process.env.MONGODB_DB_NAME || 'mercury',
     authKey: process.env.MONGODB_ENV_AUTHKEY,
     adbPortsRange: process.env.adbPortsRange || '29000-29999',
 }

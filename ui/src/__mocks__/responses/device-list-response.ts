@@ -1,5 +1,5 @@
 import type { ListDevice } from '@/types/list-device.type'
-import type { DeviceWithFieldsListResponse } from '@/api/openstf-api/types'
+import type { DeviceWithFieldsListResponse } from '@/api/mercury-api/types'
 
 const makeDevices = (length: number): ListDevice[] =>
   Array.from(

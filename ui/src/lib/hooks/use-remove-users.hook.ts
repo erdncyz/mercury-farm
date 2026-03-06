@@ -1,12 +1,12 @@
 import { useMutation } from '@tanstack/react-query'
 
-import { removeUsers } from '@/api/openstf-api'
+import { removeUsers } from '@/api/mercury-api'
 
 import { queries } from '@/config/queries/query-key-store'
 import { queryClient } from '@/config/queries/query-client'
 
 import type { AxiosError } from 'axios'
-import type { RemoveUsersArgs } from '@/api/openstf-api/types'
+import type { RemoveUsersArgs } from '@/api/mercury-api/types'
 import type { UseMutationResult } from '@tanstack/react-query'
 import type { SettingsUser } from '@/types/settings-user.type'
 import type { UnexpectedErrorResponse } from '@/generated/types'

@@ -3,15 +3,15 @@
   "info": {
     "version": "2.3.0",
     "title": "Smartphone Test Farm",
-    "description": "Control and manages real Smartphone devices from browser and restful apis",
+    "description": "Control and manages real Smartphone devices from browser and remercuryul apis",
     "license": {
       "name": "Apache-2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0"
     },
     "contact": {
-      "name": "STF Team",
-      "email": "contact@openstf.io",
-      "url": "http://openstf.io/"
+      "name": "Mercury Team",
+      "email": "contact@mercury.io",
+      "url": "http://mercury.io/"
     }
   },
   "basePath": "/api/v1",
@@ -105,7 +105,7 @@
       },
       "post": {
         "summary": "Add a device to a user",
-        "description": "The User Devices endpoint will request stf server for a new device.",
+        "description": "The User Devices endpoint will request Mercury server for a new device.",
         "operationId": "addUserDevice",
         "tags": [
           "user"
@@ -185,7 +185,7 @@
       },
       "delete": {
         "summary": "Delete User Device",
-        "description": "The User Devices endpoint will request for device release from stf server. It will return request accepted if device is being used by current user",
+        "description": "The User Devices endpoint will request for device release from Mercury server. It will return request accepted if device is being used by current user",
         "operationId": "deleteUserDeviceBySerial",
         "tags": [
           "user"
@@ -220,7 +220,7 @@
     "/user/devices/{serial}/remoteConnect": {
       "post": {
         "summary": "Remote Connect",
-        "description": "The device connect endpoint will request stf server to connect remotely",
+        "description": "The device connect endpoint will request Mercury server to connect remotely",
         "operationId": "remoteConnectUserDeviceBySerial",
         "tags": [
           "user"
@@ -256,7 +256,7 @@
       },
       "delete": {
         "summary": "Remote Disconnect",
-        "description": "The device connect endpoint will request stf server to disconnect remotely",
+        "description": "The device connect endpoint will request Mercury server to disconnect remotely",
         "operationId": "remoteDisconnectUserDeviceBySerial",
         "tags": [
           "user"
@@ -320,7 +320,7 @@
     "/devices": {
       "get": {
         "summary": "Device List",
-        "description": "The devices endpoint return list of all the STF devices including Disconnected and Offline",
+        "description": "The devices endpoint return list of all the Mercury devices including Disconnected and Offline",
         "operationId": "getDevices",
         "tags": [
           "devices"

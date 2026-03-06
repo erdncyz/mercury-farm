@@ -1,4 +1,4 @@
-export const OPENSTF_API_ROUTES = {
+export const MERCURY_API_ROUTES = {
   devices: '/devices',
   groups: '/groups',
   teams: '/teams',

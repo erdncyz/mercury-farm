@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 
-import { grantAdmin } from '@/api/openstf-api'
+import { grantAdmin } from '@/api/mercury-api'
 
 import { queries } from '@/config/queries/query-key-store'
 import { queryClient } from '@/config/queries/query-client'
