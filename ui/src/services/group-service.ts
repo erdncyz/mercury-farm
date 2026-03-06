@@ -13,16 +13,18 @@ const MILLISECONDS_IN_MINUTE = 1000 * 60
 export class GroupService {
   constructor(@inject(CONTAINER_IDS.factoryTransactionService) private transactionServiceFactory: TransactionFactory) {}
 
-  invite(serial: string, channel: string, deviceGroup?: DeviceGroup): Promise<unknown> {
-    /* NOTE: 1 for Infinity */
-    let timeout = 1
+  invite(serial: string, channel: string, deviceGroup?: DeviceGroup, customTimeoutMinutes?: number): Promise<unknown> {
+    let timeout: number
 
-    if (deviceGroup?.id === deviceGroup?.origin) {
+    if (customTimeoutMinutes && customTimeoutMinutes > 0) {
+      timeout = MILLISECONDS_IN_MINUTE * customTimeoutMinutes
+    } else if (deviceGroup?.id === deviceGroup?.origin) {
+      /* NOTE: 1 for Infinity */
       timeout = MILLISECONDS_IN_MINUTE * 15
-    }
-
-    if (deviceGroup?.class === 'once') {
+    } else if (deviceGroup?.class === 'once') {
       timeout = MILLISECONDS_IN_MINUTE * 40
+    } else {
+      timeout = 1
     }
 
     const transaction = this.transactionServiceFactory()

@@ -1,30 +1,9 @@
 .controlPage {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0;
   min-height: 0;
   height: 100%;
-}
-
-.controlHero {
-  padding: 8px 12px;
-  border: 1px solid var(--app-border);
-  border-radius: var(--app-radius-xl);
-  background: linear-gradient(110deg, rgb(232 241 255 / 82%) 0%, rgb(211 245 238 / 72%) 100%);
-}
-
-.controlLabel {
-  margin: 0;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--app-text-muted);
-}
-
-.controlTitle {
-  margin-top: 4px;
 }
 
 .layout {
@@ -34,6 +13,7 @@
   min-height: 0;
   height: 100%;
   align-items: start;
+  overflow: hidden;
 }
 
 .devicePane {

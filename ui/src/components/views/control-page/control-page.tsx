@@ -2,7 +2,6 @@ import { useParams } from 'react-router'
 import { Provider as DIContainerProvider } from 'inversify-react'
 import { observer } from 'mobx-react-lite'
 import { useTranslation } from 'react-i18next'
-import { Text, Title } from '@vkontakte/vkui'
 
 import { Device } from '@/components/ui/device'
 import { DeviceControlPanel } from '@/components/ui/device-control-panel'
@@ -21,12 +20,6 @@ export const ControlPage = observer(() => {
   return (
     <DIContainerProvider container={() => createDeviceContainer(serial)}>
       <section className={styles.controlPage}>
-        <section className={styles.controlHero}>
-          <Text className={styles.controlLabel}>{t('Remote Session')}</Text>
-          <Title className={styles.controlTitle} level='2'>
-            {t('Interactive Device Console')}
-          </Title>
-        </section>
         <section className={styles.layout}>
           <div className={styles.devicePane}>
             <Device />

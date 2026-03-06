@@ -95,6 +95,8 @@ npm run stack:up:macos
 ./scripts/start-ios-provider.sh
 ```
 
+`npm run stack:up:macos` already runs `docker compose ... up -d --build`, so containers are rebuilt automatically.
+
 If iOS provider is managed by LaunchAgent:
 
 ```bash
@@ -170,6 +172,8 @@ npm ci
 npm run stack:up:macos
 ./scripts/start-ios-provider.sh
 ```
+
+`npm run stack:up:macos` komutu zaten `docker compose ... up -d --build` calistirir; container rebuild otomatik yapilir.
 
 ### Sorun/Yardim
 

@@ -23,4 +23,5 @@ export const OPENSTF_API_ROUTES = {
   teamDelete: (id: string) => `/team/${id}/delete`,
   teamUser: (id: string, email: string) => `/team/${id}/user/${email}`,
   teamGroup: (id: string, groupId: string) => `/team/${id}/group/${groupId}`,
+  bookDevice: (serial: string) => `/devices/${serial}/book`,
 } as const

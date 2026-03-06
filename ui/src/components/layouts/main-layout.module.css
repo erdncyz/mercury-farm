@@ -25,16 +25,16 @@
   bottom: 14px;
   z-index: 120;
   padding: 10px 14px;
-  border: 1px solid rgb(36 111 255 / 36%);
+  border: 1px solid rgb(214 35 35 / 45%);
   border-radius: 12px;
   font-size: 13px;
   font-weight: 800;
   line-height: 1.25;
-  color: #1742b8;
+  color: #b21717;
   text-decoration: none;
   background:
-    linear-gradient(135deg, rgb(255 255 255 / 96%), rgb(238 246 255 / 94%)),
-    linear-gradient(115deg, #1a62ff, #1599df 45%, #0f8d62);
+    linear-gradient(135deg, rgb(255 255 255 / 96%), rgb(255 240 240 / 94%)),
+    linear-gradient(115deg, #d51f1f, #e65a3a 45%, #b81717);
   background-clip: padding-box, border-box;
   box-shadow:
     0 10px 24px rgb(18 34 56 / 18%),
@@ -52,7 +52,7 @@
   transform: translateY(-1px) scale(1.02);
   box-shadow:
     0 12px 30px rgb(18 34 56 / 22%),
-    0 0 24px rgb(29 122 255 / 20%);
+    0 0 24px rgb(214 43 43 / 26%);
 }
 
 .copyrightLink:focus-visible {

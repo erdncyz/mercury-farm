@@ -1,5 +1,6 @@
 .deviceNavigationButtons {
   height: 44px;
+  flex-shrink: 0;
   border: 1px solid var(--app-border);
   border-top: none;
   border-radius: 0 0 var(--app-radius-xl) var(--app-radius-xl);

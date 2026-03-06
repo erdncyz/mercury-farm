@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next'
 import { observer } from 'mobx-react-lite'
 import { useInjection } from 'inversify-react'
 import { Div, Flex, Placeholder, Text, Title } from '@vkontakte/vkui'
-import { Icon56InboxOutline } from '@vkontakte/icons'
+import { Icon56AndroidDeviceOutline, Icon56AppleDeviceOutline, Icon56DevicesOutline, Icon56InboxOutline } from '@vkontakte/icons'
 
-import { BrowserCell, DeviceStatusCell, NotesCell } from '@/components/ui/device-table/cells'
+import { DeviceStatusCell, NotesCell } from '@/components/ui/device-table/cells'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { deviceTableState } from '@/store/device-table-state'
@@ -15,7 +15,6 @@ import { getDeviceState } from '@/lib/utils/get-device-state.util'
 import { dateToFormattedString } from '@/lib/utils/date-to-formatted-string.util'
 import { getExpireTime } from '@/lib/utils/get-expire-time.util'
 import { resolveTableFilterValue } from '@/lib/utils/resolve-table-filter-value.util'
-import { deviceServiceToString } from '@/lib/utils/device-service-to-string.util'
 
 import type { DeviceListStore } from '@/store/device-list-store'
 import type { ListDevice } from '@/types/list-device.type'
@@ -28,10 +27,29 @@ type DeviceInfoItemProps = {
   children?: ReactNode
 }
 
+enum PlatformIcon {
+  ANDROID = 'Android',
+  IOS = 'iOS',
+  TV_OS = 'tvOS',
+}
+
+const getPlatformIcon = (platform?: string): ReactNode => {
+  switch (platform) {
+    case PlatformIcon.ANDROID:
+      return <Icon56AndroidDeviceOutline height={20} width={20} />
+    case PlatformIcon.IOS:
+      return <Icon56AppleDeviceOutline height={20} width={20} />
+    case PlatformIcon.TV_OS:
+      return <Icon56DevicesOutline height={20} width={20} />
+    default:
+      return <Icon56DevicesOutline height={20} width={20} />
+  }
+}
+
 const DeviceInfoItem = ({ label, value, children }: DeviceInfoItemProps) => (
   <div className={styles.infoItem}>
     <Text className={styles.infoLabel}>{label}</Text>
-    <Text className={styles.infoValue}>{value || '—'}</Text>
+    {!children && <Text className={styles.infoValue}>{value || '—'}</Text>}
     {children}
   </div>
 )
@@ -70,6 +88,17 @@ const getStatusColorClass = (state: DeviceState): string => {
   return stateClassMap[state]
 }
 
+const getPlatformCardClass = (platform?: string): string => {
+  switch (platform) {
+    case PlatformIcon.ANDROID:
+      return styles.cardAndroid
+    case PlatformIcon.IOS:
+      return styles.cardIOS
+    default:
+      return styles.cardDefault
+  }
+}
+
 const getSearchableText = (device: ListDevice): string =>
   [
     device.name,
@@ -87,6 +116,18 @@ const getSearchableText = (device: ListDevice): string =>
     .join(' ')
     .toLowerCase()
 
+const getBookingExpireTime = (device: ListDevice): Date | null => {
+  if (!device.statusChangedAt || !device.bookedBefore || device.bookedBefore <= 1) return null
+  return getExpireTime(device.statusChangedAt, device.bookedBefore)
+}
+
+const isBookingActive = (device: ListDevice): boolean => {
+  if (!device.owner?.email) return false
+  const expireTime = getBookingExpireTime(device)
+  if (!expireTime) return false
+  return expireTime.getTime() > Date.now()
+}
+
 export const DeviceCards = observer(() => {
   const { t } = useTranslation()
   const deviceListStore = useInjection<DeviceListStore>(CONTAINER_IDS.deviceListStore)
@@ -99,8 +140,10 @@ export const DeviceCards = observer(() => {
     return deviceListStore.visibleDevices.filter((item) => {
       const isAndroid = item.platform === 'Android'
       const isIOS = item.platform === 'iOS'
-      const platformEnabled =
-        (isAndroid && deviceTableState.platformFilters.android) || (isIOS && deviceTableState.platformFilters.ios)
+      const hasKnownPlatform = isAndroid || isIOS
+      const platformEnabled = hasKnownPlatform
+        ? (isAndroid && deviceTableState.platformFilters.android) || (isIOS && deviceTableState.platformFilters.ios)
+        : true
 
       if (!platformEnabled) return false
       if (!normalizedFilter) return true
@@ -130,35 +173,32 @@ export const DeviceCards = observer(() => {
     <Div className={styles.grid}>
       {filteredDevices.map((device) => {
         const state = getDeviceState(device)
-        const bookedBeforeDate =
-          device.statusChangedAt && device.bookedBefore
-            ? dateToFormattedString({ value: getExpireTime(device.statusChangedAt, device.bookedBefore), needTime: true })
-            : t('Not booked')
+        const marketName = device.marketName || device.product || device.model || device.name || device.serial
+        const activeUser = device.using ? device.owner?.name || device.owner?.email || '—' : t('No active user')
+
+        const bookingActive = isBookingActive(device)
+        const bookingExpire = getBookingExpireTime(device)
+        const bookingText = bookingActive
+          ? `${device.owner?.name || device.owner?.email || '—'} → ${dateToFormattedString({ value: bookingExpire!, needTime: true })}`
+          : null
 
         return (
-          <article key={device.serial} className={styles.card}>
+          <article key={device.serial} className={`${styles.card} ${getPlatformCardClass(device.platform)}`}>
             <Flex align='start' className={styles.cardHeader} justify='space-between'>
-              <div>
+              <Flex align='center' className={styles.titleRow}>
+                <span className={styles.platformIcon}>{getPlatformIcon(device.platform)}</span>
                 <Title className={styles.model} level='3'>
-                  {device.name || device.model || device.serial}
+                  {marketName}
                 </Title>
-                <Text className={styles.subtitle}>
-                  {device.manufacturer || '—'} · {device.platform || '—'}
-                </Text>
-              </div>
+              </Flex>
               <span className={`${styles.statePill} ${getStatusColorClass(state)}`}>{getStatusLabel(state, t)}</span>
             </Flex>
 
             <div className={styles.infoGrid}>
               <DeviceInfoItem label={t('Serial')} value={device.serial} />
-              <DeviceInfoItem label={t('Market Name')} value={device.marketName || device.product || device.model} />
+              <DeviceInfoItem label={t('Who is using')} value={activeUser} />
+              {bookingText && <DeviceInfoItem label={t('Booking')} value={bookingText} />}
               <DeviceInfoItem label={t('Operating System')} value={device.version || '—'} />
-              <DeviceInfoItem label='SDK' value={device.sdk || '—'} />
-              <DeviceInfoItem label={t('Mobile Service')} value={deviceServiceToString(device.service) || '—'} />
-              <DeviceInfoItem label={t('Browser')}>
-                <BrowserCell apps={device.browser?.apps} />
-              </DeviceInfoItem>
-              <DeviceInfoItem label={t('Previously booked')} value={bookedBeforeDate} />
               <DeviceInfoItem label={t('Notes')}>
                 <NotesCell notes={device.notes} serial={device.serial} />
               </DeviceInfoItem>

@@ -390,3 +390,24 @@ export const removeUserAsModerator = async ({ groupId, userEmail }: GroupUserArg
 
   return data.success
 }
+
+export type BookDeviceResponse = {
+  success: boolean
+  description: string
+  serial: string
+  bookedBy: string
+  duration: number
+  bookedUntil: string
+}
+
+export const bookDevice = async (serial: string, duration: number): Promise<BookDeviceResponse> => {
+  const { data } = await openstfApiClient.post<BookDeviceResponse>(OPENSTF_API_ROUTES.bookDevice(serial), { duration })
+
+  return data
+}
+
+export const releaseBooking = async (serial: string): Promise<{ success: boolean }> => {
+  const { data } = await openstfApiClient.delete<{ success: boolean }>(OPENSTF_API_ROUTES.bookDevice(serial))
+
+  return data
+}

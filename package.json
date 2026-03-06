@@ -123,6 +123,7 @@
     "serve-static": "1.15.0",
     "socket.io": "4.7.5",
     "split": "1.0.1",
+    "swagger-ui-express": "^5.0.1",
     "temp": "0.9.4",
     "tmp-promise": "^3.0.3",
     "transliteration": "2.2.0",

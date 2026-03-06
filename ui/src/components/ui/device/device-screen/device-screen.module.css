@@ -1,12 +1,15 @@
 .deviceScreen {
   user-select: none;
+  touch-action: none;
+  overscroll-behavior: contain;
 
   position: relative;
 
   overflow: hidden;
+  flex: 1;
+  min-height: 0;
 
   width: 100%;
-  height: 100%;
   border: 1px solid var(--app-border);
   border-top: none;
   border-bottom: none;

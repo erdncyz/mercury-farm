@@ -636,6 +636,11 @@ message ChangeQualityMessage {
   required int32 quality = 1;
 }
 
+message ApplyAndroidRuntimeSettingsMessage {
+  required uint32 screenFrameRate = 1;
+  required uint32 screenJpegQuality = 2;
+}
+
 message ForwardTestMessage {
   required string targetHost = 1;
   required uint32 targetPort = 2;

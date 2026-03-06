@@ -3038,6 +3038,133 @@ paths:
               schema:
                 $ref: '#/components/schemas/UnexpectedErrorResponse'
     x-swagger-router-controller: devices
+  /devices/{serial}/book:
+    post:
+      tags:
+        - devices
+      summary: Book a device for a specified duration
+      description: Books a device for the authenticated user for a given duration in minutes. During the booking period, other users cannot use the device.
+      operationId: bookDevice
+      parameters:
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Booking duration in minutes (1-1440)
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - duration
+              type: object
+              properties:
+                duration:
+                  type: integer
+                  minimum: 1
+                  maximum: 1440
+                  description: Booking duration in minutes (max 24 hours)
+                  example: 60
+      responses:
+        "200":
+          description: Device booked successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  description:
+                    type: string
+                  serial:
+                    type: string
+                  bookedBy:
+                    type: string
+                  duration:
+                    type: integer
+                  bookedUntil:
+                    type: string
+                    format: date-time
+        "400":
+          description: Invalid duration or device not available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: Device is currently booked by another user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  description:
+                    type: string
+                  bookedBy:
+                    type: string
+                  bookedUntil:
+                    type: string
+                    format: date-time
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown device
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    delete:
+      tags:
+        - devices
+      summary: Release a device booking
+      description: Releases the booking on a device. Only the user who booked the device can release it.
+      operationId: releaseBooking
+      parameters:
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Booking released successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  description:
+                    type: string
+                  serial:
+                    type: string
+        "403":
+          description: Device is booked by another user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown device
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: devices
   /devices/{serial}/groups/{id}:
     put:
       tags:

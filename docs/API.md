@@ -16,8 +16,11 @@ curl -H "Authorization: Bearer YOUR_TOKEN" https://YOUR_DOMAIN/api/v1/user
 
 ### OpenAPI / Swagger
 
-- OpenAPI JSON: `https://YOUR_DOMAIN/api/v1/swagger.json`
+- OpenAPI JSON: `https://YOUR_DOMAIN/api/v1/scheme`
+- Alias (compatible): `https://YOUR_DOMAIN/api/v1/swagger.json`
+- Swagger UI: `https://YOUR_DOMAIN/api/v1/docs`
 - Swagger YAML in repo: `lib/units/api/swagger/api_v1.yaml`
+- Swagger docs endpoints are publicly reachable (no Bearer token required to open docs pages).
 
 ### Frequently used endpoints
 
@@ -81,8 +84,11 @@ curl -H "Authorization: Bearer YOUR_TOKEN" https://YOUR_DOMAIN/api/v1/user
 
 ### OpenAPI / Swagger
 
-- OpenAPI JSON: `https://YOUR_DOMAIN/api/v1/swagger.json`
+- OpenAPI JSON: `https://YOUR_DOMAIN/api/v1/scheme`
+- Alternatif (uyumlu alias): `https://YOUR_DOMAIN/api/v1/swagger.json`
+- Swagger UI: `https://YOUR_DOMAIN/api/v1/docs`
 - Repodaki Swagger YAML: `lib/units/api/swagger/api_v1.yaml`
+- Swagger dokuman endpointleri herkese acik (dokumani acmak icin Bearer token gerekmez).
 
 ### Sık kullanılan endpointler
 
