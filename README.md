@@ -133,13 +133,16 @@ Important:
 
 ## Documentation
 
+- [Documentation Index (EN + TR)](docs/index.md)
 - [Getting Started (EN + TR)](docs/getting-started.md)
-- [Troubleshooting (EN + TR)](docs/troubleshooting.md)
 - [iOS Setup (EN + TR)](docs/ios-setup.md)
-- [Scaling Guide (EN + TR)](docs/scaling.md)
+- [Parallel Execution (EN + TR)](docs/parallel-execution.md)
+- [Appium Setup (EN + TR)](docs/appium-setup.md)
+- [Appium Integration (EN + TR)](docs/appium-integration.md)
 - [Automation API (EN + TR)](docs/automation-api.md)
 - [API Reference (EN + TR)](docs/API.md)
 - [ESP32 Notes (EN + TR)](docs/esp32.md)
+- [Troubleshooting (EN + TR)](docs/troubleshooting.md)
 
 ---
 
