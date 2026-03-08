@@ -1,3 +1,21 @@
+## [11.4.0](https://github.com/appium/WebDriverAgent/compare/v11.3.0...v11.4.0) (2026-03-08)
+
+### Features
+
+* make maxChildren configuable ([#1117](https://github.com/appium/WebDriverAgent/issues/1117)) ([57dd6dc](https://github.com/appium/WebDriverAgent/commit/57dd6dce1677e84740c13aec2742872d11d64526))
+
+## [11.3.0](https://github.com/appium/WebDriverAgent/compare/v11.2.0...v11.3.0) (2026-03-05)
+
+### Features
+
+* add 6 tvOS button values for `mobile: pressButton` ([#1116](https://github.com/appium/WebDriverAgent/issues/1116)) ([efd64ed](https://github.com/appium/WebDriverAgent/commit/efd64ede7212b322f412cd6b25eab9c8097c286d))
+
+## [11.2.0](https://github.com/appium/WebDriverAgent/compare/v11.1.7...v11.2.0) (2026-03-04)
+
+### Features
+
+* add `action` and `camera` values for `mobile: pressButton` ([#1115](https://github.com/appium/WebDriverAgent/issues/1115)) ([3df0284](https://github.com/appium/WebDriverAgent/commit/3df0284d741f8b4a36a9e12e130ecf0711b60366))
+
 ## [11.1.7](https://github.com/appium/WebDriverAgent/compare/v11.1.6...v11.1.7) (2026-03-03)
 
 ### Miscellaneous Chores
