@@ -10,7 +10,6 @@ import { queries } from '@/config/queries/query-key-store'
 import { queryClient } from '@/config/queries/query-client'
 import { DeviceState } from '@/types/enums/device-state.enum'
 import { getDeviceState } from '@/lib/utils/get-device-state.util'
-import { isDeviceUsable } from '@/lib/utils/is-device-usable.util'
 import { normalizeListDevice } from '@/lib/utils/normalize-list-device.util'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
@@ -70,8 +69,7 @@ export class DeviceListStore {
 
   get usableDevicesCount(): number | undefined {
     return this.visibleDevices.reduce(
-      (accumulator, { present, status, ready, using, owner }) =>
-        isDeviceUsable({ present, status, ready, using, hasOwner: !!owner }) ? accumulator + 1 : accumulator,
+      (accumulator, item) => (getDeviceState(item) === DeviceState.AVAILABLE ? accumulator + 1 : accumulator),
       0
     )
   }

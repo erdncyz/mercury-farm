@@ -20,7 +20,7 @@ export class GroupService {
       timeout = MILLISECONDS_IN_MINUTE * customTimeoutMinutes
     } else if (deviceGroup?.id === deviceGroup?.origin) {
       /* NOTE: 1 for Infinity */
-      timeout = MILLISECONDS_IN_MINUTE * 15
+      timeout = MILLISECONDS_IN_MINUTE * 5
     } else if (deviceGroup?.class === 'once') {
       timeout = MILLISECONDS_IN_MINUTE * 40
     } else {
