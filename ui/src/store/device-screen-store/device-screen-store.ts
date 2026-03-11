@@ -108,6 +108,10 @@ export class DeviceScreenStore {
       this.canvasWrapper.offsetHeight
     )
 
+    if (!newAdjustedBoundSize) {
+      return
+    }
+
     if (
       !this.adjustedBoundSize ||
       newAdjustedBoundSize.width !== this.adjustedBoundSize.width ||
@@ -158,9 +162,9 @@ export class DeviceScreenStore {
     }
   }
 
-  private adjustBoundedSize(width: number, height: number): ElementBoundSize {
+  private adjustBoundedSize(width: number, height: number): ElementBoundSize | null {
     if (!this.device?.display?.width || !this.device?.display?.height) {
-      throw new Error('No display width or height')
+      return null
     }
 
     const scaledWidth = this.device.display.width * this.options.minScale
@@ -185,7 +189,7 @@ export class DeviceScreenStore {
     }
   }
 
-  private getNewAdjustedBoundSize(width: number, height: number): ElementBoundSize {
+  private getNewAdjustedBoundSize(width: number, height: number): ElementBoundSize | null {
     switch (this.screenRotation) {
       case 90:
       case 270:
