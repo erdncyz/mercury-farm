@@ -133,6 +133,7 @@ Important:
 
 ## Documentation
 
+- Smart TV detayli rehber kisayolu: [Smart TV (Tizen) Guide (EN + TR)](docs/smart-tv-tizen.md)
 - [Documentation Index (EN + TR)](docs/index.md)
 - [Getting Started (EN + TR)](docs/getting-started.md)
 - [iOS Setup (EN + TR)](docs/ios-setup.md)

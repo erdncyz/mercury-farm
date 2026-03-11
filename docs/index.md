@@ -21,6 +21,10 @@ Use this page as the single entry point for Mercury documentation.
 - [Appium Setup](./appium-setup.md)
 - [Appium Integration](./appium-integration.md)
 
+### Smart TV
+
+- [Smart TV (Tizen) Guide](./smart-tv-tizen.md)
+
 ### Parallel and Automation
 
 - [Parallel Execution](./parallel-execution.md)
@@ -50,6 +54,10 @@ Bu sayfayı Mercury dokümantasyonu için ana giriş noktası olarak kullanın.
 
 - [Appium Setup](./appium-setup.md)
 - [Appium Integration](./appium-integration.md)
+
+### Smart TV
+
+- [Smart TV (Tizen) Guide](./smart-tv-tizen.md)
 
 ### Paralel Koşum ve Otomasyon
 
