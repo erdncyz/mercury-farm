@@ -75,12 +75,13 @@ export class ScalingService {
             x = boundingHeight - relY
             y = relX
 
-            // NOTE: X and Y are inverted on iOS
+            // NOTE: With mjpegFixOrientation enabled, iOS frames are already
+            // in correct orientation so coordinates map directly
             if (isIosDevice) {
-              width = boundingHeight
-              height = boundingWidth
-              x = relY
-              y = relX
+              width = boundingWidth
+              height = boundingHeight
+              x = relX
+              y = relY
             }
 
             break
@@ -95,6 +96,14 @@ export class ScalingService {
             height = boundingWidth
             x = relY
             y = boundingWidth - relX
+
+            if (isIosDevice) {
+              width = boundingWidth
+              height = boundingHeight
+              x = relX
+              y = relY
+            }
+
             break
         }
 
@@ -147,13 +156,6 @@ export class ScalingService {
           }
 
           width = scaledValue
-        }
-
-        if (rotation === 90 && isIosDevice) {
-          return {
-            xP: y / height,
-            yP: x / width,
-          }
         }
 
         return {

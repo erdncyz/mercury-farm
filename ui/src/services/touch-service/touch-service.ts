@@ -589,13 +589,18 @@ export class TouchService {
     const x = mousePageX - screenBoundingRect.left
     const y = mousePageY - screenBoundingRect.top
 
-    const scaler = this.scalingService.coordinator(displayWidth, displayHeight)
+    const rotation = this.deviceScreenStore.getScreenRotation
+    const isLandscape = rotation === 90 || rotation === 270
+    const effectiveWidth = isIosDevice && isLandscape ? displayHeight : displayWidth
+    const effectiveHeight = isIosDevice && isLandscape ? displayWidth : displayHeight
+
+    const scaler = this.scalingService.coordinator(effectiveWidth, effectiveHeight)
     const scaled = scaler.coords({
       boundingWidth: screenBoundingRect.width,
       boundingHeight: screenBoundingRect.height,
       relX: x,
       relY: y,
-      rotation: this.deviceScreenStore.getScreenRotation,
+      rotation,
       isIosDevice: !!isIosDevice,
     })
 

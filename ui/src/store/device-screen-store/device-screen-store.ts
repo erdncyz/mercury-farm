@@ -4,6 +4,7 @@ import { inject, injectable } from 'inversify'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { DeviceBySerialStore } from '@/store/device-by-serial-store'
+import { socket } from '@/api/socket'
 import { deviceErrorModalStore } from '@/store/device-error-modal-store'
 import { deviceConnectionRequired } from '@/config/inversify/decorators'
 import { authStore } from '@/store/auth-store'
@@ -23,6 +24,7 @@ export class DeviceScreenStore {
   private disposed = false
 
   private context: ImageBitmapRenderingContext | null = null
+  private canvas: HTMLCanvasElement | null = null
   private canvasWrapper: HTMLDivElement | null = null
   private device: Device | null = null
   private showScreen = true
@@ -37,6 +39,10 @@ export class DeviceScreenStore {
   }
   private screenRotation = 0
   private isScreenStreamingJustStarted = false
+  private lastFrameWidth = 0
+  private lastFrameHeight = 0
+  private rotationCanvas: OffscreenCanvas | null = null
+  private rotationCtx: OffscreenCanvasRenderingContext2D | null = null
 
   isAspectRatioModeLetterbox = false
   isScreenLoading = false
@@ -46,6 +52,7 @@ export class DeviceScreenStore {
     this.updateBounds = this.updateBounds.bind(this)
     this.messageListener = this.messageListener.bind(this)
     this.openListener = this.openListener.bind(this)
+    this.onDeviceRotationChange = this.onDeviceRotationChange.bind(this)
 
     makeAutoObservable(this)
   }
@@ -83,7 +90,10 @@ export class DeviceScreenStore {
     }
 
     this.context = canvas.getContext('bitmaprenderer')
+    this.canvas = canvas
     this.canvasWrapper = canvasWrapper
+
+    socket.on('device.change', this.onDeviceRotationChange)
 
     this.connectWebsocket()
   }
@@ -91,6 +101,8 @@ export class DeviceScreenStore {
   stopScreenStreaming(): void {
     this.disposed = true
     this.stopWebsocket()
+
+    socket.off('device.change', this.onDeviceRotationChange)
 
     if (this.websocketReconnectionTimeoutID) {
       clearTimeout(this.websocketReconnectionTimeoutID)
@@ -128,6 +140,23 @@ export class DeviceScreenStore {
       const canvasWrapperAspect = this.canvasWrapper.offsetWidth / this.canvasWrapper.offsetHeight
 
       this.isAspectRatioModeLetterbox = canvasWrapperAspect < canvasAspect
+
+      // Re-apply explicit canvas sizing when container is resized
+      if (this.isAspectRatioModeLetterbox && this.canvas && this.lastFrameWidth > 0) {
+        const containerWidth = this.canvasWrapper.offsetWidth
+        const containerHeight = this.canvasWrapper.offsetHeight
+        const frameAspect = this.lastFrameWidth / this.lastFrameHeight
+        const cssWidth = containerWidth
+        const cssHeight = Math.round(containerWidth / frameAspect)
+
+        this.canvas.style.width = `${cssWidth}px`
+        this.canvas.style.height = `${cssHeight}px`
+        this.canvas.style.position = 'absolute'
+        this.canvas.style.left = '0'
+        this.canvas.style.top = `${Math.round((containerHeight - cssHeight) / 2)}px`
+        this.canvas.style.right = 'auto'
+        this.canvas.style.bottom = 'auto'
+      }
     }
   }
 
@@ -203,8 +232,44 @@ export class DeviceScreenStore {
     }
   }
 
+  private get isIosDevice(): boolean {
+    const platform = (this.device?.platform || '').toLowerCase()
+    const manufacturer = (this.device?.manufacturer || '').toLowerCase()
+
+    return platform === 'ios' || manufacturer === 'apple'
+  }
+
   private isRotated(): boolean {
     return this.screenRotation === 90 || this.screenRotation === 270
+  }
+
+  private needsFrameRotation(imageWidth: number, imageHeight: number): boolean {
+    if (!this.isIosDevice) return false
+
+    const isOrientationLandscape = this.screenRotation === 90 || this.screenRotation === 270
+    const isFramePortrait = imageHeight > imageWidth
+
+    return isOrientationLandscape && isFramePortrait
+  }
+
+  private rotateFrame(image: ImageBitmap): ImageBitmap {
+    const width = image.height
+    const height = image.width
+
+    if (!this.rotationCanvas || this.rotationCanvas.width !== width || this.rotationCanvas.height !== height) {
+      this.rotationCanvas = new OffscreenCanvas(width, height)
+      this.rotationCtx = this.rotationCanvas.getContext('2d')
+    }
+
+    const ctx = this.rotationCtx!
+
+    ctx.save()
+    ctx.translate(width / 2, height / 2)
+    ctx.rotate(this.screenRotation === 90 ? -Math.PI / 2 : Math.PI / 2)
+    ctx.drawImage(image, -image.width / 2, -image.height / 2)
+    ctx.restore()
+
+    return this.rotationCanvas.transferToImageBitmap()
   }
 
   private updateImageArea(imageWidth: number, imageHeight: number): void {
@@ -222,17 +287,34 @@ export class DeviceScreenStore {
       this.context.canvas.height = imageHeight
     }
 
-    const isRotated = this.isRotated()
-
-    if (isRotated) {
-      this.isScreenRotated = true
-    }
-
-    if (!isRotated) {
-      this.isScreenRotated = false
-    }
-
+    this.isScreenRotated = this.isRotated()
     this.determineAspectRatioMode()
+
+    // Explicitly set canvas CSS dimensions when in letterbox mode
+    // to ensure proper sizing regardless of CSS auto behavior
+    if (this.canvasWrapper && this.canvas && this.isAspectRatioModeLetterbox) {
+      const containerWidth = this.canvasWrapper.offsetWidth
+      const containerHeight = this.canvasWrapper.offsetHeight
+      const frameAspect = imageWidth / imageHeight
+      const cssWidth = containerWidth
+      const cssHeight = Math.round(containerWidth / frameAspect)
+
+      this.canvas.style.width = `${cssWidth}px`
+      this.canvas.style.height = `${cssHeight}px`
+      this.canvas.style.position = 'absolute'
+      this.canvas.style.left = '0'
+      this.canvas.style.top = `${Math.round((containerHeight - cssHeight) / 2)}px`
+      this.canvas.style.right = 'auto'
+      this.canvas.style.bottom = 'auto'
+    } else if (this.canvas && this.canvas.style.top !== '') {
+      // Reset to CSS class defaults when not in letterbox
+      this.canvas.style.width = ''
+      this.canvas.style.height = ''
+      this.canvas.style.top = ''
+      this.canvas.style.left = ''
+      this.canvas.style.right = ''
+      this.canvas.style.bottom = ''
+    }
   }
 
   private connectWebsocket(): void {
@@ -280,21 +362,46 @@ export class DeviceScreenStore {
     this.isScreenStreamingJustStarted = true
   }
 
+  private onDeviceRotationChange({ data }: { data: Partial<Device> & { serial: string } }): void {
+    if (data.serial !== this.device?.serial) return
+
+    if (data.display?.rotation !== undefined && data.display.rotation !== this.screenRotation) {
+      this.screenRotation = data.display.rotation
+      this.isScreenRotated = this.isRotated()
+      this.updateBounds()
+    }
+  }
+
   private messageListener(message: MessageEvent<Blob | string>): void {
     if (message.data instanceof Blob) {
       createImageBitmap(message.data).then((image) => {
-        if (!this.context) {
-          throw new Error('Context is not set')
-        }
+        runInAction(() => {
+          if (!this.context) {
+            throw new Error('Context is not set')
+          }
 
-        if (this.isScreenStreamingJustStarted) {
-          this.updateImageArea(image.width, image.height)
+          const willRotate = this.needsFrameRotation(image.width, image.height)
 
-          this.setIsScreenLoading(false)
-          this.isScreenStreamingJustStarted = false
-        }
+          const frameToRender = willRotate
+            ? this.rotateFrame(image)
+            : image
 
-        this.context.transferFromImageBitmap(image)
+          const dimensionsChanged =
+            frameToRender.width !== this.lastFrameWidth || frameToRender.height !== this.lastFrameHeight
+
+          if (this.isScreenStreamingJustStarted || dimensionsChanged) {
+            this.lastFrameWidth = frameToRender.width
+            this.lastFrameHeight = frameToRender.height
+            this.updateImageArea(frameToRender.width, frameToRender.height)
+
+            if (this.isScreenStreamingJustStarted) {
+              this.setIsScreenLoading(false)
+              this.isScreenStreamingJustStarted = false
+            }
+          }
+
+          this.context.transferFromImageBitmap(frameToRender)
+        })
       })
 
       return
@@ -328,6 +435,19 @@ export class DeviceScreenStore {
 
         if (authMessage.type === 'auth_error') {
           console.error('WebSocket authentication failed:', authMessage.message)
+
+          return
+        }
+
+        if (authMessage.type === 'orientation') {
+          const rotation = authMessage.rotation
+
+          if (typeof rotation === 'number' && rotation !== this.screenRotation) {
+            this.screenRotation = rotation
+            this.isScreenRotated = this.isRotated()
+            this.isScreenStreamingJustStarted = true
+            this.updateBounds()
+          }
 
           return
         }
