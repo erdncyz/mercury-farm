@@ -143,6 +143,7 @@ Important:
 - [Automation API (EN + TR)](docs/automation-api.md)
 - [API Reference (EN + TR)](docs/API.md)
 - [ESP32 Notes (EN + TR)](docs/esp32.md)
+- [Docker Services & Logs (EN + TR)](docs/docker-logs.md)
 - [Troubleshooting (EN + TR)](docs/troubleshooting.md)
 
 ---
