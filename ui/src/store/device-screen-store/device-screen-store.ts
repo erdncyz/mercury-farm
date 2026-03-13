@@ -15,8 +15,8 @@ import type { Device } from '@/generated/types'
 @injectable()
 @deviceConnectionRequired()
 export class DeviceScreenStore {
-  private readonly websocketReconnectionInterval = 5000 // NOTE: 5s
-  private readonly websocketReconnectionMaxAttempts = 3 // NOTE: 5s * 3 -> 15s total delay
+  private readonly websocketReconnectionInterval = 3000 // NOTE: 3s initial, with exponential backoff
+  private readonly websocketReconnectionMaxAttempts = 6 // NOTE: 3s + 6s + 12s + 24s + 48s + 96s ~ 3min total
   private websocket: WebSocket | null = null
   private websocketReconnecting = false
   private websocketReconnectionAttempt = 0
@@ -480,10 +480,12 @@ export class DeviceScreenStore {
     }
 
     if (!event.wasClean && this.websocketReconnectionAttempt < this.websocketReconnectionMaxAttempts) {
+      const backoffDelay = this.websocketReconnectionInterval * Math.pow(2, this.websocketReconnectionAttempt)
+
       this.websocketReconnectionTimeoutID = setTimeout(() => {
         this.websocketReconnectionTimeoutID = null
         this.reconnectWebsocket()
-      }, this.websocketReconnectionInterval)
+      }, backoffDelay)
 
       return
     }
