@@ -83,6 +83,7 @@ class TouchConsumer extends EventEmitter {
     private options: TouchOptions
     private adb: Client
     private minitouch: MinitouchService
+    private recoveryTimeoutID: ReturnType<typeof setTimeout> | null = null
     private ensureStateLock: boolean = false
     private splitStream: any = null
 
@@ -185,7 +186,6 @@ class TouchConsumer extends EventEmitter {
             } finally {
                 if (err.name !== 'CancellationError') {
                     this.failCounter.inc()
-                    this.emit('error', err)
                 }
             }
         } finally {
@@ -282,7 +282,16 @@ class TouchConsumer extends EventEmitter {
     private _failLimitExceeded(limit: number, time: number): void {
         this._stop()
         this.failed = true
-        this.emit('error', new Error(util.format('Failed more than %d times in %dms', limit, time)))
+        log.warn(`Touch consumer failed more than ${limit} times in ${time}ms, will attempt recovery in 30s`)
+
+        this.recoveryTimeoutID = setTimeout(() => {
+            this.recoveryTimeoutID = null
+            log.info('Attempting touch consumer recovery after cooldown')
+            this.failed = false
+            this.failCounter = new FailCounter(3, 10000)
+            this.failCounter.on('exceedLimit', this._failLimitExceeded.bind(this))
+            this.start()
+        }, 30000)
     }
 
     private async _startService(): Promise<NodeJS.ReadableStream> {
@@ -343,7 +352,7 @@ class TouchConsumer extends EventEmitter {
             // being quite aggressive. But if we do, well... assume it
             // stopped anyway for now.
             this.runningState = STATE_STOPPED
-            this.emit('error', err)
+            log.warn('Unexpected error during minitouch stop: %s', (err as Error)?.message)
             this.emit('stop')
         } finally {
             // Clean up split stream
@@ -530,6 +539,12 @@ class TouchConsumer extends EventEmitter {
     }
     
     destroy(): void {
+        // Clean up recovery timeout
+        if (this.recoveryTimeoutID) {
+            clearTimeout(this.recoveryTimeoutID)
+            this.recoveryTimeoutID = null
+        }
+        
         // Clean up all resources
         if (this.splitStream) {
             this.splitStream.removeAllListeners('data')
@@ -590,6 +605,9 @@ export default syrup.serial()
                 }),
                 new Promise<TouchConsumer>((_, reject) => {
                     touchConsumer.once('error', reject)
+                }),
+                new Promise<TouchConsumer>((_, reject) => {
+                    setTimeout(() => reject(new Error('Minitouch initial start timed out')), 60000)
                 })
             ])
         }

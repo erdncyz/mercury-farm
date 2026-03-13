@@ -520,7 +520,7 @@ export default syrup.serial()
 
             sendCommand = function(command: string) {
                 log.info('Executing shell command ' + command + ' on ' + options.serial)
-                devutil.executeShellCommand(command)
+                return devutil.executeShellCommand(command)
             }
 
             setBluetoothEnabled = (enabled: boolean) =>
