@@ -54,7 +54,7 @@ export class DeviceBySerialStore {
     queryClient.setQueryData<Device>(queries.devices.bySerial(this.serial).queryKey, (oldData) => {
       if (!oldData) return undefined
 
-      const newData = merge(oldData, changedData)
+      const newData = merge({}, oldData, changedData)
 
       const prevDeviceState = getDeviceState(oldData)
       const nextDeviceState = getDeviceState(newData)
@@ -76,6 +76,7 @@ export class DeviceBySerialStore {
         (nextDeviceState === DeviceState.USING && nextDeviceState !== prevDeviceState) ||
         (nextDeviceState === DeviceState.AUTOMATION && nextDeviceState !== prevDeviceState)
       ) {
+        newData.likelyLeaveReason = undefined
         deviceErrorModalStore.clearError()
       }
 

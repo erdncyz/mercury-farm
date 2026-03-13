@@ -53,6 +53,10 @@ export class DeviceScreenStore {
     this.messageListener = this.messageListener.bind(this)
     this.openListener = this.openListener.bind(this)
     this.onDeviceRotationChange = this.onDeviceRotationChange.bind(this)
+    this.handleVisibilityChange = this.handleVisibilityChange.bind(this)
+    this.handleWindowFocus = this.handleWindowFocus.bind(this)
+    this.handlePageShow = this.handlePageShow.bind(this)
+    this.handlePageHide = this.handlePageHide.bind(this)
 
     makeAutoObservable(this)
   }
@@ -94,6 +98,10 @@ export class DeviceScreenStore {
     this.canvasWrapper = canvasWrapper
 
     socket.on('device.change', this.onDeviceRotationChange)
+    document.addEventListener('visibilitychange', this.handleVisibilityChange)
+    window.addEventListener('focus', this.handleWindowFocus)
+    window.addEventListener('pageshow', this.handlePageShow)
+    window.addEventListener('pagehide', this.handlePageHide)
 
     this.connectWebsocket()
   }
@@ -103,6 +111,10 @@ export class DeviceScreenStore {
     this.stopWebsocket()
 
     socket.off('device.change', this.onDeviceRotationChange)
+    document.removeEventListener('visibilitychange', this.handleVisibilityChange)
+    window.removeEventListener('focus', this.handleWindowFocus)
+    window.removeEventListener('pageshow', this.handlePageShow)
+    window.removeEventListener('pagehide', this.handlePageHide)
 
     if (this.websocketReconnectionTimeoutID) {
       clearTimeout(this.websocketReconnectionTimeoutID)
@@ -189,6 +201,43 @@ export class DeviceScreenStore {
     if (this.websocket && this.websocket.readyState === WebSocket.OPEN) {
       this.websocket.send('off')
     }
+  }
+
+  private refreshScreenInterest(): void {
+    if (this.disposed) {
+      return
+    }
+
+    if (!this.shouldUpdateScreen()) {
+      this.onScreenInterestLost()
+
+      return
+    }
+
+    this.updateBounds()
+    this.onScreenInterestGained()
+  }
+
+  private recoverScreenStreaming(): void {
+    if (this.disposed || document.visibilityState !== 'visible') {
+      return
+    }
+
+    const socketState = this.websocket?.readyState
+
+    if (socketState === WebSocket.OPEN) {
+      this.refreshScreenInterest()
+
+      return
+    }
+
+    if (socketState === WebSocket.CONNECTING || this.websocketReconnecting || this.websocketReconnectionTimeoutID) {
+      return
+    }
+
+    this.setIsScreenLoading(true)
+    this.stopWebsocket()
+    this.reconnectWebsocket()
   }
 
   private adjustBoundedSize(width: number, height: number): ElementBoundSize | null {
@@ -370,6 +419,28 @@ export class DeviceScreenStore {
       this.isScreenRotated = this.isRotated()
       this.updateBounds()
     }
+  }
+
+  private handleVisibilityChange(): void {
+    if (document.visibilityState === 'visible') {
+      this.recoverScreenStreaming()
+
+      return
+    }
+
+    this.onScreenInterestLost()
+  }
+
+  private handleWindowFocus(): void {
+    this.recoverScreenStreaming()
+  }
+
+  private handlePageShow(): void {
+    this.recoverScreenStreaming()
+  }
+
+  private handlePageHide(): void {
+    this.onScreenInterestLost()
   }
 
   private messageListener(message: MessageEvent<Blob | string>): void {
