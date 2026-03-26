@@ -24,6 +24,19 @@ Settings Page:
 
 ---
 
+## Demo Video
+
+[![Mercury Device Farm Demo](https://img.youtube.com/vi/ZHmtFVSZbqM/maxresdefault.jpg)](https://www.youtube.com/watch?v=ZHmtFVSZbqM)
+
+---
+
+## Documentation
+
+- [Architecture Document (EN)](docs/architecture.md)
+- [Mimari Dokümanı (TR)](docs/mimari.md)
+
+---
+
 ## Quick Start (Source Install)
 
 ### 1) Prerequisites (macOS)
