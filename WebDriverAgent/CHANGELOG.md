@@ -1,3 +1,9 @@
+## [11.4.1](https://github.com/appium/WebDriverAgent/compare/v11.4.0...v11.4.1) (2026-03-15)
+
+### Bug Fixes
+
+* Add exponential backoff interval on consecutive screenshot failures ([#1119](https://github.com/appium/WebDriverAgent/issues/1119)) ([8aa1c5b](https://github.com/appium/WebDriverAgent/commit/8aa1c5b81363f45a4046161099ad624febdc0802))
+
 ## [11.4.0](https://github.com/appium/WebDriverAgent/compare/v11.3.0...v11.4.0) (2026-03-08)
 
 ### Features
