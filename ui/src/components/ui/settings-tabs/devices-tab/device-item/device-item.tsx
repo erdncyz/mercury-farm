@@ -29,7 +29,7 @@ type DeviceItemProps = {
   removeFilters: DeleteDeviceParams
 }
 
-export const DeviceItem = observer(({ device, removeFilters }: DeviceItemProps) => {
+export const DeviceItem = observer(({ device, removeFilters: _removeFilters }: DeviceItemProps) => {
   const { t } = useTranslation()
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
   const { mutate: removeDevice } = useRemoveDevice()
