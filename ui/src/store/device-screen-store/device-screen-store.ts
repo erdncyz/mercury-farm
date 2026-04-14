@@ -38,6 +38,8 @@ export class DeviceScreenStore {
     height: 0,
   }
   private screenRotation = 0
+  private isDecodingFrame = false
+  private pendingFrameBlob: Blob | null = null
   private isScreenStreamingJustStarted = false
   private lastFrameWidth = 0
   private lastFrameHeight = 0
@@ -216,6 +218,52 @@ export class DeviceScreenStore {
 
     this.updateBounds()
     this.onScreenInterestGained()
+  }
+
+  private decodeAndRenderFrame(blob: Blob): void {
+    createImageBitmap(blob).then((image) => {
+      runInAction(() => {
+        if (!this.context) {
+          this.isDecodingFrame = false
+          this.pendingFrameBlob = null
+
+          return
+        }
+
+        const willRotate = this.needsFrameRotation(image.width, image.height)
+
+        const frameToRender = willRotate
+          ? this.rotateFrame(image)
+          : image
+
+        const dimensionsChanged =
+          frameToRender.width !== this.lastFrameWidth || frameToRender.height !== this.lastFrameHeight
+
+        if (this.isScreenStreamingJustStarted || dimensionsChanged) {
+          this.lastFrameWidth = frameToRender.width
+          this.lastFrameHeight = frameToRender.height
+          this.updateImageArea(frameToRender.width, frameToRender.height)
+
+          if (this.isScreenStreamingJustStarted) {
+            this.setIsScreenLoading(false)
+            this.isScreenStreamingJustStarted = false
+          }
+        }
+
+        this.context.transferFromImageBitmap(frameToRender)
+
+        if (this.pendingFrameBlob) {
+          const nextBlob = this.pendingFrameBlob
+          this.pendingFrameBlob = null
+          this.decodeAndRenderFrame(nextBlob)
+        } else {
+          this.isDecodingFrame = false
+        }
+      })
+    }).catch(() => {
+      this.isDecodingFrame = false
+      this.pendingFrameBlob = null
+    })
   }
 
   private recoverScreenStreaming(): void {
@@ -445,35 +493,14 @@ export class DeviceScreenStore {
 
   private messageListener(message: MessageEvent<Blob | string>): void {
     if (message.data instanceof Blob) {
-      createImageBitmap(message.data).then((image) => {
-        runInAction(() => {
-          if (!this.context) {
-            throw new Error('Context is not set')
-          }
+      if (this.isDecodingFrame) {
+        this.pendingFrameBlob = message.data
 
-          const willRotate = this.needsFrameRotation(image.width, image.height)
+        return
+      }
 
-          const frameToRender = willRotate
-            ? this.rotateFrame(image)
-            : image
-
-          const dimensionsChanged =
-            frameToRender.width !== this.lastFrameWidth || frameToRender.height !== this.lastFrameHeight
-
-          if (this.isScreenStreamingJustStarted || dimensionsChanged) {
-            this.lastFrameWidth = frameToRender.width
-            this.lastFrameHeight = frameToRender.height
-            this.updateImageArea(frameToRender.width, frameToRender.height)
-
-            if (this.isScreenStreamingJustStarted) {
-              this.setIsScreenLoading(false)
-              this.isScreenStreamingJustStarted = false
-            }
-          }
-
-          this.context.transferFromImageBitmap(frameToRender)
-        })
-      })
+      this.isDecodingFrame = true
+      this.decodeAndRenderFrame(message.data)
 
       return
     }

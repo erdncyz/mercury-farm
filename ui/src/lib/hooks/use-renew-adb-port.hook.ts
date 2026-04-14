@@ -9,4 +9,7 @@ import type { UnexpectedErrorResponse } from '@/generated/types'
 export const useRenewAdbPort = (): UseMutationResult<number, AxiosError<UnexpectedErrorResponse>, string> =>
   useMutation({
     mutationFn: (data) => renewAdbPort(data),
+    onError: (error) => {
+      console.error('Failed to renew ADB port:', error)
+    },
   })

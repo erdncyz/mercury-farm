@@ -278,6 +278,10 @@ export const updateGroup = async (id: string, data: GroupPayload): Promise<boole
 export const renewAdbPort = async (serial: string): Promise<number> => {
   const { data } = await mercuryApiClient.put<AdbPortResponse>(MERCURY_API_ROUTES.adbPort(serial))
 
+  if (!data.port) {
+    throw new Error('Failed to assign ADB port: no free port available')
+  }
+
   return data.port
 }
 

@@ -40,6 +40,7 @@ export const DeviceItem = observer(({ device, removeFilters }: DeviceItemProps) 
     mutate: renewAdbPort,
     isSuccess: isAdbPortRenewed,
     isPending: isAdbPortPending,
+    isError: isAdbPortError,
   } = useRenewAdbPort()
   const [updateInfo, setUpdateInfo] = useState<UpdateStorageInfoParams>({
     place: device.place,
@@ -65,7 +66,7 @@ export const DeviceItem = observer(({ device, removeFilters }: DeviceItemProps) 
   }
 
   const onRemove = () => {
-    removeDevice({ serial: device.serial, ...removeFilters })
+    removeDevice({ serial: device.serial })
 
     deviceSettingsService.setSelectedItem(device, false)
   }
@@ -87,13 +88,14 @@ export const DeviceItem = observer(({ device, removeFilters }: DeviceItemProps) 
         title={`${device.manufacturer || t('Unknown')} ${device.model || t('Unknown')} (${device.marketName || t('Unknown')})`}
         after={
           <Button
+            appearance={isAdbPortError ? 'negative' : undefined}
             before={<Icon20RefreshOutline />}
             disabled={isAdbPortPending}
             mode='tertiary'
             size='s'
             onClick={onUpdateAdbPort}
           >
-            {t('Update ADB Port')}
+            {isAdbPortError ? t('ADB Port Update Failed') : t('Update ADB Port')}
           </Button>
         }
         indicator={

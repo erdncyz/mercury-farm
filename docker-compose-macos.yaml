@@ -42,7 +42,15 @@ services:
         container_name: mercury-mongo
         ports:
             - 27017:27017
-        entrypoint: ["mongod", "--replSet", "mercury-rs", "--bind_ip_all"]
+        entrypoint: ["mongod", "--replSet", "mercury-rs", "--bind_ip_all", "--wiredTigerCacheSizeGB", "1"]
+        deploy:
+            resources:
+                limits:
+                    cpus: '2'
+                    memory: 2G
+                reservations:
+                    cpus: '0.5'
+                    memory: 512M
         healthcheck:
             test: echo "rs.status()" | mongosh --port 27017 --quiet
             interval: 5s
@@ -123,7 +131,7 @@ services:
         container_name: mercury-reaper
         env_file:
             - scripts/variables.env
-        command: mercury reaper --name reaper001 --connect-push tcp://mercury-triproxy-dev:7270 --connect-sub tcp://mercury-triproxy-dev:7250 --heartbeat-timeout 30000
+        command: mercury reaper --name reaper001 --connect-push tcp://mercury-triproxy-dev:7270 --connect-sub tcp://mercury-triproxy-dev:7250 --heartbeat-timeout 30000 --time-to-device-cleanup 10
         depends_on:
             mercury-migrate:
                 condition: service_completed_successfully
@@ -210,6 +218,14 @@ services:
         env_file:
             - scripts/variables.env
         command: mercury websocket --port 3000 --storage-url http://mercury-storage-temp:3000/ --connect-sub tcp://mercury-triproxy-app:7150 --connect-push tcp://mercury-triproxy-app:7170 --connect-sub-dev tcp://mercury-triproxy-dev:7250 --connect-push-dev tcp://mercury-triproxy-dev:7270 --secret=${MERCURY_SECRET}
+        deploy:
+            resources:
+                limits:
+                    cpus: '2'
+                    memory: 2G
+                reservations:
+                    cpus: '0.5'
+                    memory: 256M
         depends_on:
             mercury-migrate:
                 condition: service_completed_successfully
@@ -254,7 +270,15 @@ services:
             mercury-migrate:
                 condition: service_completed_successfully
         restart: unless-stopped
-        command: mercury provider --name mercury-provider --adb-host host.docker.internal --no-cleanup --connect-sub tcp://mercury-triproxy-dev:7250 --connect-push tcp://mercury-triproxy-dev:7270 --storage-url http://mercury-storage-plugin-apk:3000/ --public-ip ${MERCURY_DOMAIN} --min-port=12010 --max-port=12100 --heartbeat-interval 10000 --screen-ws-url-pattern "wss://${MERCURY_DOMAIN}:${MERCURY_PORT}/d/mercury-provider/<%= publicPort %>/" --screen-frame-rate 30 --screen-jpeg-quality 15 --secret=${MERCURY_SECRET}
+        command: mercury provider --name mercury-provider --adb-host host.docker.internal --no-cleanup --connect-sub tcp://mercury-triproxy-dev:7250 --connect-push tcp://mercury-triproxy-dev:7270 --storage-url http://mercury-storage-plugin-apk:3000/ --public-ip ${MERCURY_DOMAIN} --min-port=12010 --max-port=12100 --heartbeat-interval 10000 --screen-ws-url-pattern "wss://${MERCURY_DOMAIN}:${MERCURY_PORT}/d/mercury-provider/<%= publicPort %>/" --screen-frame-rate ${SCREEN_FRAME_RATE:-24} --screen-jpeg-quality ${SCREEN_JPEG_QUALITY:-30} --secret=${MERCURY_SECRET}
+        deploy:
+            resources:
+                limits:
+                    cpus: '4'
+                    memory: 4G
+                reservations:
+                    cpus: '1'
+                    memory: 512M
         networks:
             mercury:
     mercury-ssl:

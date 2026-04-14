@@ -94,5 +94,7 @@
   "Runtime profile.quality": "Image Quality",
   "Runtime profile.description.aggressive": "fast and risk-averse",
   "Runtime profile.description.balanced": "stability and default usage",
-  "Runtime profile.description.quality": "high clarity for visual analysis"
+  "Runtime profile.description.quality": "high clarity for visual analysis",
+  "ShellCommandPlaceholder": "e.g. pm list packages, getprop ro.build.version.sdk, dumpsys battery",
+  "ShellHelpTooltip": "Runs an ADB shell command on all connected Android devices. Examples:\n• pm list packages — list installed apps\n• getprop ro.product.model — get device model\n• settings put system font_scale 1.2 — change font size\n• dumpsys battery — battery info\n• cmd uimode night yes — enable dark mode\n\nNote: Only works on Android devices. iOS devices are not supported."
 }

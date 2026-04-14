@@ -1,3 +1,15 @@
+## [11.4.3](https://github.com/appium/WebDriverAgent/compare/v11.4.2...v11.4.3) (2026-04-12)
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump typescript from 5.9.3 to 6.0.2 ([#1121](https://github.com/appium/WebDriverAgent/issues/1121)) ([046b080](https://github.com/appium/WebDriverAgent/commit/046b08042df33f507466f55b68b444c91684931a))
+
+## [11.4.2](https://github.com/appium/WebDriverAgent/compare/v11.4.1...v11.4.2) (2026-04-12)
+
+### Bug Fixes
+
+* Avoid keeping strong reference to self instance in delegates ([#1123](https://github.com/appium/WebDriverAgent/issues/1123)) ([dd15f48](https://github.com/appium/WebDriverAgent/commit/dd15f48d33edabef6aea8ac951cf539946b492f2))
+
 ## [11.4.1](https://github.com/appium/WebDriverAgent/compare/v11.4.0...v11.4.1) (2026-03-15)
 
 ### Bug Fixes

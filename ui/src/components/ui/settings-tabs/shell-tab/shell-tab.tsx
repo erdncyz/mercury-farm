@@ -36,14 +36,14 @@ export const ShellTab = observer(() => {
       afterButtonIcon={<Icon20DeleteOutline />}
       afterTooltipText={t('Clear')}
       before={<Icon20ChevronRightOutline />}
-      helpTooltipText={t('Execute adb shell command on all devices')}
+      helpTooltipText={t('ShellHelpTooltip')}
       isAfterButtonDisabled={shellSettingsService.isPaginatedItemsEmpty}
       title={t('Shell')}
       onAfterButtonClick={() => shellSettingsService.clear()}
     >
       <div className={styles.commandInput}>
         <Input
-          placeholder={t('Type a command')}
+          placeholder={t('ShellCommandPlaceholder')}
           value={shellSettingsService.command}
           after={
             <IconButton

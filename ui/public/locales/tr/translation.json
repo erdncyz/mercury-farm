@@ -96,6 +96,8 @@
   "Device booking": "Cihaz rezervasyonu",
   "Booked before": "Daha önce rezerve edildi",
   "Remote debug": "Uzak hata ayıklama",
+  "ShellCommandPlaceholder": "örn. pm list packages, getprop ro.build.version.sdk, dumpsys battery",
+  "ShellHelpTooltip": "Bağlı tüm Android cihazlarda ADB shell komutu çalıştırır. Örnekler:\n• pm list packages — yüklü uygulamaları listele\n• getprop ro.product.model — cihaz modelini al\n• settings put system font_scale 1.2 — yazı boyutunu değiştir\n• dumpsys battery — pil bilgisi\n• cmd uimode night yes — karanlık modu aç\n\nNot: Sadece Android cihazlarda çalışır. iOS desteklenmez.",
   "Open link or deeplink": "Bağlantı veya deeplink aç",
   "Shell": "Kabuk",
   "Type a command": "Bir komut yazın",
