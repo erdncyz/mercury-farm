@@ -27,6 +27,10 @@ export class TouchService {
   private readonly cycle = 100
   private readonly minMoveDelta = 0.003
   private readonly minIosSwipeDelta = 0.004
+  private readonly minIosFlickDelta = 0.012
+  private readonly iosFlickMaxElapsedMs = 220
+  private readonly iosFlickMinDuration = 0.1
+  private readonly iosFlickMaxDuration = 0.2
   private readonly iosSwipeMinDuration = 0.12
   private readonly iosSwipeMaxDuration = 0.8
   private prevCoords: { x: number; y: number } = { x: 0, y: 0 }
@@ -204,8 +208,19 @@ export class TouchService {
       (iosSwipeDistanceX >= this.minIosSwipeDelta || iosSwipeDistanceY >= this.minIosSwipeDelta) &&
       this.isIosDevice(device)
     ) {
-      const elapsedSeconds = (Date.now() - this.iosSwipeStartAt) / 1000
-      const duration = Math.min(this.iosSwipeMaxDuration, Math.max(this.iosSwipeMinDuration, elapsedSeconds))
+      const elapsedMs = Date.now() - this.iosSwipeStartAt
+      const elapsedSeconds = elapsedMs / 1000
+      const swipeDistance = Math.hypot(iosSwipeDistanceX, iosSwipeDistanceY)
+      const isFlick = elapsedMs <= this.iosFlickMaxElapsedMs && swipeDistance >= this.minIosFlickDelta
+
+      let duration = Math.min(this.iosSwipeMaxDuration, Math.max(this.iosSwipeMinDuration, elapsedSeconds))
+
+      if (isFlick) {
+        // Keep quick flicks short for natural inertial scrolling on iOS.
+        const normalizedDistance = Math.min(1, swipeDistance / 0.35)
+        const flickDuration = this.iosFlickMaxDuration - normalizedDistance * 0.1
+        duration = Math.max(this.iosFlickMinDuration, Math.min(this.iosFlickMaxDuration, flickDuration))
+      }
 
       this.deviceControlStore.touchMoveIos({
         x: scaled.coords.xP,
@@ -452,12 +467,17 @@ export class TouchService {
 
     if (!device?.display?.width || !device.display?.height || !this.deviceScreenStore.getCanvasWrapper) return
 
+    const hasCursor = !!device.capabilities?.hasCursor
     const screenBoundingRect = this.getScreenBoundingRect()
     const wrapperBoundingRect = this.getWrapperBoundingRect()
 
     for (let i = 0, l = changedTouches.length; i < l; ++i) {
       const touch = changedTouches[i]
       const slot = this.slotted[touch.identifier]
+
+      if (typeof slot === 'undefined') {
+        continue
+      }
 
       const scaled = this.getScaledCoords({
         displayWidth: device.display.width,
@@ -470,26 +490,26 @@ export class TouchService {
 
       const pressure = touch.force || 0.5
 
-      if (this.isIosDevice(device)) {
-      this.deviceControlStore.touchMoveIos({
-        x: scaled.coords.xP,
-        y: scaled.coords.yP,
-        pX: this.prevCoords.x,
-        pY: this.prevCoords.y,
-        pressure,
-        duration: this.iosSwipeMinDuration,
-        seq: this.nextSeq(),
-        contact: slot,
-      })
+      if (this.isIosDevice(device) && !hasCursor) {
+        this.deviceControlStore.touchMoveIos({
+          x: scaled.coords.xP,
+          y: scaled.coords.yP,
+          pX: this.prevCoords.x,
+          pY: this.prevCoords.y,
+          pressure,
+          duration: this.iosSwipeMinDuration,
+          seq: this.nextSeq(),
+          contact: slot,
+        })
+      } else {
+        this.deviceControlStore.touchMove({
+          seq: this.nextSeq(),
+          contact: slot,
+          x: scaled.coords.xP,
+          y: scaled.coords.yP,
+          pressure,
+        })
       }
-
-      this.deviceControlStore.touchMove({
-        seq: this.nextSeq(),
-        contact: slot,
-        x: scaled.coords.xP,
-        y: scaled.coords.yP,
-        pressure,
-      })
 
       this.prevCoords = {
         x: scaled.coords.xP,

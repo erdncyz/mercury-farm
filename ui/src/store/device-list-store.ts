@@ -34,16 +34,19 @@ export class DeviceListStore {
 
     this.flushUpdates = this.flushUpdates.bind(this)
     this.onDeviceChange = this.onDeviceChange.bind(this)
+    this.onDeviceRemove = this.onDeviceRemove.bind(this)
 
     this.addDeviceChangeListener()
   }
 
   addDeviceChangeListener(): void {
     socket.on('device.change', this.onDeviceChange)
+    socket.on('device.remove', this.onDeviceRemove)
   }
 
   removeDeviceChangeListener(): void {
     socket.off('device.change', this.onDeviceChange)
+    socket.off('device.remove', this.onDeviceRemove)
   }
 
   get devicesQueryResult(): QueryObserverResult<ListDevice[]> {
@@ -84,6 +87,18 @@ export class DeviceListStore {
     }
 
     this.throttledFlushUpdates()
+  }
+
+  private onDeviceRemove({ data }: { data?: { serial?: string } }): void {
+    if (!data?.serial) return
+
+    delete this.batchedUpdates[data.serial]
+
+    queryClient.setQueryData<DeviceTableRow[] | undefined>(queries.devices.list.queryKey, (oldData) => {
+      if (!oldData) return oldData
+
+      return oldData.filter((item) => item.serial !== data.serial)
+    })
   }
 
   private flushUpdates(): void {

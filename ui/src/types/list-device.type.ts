@@ -15,6 +15,7 @@ export type ListDevice = {
   battery?: Omit<DeviceBattery, 'voltage'>
   bookedAt?: string | null
   bookedBefore?: number
+  bookingSource?: 'manual' | 'session' | null | string
   browser?: Omit<DeviceBrowser, 'selected'>
   channel?: string
   cpuPlatform?: string

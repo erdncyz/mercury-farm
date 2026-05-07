@@ -66,6 +66,16 @@ export const StreamingScreen = observer(({ canvasWrapperRef }: ScreenProps) => {
     touchService.mouseUpBugWorkaroundListener(event)
   })
 
+  const onWindowMouseUp = useCallbackWithErrorHandling((event: MouseEvent) => {
+    touchService.mouseUpListener({
+      mousePageX: event.clientX,
+      mousePageY: event.clientY,
+      isRightButtonPressed: event.button === 2,
+    })
+
+    touchService.mouseUpBugWorkaroundListener(event)
+  })
+
   const onTouchEnd = useCallbackWithErrorHandling((event: TouchEvent) => {
     event.preventDefault()
 
@@ -149,7 +159,7 @@ export const StreamingScreen = observer(({ canvasWrapperRef }: ScreenProps) => {
     el.addEventListener('touchstart', onTouchStart, touchListenerOptions)
     el.addEventListener('contextmenu', preventContextMenu)
 
-    window.addEventListener('mouseup', onMouseUp)
+    window.addEventListener('mouseup', onWindowMouseUp)
 
     return () => {
       el.removeEventListener('mousedown', onMouseDown)
@@ -160,9 +170,9 @@ export const StreamingScreen = observer(({ canvasWrapperRef }: ScreenProps) => {
       el.removeEventListener('touchstart', onTouchStart)
       el.removeEventListener('contextmenu', preventContextMenu)
 
-      window.removeEventListener('mouseup', onMouseUp)
+      window.removeEventListener('mouseup', onWindowMouseUp)
     }
-  }, [canvasWrapperRef, onMouseDown, onMouseMove, onMouseUp, onTouchEnd, onTouchMove, onTouchStart])
+  }, [canvasWrapperRef, onMouseDown, onMouseMove, onMouseUp, onTouchEnd, onTouchMove, onTouchStart, onWindowMouseUp])
 
   return (
     <>

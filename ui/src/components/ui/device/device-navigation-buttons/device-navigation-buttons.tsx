@@ -12,6 +12,13 @@ import { NavigationButton } from './navigation-button'
 
 import styles from './device-navigation-buttons.module.css'
 
+const OpenAppsIcon = () => (
+  <svg aria-hidden='true' height='24' viewBox='0 0 24 24' width='24'>
+    <rect fill='none' height='10' rx='2' stroke='currentColor' strokeWidth='2' width='10' x='4' y='7' />
+    <rect fill='none' height='10' rx='2' stroke='currentColor' strokeWidth='2' width='10' x='10' y='5' />
+  </svg>
+)
+
 export const DeviceNavigationButtons = observer(() => {
   const { t } = useTranslation()
 
@@ -32,6 +39,13 @@ export const DeviceNavigationButtons = observer(() => {
           title={`${t('Home')}`}
           onClick={() => {
             deviceControlStore.home()
+          }}
+        />
+        <NavigationButton
+          beforeIcon={<OpenAppsIcon />}
+          title={`${t('Open apps')}`}
+          onClick={() => {
+            deviceControlStore.appSwitch()
           }}
         />
       </ConditionalRender>

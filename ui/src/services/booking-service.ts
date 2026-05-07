@@ -26,12 +26,16 @@ export class BookingService {
 
   async init(): Promise<void> {
     const device = await this.deviceBySerialStore.fetch()
+    const bookingSource = (device as { bookingSource?: string | null }).bookingSource
 
-    if (device.statusChangedAt && device.bookedBefore && device.bookedBefore > 1) {
+    if (bookingSource === 'manual' && device.statusChangedAt && device.bookedBefore && device.bookedBefore > 1) {
       this.setTime(device.statusChangedAt, device.bookedBefore)
       this.bookedByUser = device.owner?.name || device.owner?.email || ''
       const expireTime = new Date(new Date(device.statusChangedAt).getTime() + device.bookedBefore)
       this.isBooked = expireTime.getTime() > Date.now()
+    } else {
+      this.isBooked = false
+      this.bookedByUser = ''
     }
   }
 
