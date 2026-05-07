@@ -1,3 +1,39 @@
+## [12.2.1](https://github.com/appium/WebDriverAgent/compare/v12.2.0...v12.2.1) (2026-05-06)
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump sinon from 21.1.2 to 22.0.0 ([#1133](https://github.com/appium/WebDriverAgent/issues/1133)) ([11c579b](https://github.com/appium/WebDriverAgent/commit/11c579b7ed3a9995715d65590a2959763871aa6d))
+
+## [12.2.0](https://github.com/appium/WebDriverAgent/compare/v12.1.1...v12.2.0) (2026-04-29)
+
+### Features
+
+* Ditch bluebird and lodash ([#1130](https://github.com/appium/WebDriverAgent/issues/1130)) ([8899895](https://github.com/appium/WebDriverAgent/commit/88998951f004daed1d22ce2c06eec89a08129e4f))
+
+## [12.1.1](https://github.com/appium/WebDriverAgent/compare/v12.1.0...v12.1.1) (2026-04-27)
+
+### Miscellaneous Chores
+
+* **compile:** fix compilation ([#1129](https://github.com/appium/WebDriverAgent/issues/1129)) ([76d59e8](https://github.com/appium/WebDriverAgent/commit/76d59e85c75680c97abe9e67fdf4a70cacd46418))
+
+## [12.1.0](https://github.com/appium/WebDriverAgent/compare/v12.0.0...v12.1.0) (2026-04-24)
+
+### Features
+
+* **client:** add ability to set headers on requests ([#1127](https://github.com/appium/WebDriverAgent/issues/1127)) ([a8889cd](https://github.com/appium/WebDriverAgent/commit/a8889cd7cb85c1b58faee306295fb3c5c2a9d0e3))
+
+## [12.0.0](https://github.com/appium/WebDriverAgent/compare/v11.4.3...v12.0.0) (2026-04-14)
+
+### ⚠ BREAKING CHANGES
+
+* remove idb from AppleDevice; clients must stop passing device.idb.
+* remove includeNonModalElements WDA setting; clients must stop sending this setting in /settings.
+* remove shouldUseTestManagerForVisibilityDetection capability; clients must stop sending this desired capability.
+
+### Code Refactoring
+
+* remove deprecated WDA settings/capabilities and idb typing ([#1124](https://github.com/appium/WebDriverAgent/issues/1124)) ([5072e25](https://github.com/appium/WebDriverAgent/commit/5072e255faa3538f5ff4c8769bf16fd290ee8af9))
+
 ## [11.4.3](https://github.com/appium/WebDriverAgent/compare/v11.4.2...v11.4.3) (2026-04-12)
 
 ### Miscellaneous Chores

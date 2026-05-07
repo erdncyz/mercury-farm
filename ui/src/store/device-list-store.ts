@@ -87,11 +87,22 @@ export class DeviceListStore {
   }
 
   private flushUpdates(): void {
-    queryClient.setQueryData<DeviceTableRow[]>(queries.devices.list.queryKey, (oldData) => {
-      if (!oldData) return []
+    const batchedUpdates = this.batchedUpdates
+    let hasUnknownDeviceUpdate = false
+
+    queryClient.setQueryData<DeviceTableRow[] | undefined>(queries.devices.list.queryKey, (oldData) => {
+      if (!oldData) {
+        hasUnknownDeviceUpdate = true
+
+        return oldData
+      }
+
+      const knownSerials = new Set(oldData.map((item) => item.serial))
+
+      hasUnknownDeviceUpdate = Object.keys(batchedUpdates).some((serial) => !knownSerials.has(serial))
 
       return oldData.map((item): DeviceTableRow => {
-        const updateData = this.batchedUpdates[item.serial]
+        const updateData = batchedUpdates[item.serial]
 
         if (updateData) {
           /* NOTE: needUpdate determine if the row needs to be rerendered */
@@ -103,5 +114,9 @@ export class DeviceListStore {
     })
 
     this.batchedUpdates = {}
+
+    if (hasUnknownDeviceUpdate) {
+      queryClient.invalidateQueries({ queryKey: queries.devices.list.queryKey })
+    }
   }
 }

@@ -80,7 +80,7 @@ export class DeviceScreenStore {
   }
 
   async init(): Promise<void> {
-    this.device = await this.deviceBySerialStore.fetch()
+    this.device = await this.deviceBySerialStore.fetchFresh()
   }
 
   async startScreenStreaming(canvas: HTMLCanvasElement, canvasWrapper: HTMLDivElement): Promise<void> {
@@ -105,6 +105,25 @@ export class DeviceScreenStore {
     window.addEventListener('pageshow', this.handlePageShow)
     window.addEventListener('pagehide', this.handlePageHide)
 
+    this.connectWebsocket()
+  }
+
+  async reconnectScreenStreaming(): Promise<void> {
+    if (!this.canvas || !this.canvasWrapper) return
+
+    if (this.websocketReconnectionTimeoutID) {
+      clearTimeout(this.websocketReconnectionTimeoutID)
+      this.websocketReconnectionTimeoutID = null
+    }
+
+    this.websocketReconnecting = false
+    this.websocketReconnectionAttempt = 0
+    this.isScreenStreamingJustStarted = true
+    this.setIsScreenLoading(true)
+
+    await this.init()
+
+    this.stopWebsocket()
     this.connectWebsocket()
   }
 
@@ -221,49 +240,49 @@ export class DeviceScreenStore {
   }
 
   private decodeAndRenderFrame(blob: Blob): void {
-    createImageBitmap(blob).then((image) => {
-      runInAction(() => {
-        if (!this.context) {
-          this.isDecodingFrame = false
-          this.pendingFrameBlob = null
+    createImageBitmap(blob)
+      .then((image) => {
+        runInAction(() => {
+          if (!this.context) {
+            this.isDecodingFrame = false
+            this.pendingFrameBlob = null
 
-          return
-        }
-
-        const willRotate = this.needsFrameRotation(image.width, image.height)
-
-        const frameToRender = willRotate
-          ? this.rotateFrame(image)
-          : image
-
-        const dimensionsChanged =
-          frameToRender.width !== this.lastFrameWidth || frameToRender.height !== this.lastFrameHeight
-
-        if (this.isScreenStreamingJustStarted || dimensionsChanged) {
-          this.lastFrameWidth = frameToRender.width
-          this.lastFrameHeight = frameToRender.height
-          this.updateImageArea(frameToRender.width, frameToRender.height)
-
-          if (this.isScreenStreamingJustStarted) {
-            this.setIsScreenLoading(false)
-            this.isScreenStreamingJustStarted = false
+            return
           }
-        }
 
-        this.context.transferFromImageBitmap(frameToRender)
+          const willRotate = this.needsFrameRotation(image.width, image.height)
 
-        if (this.pendingFrameBlob) {
-          const nextBlob = this.pendingFrameBlob
-          this.pendingFrameBlob = null
-          this.decodeAndRenderFrame(nextBlob)
-        } else {
-          this.isDecodingFrame = false
-        }
+          const frameToRender = willRotate ? this.rotateFrame(image) : image
+
+          const dimensionsChanged =
+            frameToRender.width !== this.lastFrameWidth || frameToRender.height !== this.lastFrameHeight
+
+          if (this.isScreenStreamingJustStarted || dimensionsChanged) {
+            this.lastFrameWidth = frameToRender.width
+            this.lastFrameHeight = frameToRender.height
+            this.updateImageArea(frameToRender.width, frameToRender.height)
+
+            if (this.isScreenStreamingJustStarted) {
+              this.setIsScreenLoading(false)
+              this.isScreenStreamingJustStarted = false
+            }
+          }
+
+          this.context.transferFromImageBitmap(frameToRender)
+
+          if (this.pendingFrameBlob) {
+            const nextBlob = this.pendingFrameBlob
+            this.pendingFrameBlob = null
+            this.decodeAndRenderFrame(nextBlob)
+          } else {
+            this.isDecodingFrame = false
+          }
+        })
       })
-    }).catch(() => {
-      this.isDecodingFrame = false
-      this.pendingFrameBlob = null
-    })
+      .catch(() => {
+        this.isDecodingFrame = false
+        this.pendingFrameBlob = null
+      })
   }
 
   private recoverScreenStreaming(): void {

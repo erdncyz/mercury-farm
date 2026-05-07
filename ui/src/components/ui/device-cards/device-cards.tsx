@@ -117,8 +117,8 @@ const getSearchableText = (device: ListDevice): string =>
     .toLowerCase()
 
 const getBookingExpireTime = (device: ListDevice): Date | null => {
-  if (!device.statusChangedAt || !device.bookedBefore || device.bookedBefore <= 1) return null
-  return getExpireTime(device.statusChangedAt, device.bookedBefore)
+  if (!device.bookedAt || !device.bookedBefore || device.bookedBefore <= 1) return null
+  return getExpireTime(device.bookedAt, device.bookedBefore)
 }
 
 const isBookingActive = (device: ListDevice): boolean => {

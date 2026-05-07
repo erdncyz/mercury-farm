@@ -52,15 +52,22 @@ export class GroupService {
   kick(serial: string, channel: string): Promise<unknown> {
     const transaction = this.transactionServiceFactory()
     const { channel: transactionChannel, donePromise: transactionEndPromise } = transaction.initializeTransaction()
-
-    socket.emit('group.kick', channel, transactionChannel, {
-      requirements: {
-        serial: {
-          value: serial,
-          match: 'exact',
+    const kick = (): void =>
+      socket.emit('group.kick', channel, transactionChannel, {
+        requirements: {
+          serial: {
+            value: serial,
+            match: 'exact',
+          },
         },
-      },
-    })
+      }) as never
+
+    if (!socket.connected) {
+      socket.once('connect', kick)
+      socket.connect()
+    } else {
+      kick()
+    }
 
     return transactionEndPromise
   }

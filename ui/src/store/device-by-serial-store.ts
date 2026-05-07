@@ -92,6 +92,16 @@ export class DeviceBySerialStore {
     return this.deviceQuery.fetch()
   }
 
+  async fetchFresh(): Promise<Device> {
+    const result = await this.deviceQuery.refetch()
+
+    if (result.data) {
+      return result.data
+    }
+
+    throw result.error || new Error('Unable to fetch device')
+  }
+
   refetch(): Promise<QueryObserverResult<Device>> {
     return this.deviceQuery.refetch()
   }

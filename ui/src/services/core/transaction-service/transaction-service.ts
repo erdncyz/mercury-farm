@@ -55,6 +55,7 @@ export class TransactionService<T = unknown> {
      */
     this.timeoutId = setTimeout(() => {
       this.cleanUpTransaction()
+      this.donePromise.reject(new Error('Transaction timed out'))
     }, this.timeoutDelay)
 
     return {

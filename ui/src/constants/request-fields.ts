@@ -1,5 +1,5 @@
 export const DEVICE_LIST_FIELDS =
-  'abi,battery.health,battery.level,battery.scale,battery.source,battery.status,battery.temp,bookedBefore,browser.apps,channel,cpuPlatform,createdAt,display.width,display.height,display.rotation,display.url,group,ios,macAddress,manufacturer,marketName,model,name,network.type,network.subtype,notes,openGLESVersion,operator,owner.email,owner.name,phone.iccid,phone.imei,phone.imsi,phone.phoneNumber,place,platform,present,product,provider.name,ready,releaseAt,sdk,serial,service,status,statusChangedAt,storageId,usage,using,version'
+  'abi,battery.health,battery.level,battery.scale,battery.source,battery.status,battery.temp,bookedAt,bookedBefore,browser.apps,channel,cpuPlatform,createdAt,display.width,display.height,display.rotation,display.url,group,ios,macAddress,manufacturer,marketName,model,name,network.type,network.subtype,notes,openGLESVersion,operator,owner.email,owner.name,phone.iccid,phone.imei,phone.imsi,phone.phoneNumber,place,platform,present,product,provider.name,ready,releaseAt,sdk,serial,service,status,statusChangedAt,storageId,usage,using,version'
 
 export const DEVICE_GROUPS_FIELDS =
   'serial,model,version,operator,network.type,network.subtype,display.height,display.width,manufacturer,sdk,abi,cpuPlatform,openGLESVersion,marketName,phone.imei,provider.name,group.originName,group.class,group.lifeTime'

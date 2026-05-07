@@ -11,6 +11,8 @@ import { WarningModal } from '@/components/ui/modals'
 import { ConditionalRender } from '@/components/lib/conditional-render'
 import { ScreenQualitySelector } from '@/components/ui/screen-quality-selector'
 
+import { queries } from '@/config/queries/query-key-store'
+import { queryClient } from '@/config/queries/query-client'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
 import { getMainRoute } from '@/constants/route-paths'
@@ -31,7 +33,7 @@ export const DeviceTopBar = observer(() => {
 
   const deviceTitle =
     device?.platform === 'Android' ? `${device?.manufacturer || ''} ${device?.marketName || ''}` : device?.model || ''
-  const currentRotation = `${t('Current rotation:')} ${deviceScreenStore.getScreenRotation}°`
+  const currentRotation = `${t('Current rotation:')} ${deviceScreenStore.getScreenRotation} deg`
 
   useEffect(() => {
     const onPopState = () => {
@@ -94,11 +96,17 @@ export const DeviceTopBar = observer(() => {
         title={t('Warning')}
         onClose={() => setIsConfirmationOpen(false)}
         onOk={async () => {
-          if (!device?.channel || !device?.serial) return
+          try {
+            if (device?.channel && device?.serial) {
+              await deviceDisconnection.stopUsingDevice(device.serial, device.channel)
+            }
+          } catch (error) {
+            console.error(error)
+          } finally {
+            queryClient.invalidateQueries({ queryKey: queries.devices.list.queryKey })
 
-          await deviceDisconnection.stopUsingDevice(device.serial, device.channel)
-
-          navigate(getMainRoute(), { replace: true })
+            navigate(getMainRoute(), { replace: true })
+          }
         }}
       />
     </Flex>

@@ -27,10 +27,10 @@ export class DeviceConnection {
     makeAutoObservable(this)
   }
 
-  async useDevice(): Promise<void> {
-    const device = await this.deviceBySerialStore.fetch()
-
+  async useDevice(): Promise<boolean> {
     try {
+      const device = await this.deviceBySerialStore.fetchFresh()
+
       if (!device?.channel) throw new Error('Device is not cooperating.')
 
       const startRemoteConnectResult = await this.deviceControlStore.startRemoteConnect()
@@ -49,10 +49,14 @@ export class DeviceConnection {
       await this.groupService.invite(this.serial, device.channel, device.group)
 
       this.settingsService.updateLastUsedDevice(this.serial)
+
+      return true
     } catch (error) {
       deviceErrorModalStore.setError(t('Connection failed'))
 
       console.error(error)
+
+      return false
     }
   }
 }

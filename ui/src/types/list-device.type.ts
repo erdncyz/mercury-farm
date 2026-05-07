@@ -13,6 +13,7 @@ import type {
 export type ListDevice = {
   abi?: string
   battery?: Omit<DeviceBattery, 'voltage'>
+  bookedAt?: string | null
   bookedBefore?: number
   browser?: Omit<DeviceBrowser, 'selected'>
   channel?: string

@@ -33,6 +33,7 @@ export default syrup.serial()
     .define((options: InstallOptions, adb: any, router: any, push: any, storage: any) => {
         const log = logger.createLogger('device:plugins:install')
         const reply = wireutil.reply(options.serial)
+        const isUnknownPackageError = (err: any): boolean => /Unknown package:/i.test(err?.message || String(err))
 
         router.on(InstallMessage, async (channel: string, message: any) => {
             const manifest: Manifest = JSON.parse(message.manifest)
@@ -230,6 +231,15 @@ export default syrup.serial()
                 ])
             }
             catch (err: any) {
+                if (isUnknownPackageError(err)) {
+                    log.info('Uninstall skipped; package is already absent: %s', message.packageName)
+                    push.send([
+                        channel,
+                        reply.okay('success')
+                    ])
+                    return
+                }
+
                 log.error('Uninstallation failed: %s', err)
                 push.send([
                     channel,
