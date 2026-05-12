@@ -220,7 +220,7 @@ export default syrup.serial()
                 catch (err: any) {
                     log.error('Failed processing UngroupMessage: %s', err?.message)
                     if (err instanceof grouputil.NoGroupError) {
-                        // Device is already not in any group — desired state achieved, respond okay
+                        // Device is already not in any group - desired state achieved, respond okay
                         log.info('Device was not in any group during UngroupMessage, treating as success')
                         push.send([
                             channel,
