@@ -21,10 +21,12 @@ import {
   Icon16UnlockOutline,
   Icon28VolumeOutline,
   Icon28SettingsOutline,
+  Icon24RefreshOutline,
 } from '@vkontakte/icons'
 import { observer } from 'mobx-react-lite'
 import { useInjection } from 'inversify-react'
 import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 
 import { ContentCard } from '@/components/lib/content-card'
 
@@ -62,6 +64,22 @@ export const DeviceButtonsControl = observer(({ className }: { className?: strin
               tooltipText={t('Power')}
               onClick={() => {
                 deviceControlStore.power()
+              }}
+            />
+            <ButtonControl
+              icon={<Icon24RefreshOutline />}
+              tooltipText={t('Restart')}
+              onClick={async () => {
+                if (device) {
+                  try {
+                    await axios.post('/restart', {
+                      platform: device.platform?.toLowerCase() || 'android',
+                      serial: device.serial,
+                    })
+                  } catch (e) {
+                    console.error('Failed to restart device', e)
+                  }
+                }
               }}
             />
             <ButtonControl

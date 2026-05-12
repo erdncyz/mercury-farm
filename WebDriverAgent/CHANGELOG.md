@@ -1,3 +1,9 @@
+## [12.2.2](https://github.com/appium/WebDriverAgent/compare/v12.2.1...v12.2.2) (2026-05-08)
+
+### Bug Fixes
+
+* linter ([#1134](https://github.com/appium/WebDriverAgent/issues/1134)) ([2bd1816](https://github.com/appium/WebDriverAgent/commit/2bd181628a1d4525a8f1c459ea295ac0541b514c))
+
 ## [12.2.1](https://github.com/appium/WebDriverAgent/compare/v12.2.0...v12.2.1) (2026-05-06)
 
 ### Miscellaneous Chores
