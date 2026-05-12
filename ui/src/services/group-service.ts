@@ -41,7 +41,7 @@ export class GroupService {
       }) as never
 
     if (!socket.connected) {
-      socket.on('connect', invite)
+      socket.once('connect', invite)
     } else {
       invite()
     }
