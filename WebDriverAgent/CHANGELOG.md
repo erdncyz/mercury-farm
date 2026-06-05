@@ -1,3 +1,47 @@
+## [13.2.0](https://github.com/appium/WebDriverAgent/compare/v13.1.3...v13.2.0) (2026-05-26)
+
+### Features
+
+* Add XPath extensions ([#1144](https://github.com/appium/WebDriverAgent/issues/1144)) ([a975b89](https://github.com/appium/WebDriverAgent/commit/a975b89ac998d31a72bf3723b843d85af8867cf0))
+
+## [13.1.3](https://github.com/appium/WebDriverAgent/compare/v13.1.2...v13.1.3) (2026-05-24)
+
+### Bug Fixes
+
+* Scheme for derived data path retrieval ([#1142](https://github.com/appium/WebDriverAgent/issues/1142)) ([9ada5f6](https://github.com/appium/WebDriverAgent/commit/9ada5f6fe2af29278c488e845f8714f22fabfeee))
+
+## [13.1.2](https://github.com/appium/WebDriverAgent/compare/v13.1.1...v13.1.2) (2026-05-23)
+
+### Bug Fixes
+
+* Address compilation warnings ([#1143](https://github.com/appium/WebDriverAgent/issues/1143)) ([f1f9976](https://github.com/appium/WebDriverAgent/commit/f1f9976f4a0a0fb8a8aa3ee1f2483b25275600e6))
+
+## [13.1.1](https://github.com/appium/WebDriverAgent/compare/v13.1.0...v13.1.1) (2026-05-22)
+
+### Bug Fixes
+
+* ship Scripts/embed-runner-icon.sh in the npm package ([#1141](https://github.com/appium/WebDriverAgent/issues/1141)) ([17ac1c1](https://github.com/appium/WebDriverAgent/commit/17ac1c16a0890ee0fbfe73504a3ff570dfe1a7bf)), closes [#1138](https://github.com/appium/WebDriverAgent/issues/1138)
+
+## [13.1.0](https://github.com/appium/WebDriverAgent/compare/v13.0.0...v13.1.0) (2026-05-21)
+
+### Features
+
+* add app icon to WebDriverAgentRunner ([#1138](https://github.com/appium/WebDriverAgent/issues/1138)) ([fe8adc8](https://github.com/appium/WebDriverAgent/commit/fe8adc89923994428783397170de850e11ebb3c6))
+* Add helper method to fetch build settings ([#1139](https://github.com/appium/WebDriverAgent/issues/1139)) ([56b5f38](https://github.com/appium/WebDriverAgent/commit/56b5f384ed9ba1a014d4b642ddf26b8573ceaafe))
+
+## [13.0.0](https://github.com/appium/WebDriverAgent/compare/v12.2.2...v13.0.0) (2026-05-17)
+
+### ⚠ BREAKING CHANGES
+
+* quitAndUninstall() removed — use quit() only. App uninstall is out of scope for this module.
+* uninstall() removed — WDA must not be uninstalled from this package; callers (e.g. xcuitest-driver) should own that if needed.
+* setupCaching() no longer uninstalls WDA — on bundle-id or version mismatch it logs and skips caching instead of removing apps from the device. Also, it now returns the cached url on success.
+* appium-ios-device dependency removed — preinstalled WDA on real devices always launches via devicectl (no iOS < 17 Xctest fallback).
+
+### Features
+
+* Drop legacy APIs ([#1137](https://github.com/appium/WebDriverAgent/issues/1137)) ([8995d24](https://github.com/appium/WebDriverAgent/commit/8995d24e16634a4624918319996839993502c7b4))
+
 ## [12.2.2](https://github.com/appium/WebDriverAgent/compare/v12.2.1...v12.2.2) (2026-05-08)
 
 ### Bug Fixes

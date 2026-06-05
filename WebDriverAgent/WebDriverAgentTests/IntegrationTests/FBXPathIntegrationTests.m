@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FBIntegrationTestCase.h"
+#import "FBExceptions.h"
 #import "FBMacros.h"
 #import "FBTestMacros.h"
 #import "FBXPath.h"
@@ -49,6 +50,31 @@
   // The purpose of here is return a single element to replace children with an empty array for testing.
   snapshot.children = @[];
   return snapshot;
+}
+
+- (NSSet<NSString *> *)labelsForMatchingSnapshots:(NSArray<id<FBXCElementSnapshot>> *)matchingSnapshots
+{
+  NSMutableSet<NSString *> *labels = [NSMutableSet set];
+  for (id<FBXCElementSnapshot> snapshot in matchingSnapshots) {
+    NSString *label = [FBXCElementSnapshotWrapper ensureWrapped:snapshot].wdLabel;
+    if (nil != label) {
+      [labels addObject:label];
+    }
+  }
+  return labels.copy;
+}
+
+- (void)assertXPathQuery:(NSString *)query findsButtonLabels:(NSArray<NSString *> *)expectedLabels
+{
+  NSArray<id<FBXCElementSnapshot>> *matchingSnapshots = [FBXPath matchesWithRootElement:self.testedApplication
+                                                                               forQuery:query];
+  NSSet<NSString *> *foundLabels = [self labelsForMatchingSnapshots:matchingSnapshots];
+  NSSet<NSString *> *expectedLabelSet = [NSSet setWithArray:expectedLabels];
+  XCTAssertEqual(foundLabels.count, expectedLabelSet.count);
+  XCTAssertEqualObjects(foundLabels, expectedLabelSet);
+  for (id<FBXCElementSnapshot> snapshot in matchingSnapshots) {
+    XCTAssertEqualObjects([FBXCElementSnapshotWrapper ensureWrapped:snapshot].wdType, @"XCUIElementTypeButton");
+  }
 }
 
 - (void)testApplicationNodeXMLRepresentation
@@ -152,6 +178,83 @@
   for (id<FBXCElementSnapshot> element in matchingSnapshots) {
     XCTAssertTrue([[FBXCElementSnapshotWrapper ensureWrapped:element].wdType isEqualToString:@"XCUIElementTypeButton"]);
   }
+}
+
+- (void)testFindMatchesWithMatchesFunction
+{
+  [self assertXPathQuery:@"//XCUIElementTypeButton[matches(@label, '^Alerts$')]"
+       findsButtonLabels:@[@"Alerts"]];
+}
+
+- (void)testFindMatchesWithMatchesFunctionCaseInsensitive
+{
+  [self assertXPathQuery:@"//XCUIElementTypeButton[matches(@label, '^alerts$', 'i')]"
+       findsButtonLabels:@[@"Alerts"]];
+}
+
+- (void)testFindMatchesWithEndsWithFunction
+{
+  [self assertXPathQuery:@"//XCUIElementTypeButton[ends-with(@label, 'ing')]"
+       findsButtonLabels:@[@"Scrolling"]];
+}
+
+- (void)testFindMatchesWithLowerCaseFunction
+{
+  [self assertXPathQuery:@"//XCUIElementTypeButton[lower-case(@label)='alerts']"
+       findsButtonLabels:@[@"Alerts"]];
+}
+
+- (void)testFindMatchesWithUpperCaseFunction
+{
+  [self assertXPathQuery:@"//XCUIElementTypeButton[upper-case(@label)='TOUCH']"
+       findsButtonLabels:@[@"Touch"]];
+}
+
+- (void)testFindMatchesWithReplaceFunction
+{
+  [self assertXPathQuery:@"//XCUIElementTypeButton[replace(@label, ' ', '')='Deadlockapp']"
+       findsButtonLabels:@[@"Deadlock app"]];
+}
+
+- (void)testFindMatchesWithTokenizeAndStringJoinFunctions
+{
+  [self assertXPathQuery:@"//XCUIElementTypeButton[string-join(tokenize(@label, ' '), '-')='Deadlock-app']"
+       findsButtonLabels:@[@"Deadlock app"]];
+}
+
+- (void)testFindMatchesWithExtensionFunctionsNoMatches
+{
+  NSArray<id<FBXCElementSnapshot>> *matchingSnapshots = [FBXPath matchesWithRootElement:self.testedApplication
+                                                                               forQuery:@"//XCUIElementTypeButton[matches(@label, '^NoSuchButton$')]"];
+  XCTAssertEqual(matchingSnapshots.count, 0);
+}
+
+- (void)testFindMultipleMatchesWithMatchesFunction
+{
+  [self assertXPathQuery:@"//XCUIElementTypeButton[matches(@label, '.*')]"
+       findsButtonLabels:@[@"Alerts", @"Deadlock app", @"Attributes", @"Scrolling", @"Touch"]];
+}
+
+- (void)testInvalidXPathExtensionFunctionViaElementLookup
+{
+  XCTAssertThrowsSpecificNamed([self.testedView fb_descendantsMatchingXPathQuery:@"//XCUIElementTypeButton[matches(@label)]"
+                                                      shouldReturnAfterFirstMatch:NO],
+                               NSException,
+                               FBInvalidXPathException);
+}
+
+- (void)testInvalidXPathExtensionRegexpViaElementLookup
+{
+  NSException *exception = nil;
+  @try {
+    [self.testedView fb_descendantsMatchingXPathQuery:@"//XCUIElementTypeButton[matches(@label, '[')]"
+                             shouldReturnAfterFirstMatch:NO];
+  } @catch (NSException *caughtException) {
+    exception = caughtException;
+  }
+  XCTAssertEqualObjects(exception.name, FBInvalidXPathException);
+  XCTAssertTrue([exception.reason containsString:@"Cannot evaluate results for XPath expression"]);
+  XCTAssertTrue([exception.reason rangeOfString:@"invalid" options:NSCaseInsensitiveSearch].location != NSNotFound);
 }
 
 @end

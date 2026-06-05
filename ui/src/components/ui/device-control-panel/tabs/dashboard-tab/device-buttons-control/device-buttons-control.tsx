@@ -26,7 +26,6 @@ import {
 import { observer } from 'mobx-react-lite'
 import { useInjection } from 'inversify-react'
 import { useMutation } from '@tanstack/react-query'
-import axios from 'axios'
 
 import { ContentCard } from '@/components/lib/content-card'
 
@@ -72,10 +71,8 @@ export const DeviceButtonsControl = observer(({ className }: { className?: strin
               onClick={async () => {
                 if (device) {
                   try {
-                    await axios.post('/restart', {
-                      platform: device.platform?.toLowerCase() || 'android',
-                      serial: device.serial,
-                    })
+                    const rebootResult = await deviceControlStore.reboot()
+                    await rebootResult.donePromise
                   } catch (e) {
                     console.error('Failed to restart device', e)
                   }
