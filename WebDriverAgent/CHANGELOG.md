@@ -1,3 +1,43 @@
+## [14.0.0](https://github.com/appium/WebDriverAgent/compare/v13.3.0...v14.0.0) (2026-06-09)
+
+### ⚠ BREAKING CHANGES
+
+* bump the deployment target to 15
+
+### Features
+
+* bump the deployment target to 15 ([#1152](https://github.com/appium/WebDriverAgent/issues/1152)) ([74498f7](https://github.com/appium/WebDriverAgent/commit/74498f79c9f00678f2bc37b9afb50f70e30d0f88))
+
+## [13.3.0](https://github.com/appium/WebDriverAgent/compare/v13.2.4...v13.3.0) (2026-06-09)
+
+### Features
+
+* Expose native isAccessibilityElement ([#1146](https://github.com/appium/WebDriverAgent/issues/1146)) ([e615621](https://github.com/appium/WebDriverAgent/commit/e6156212e6fba6af98a69a400f5fa18b67f1e3e3))
+
+## [13.2.4](https://github.com/appium/WebDriverAgent/compare/v13.2.3...v13.2.4) (2026-06-08)
+
+### Bug Fixes
+
+* update WebDriverAgentRunner app icon ([#1151](https://github.com/appium/WebDriverAgent/issues/1151)) ([eea2229](https://github.com/appium/WebDriverAgent/commit/eea2229f8d2e8bd2dd936fe3ddb69a9458789f49))
+
+## [13.2.3](https://github.com/appium/WebDriverAgent/compare/v13.2.2...v13.2.3) (2026-06-07)
+
+### Bug Fixes
+
+* auto-handle iOS 18+ limited access permission prompt ([#1150](https://github.com/appium/WebDriverAgent/issues/1150)) ([98d79e7](https://github.com/appium/WebDriverAgent/commit/98d79e7c3875424cb4b5fdee55bb079286a14b05))
+
+## [13.2.2](https://github.com/appium/WebDriverAgent/compare/v13.2.1...v13.2.2) (2026-06-06)
+
+### Miscellaneous Chores
+
+* Refactor session creation handler ([#1149](https://github.com/appium/WebDriverAgent/issues/1149)) ([923b523](https://github.com/appium/WebDriverAgent/commit/923b523b55f880b921de2c95a82786ce0699cb9d))
+
+## [13.2.1](https://github.com/appium/WebDriverAgent/compare/v13.2.0...v13.2.1) (2026-06-06)
+
+### Miscellaneous Chores
+
+* Refactor settings handling API ([#1148](https://github.com/appium/WebDriverAgent/issues/1148)) ([ff7ac36](https://github.com/appium/WebDriverAgent/commit/ff7ac368debb22659509169a0eca530bae3dc879))
+
 ## [13.2.0](https://github.com/appium/WebDriverAgent/compare/v13.1.3...v13.2.0) (2026-05-26)
 
 ### Features

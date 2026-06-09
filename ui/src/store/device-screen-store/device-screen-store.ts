@@ -244,6 +244,8 @@ export class DeviceScreenStore {
       .then((image) => {
         runInAction(() => {
           if (!this.context) {
+            // NOTE: Release the decoded bitmap; otherwise GPU/native memory leaks per frame
+            image.close()
             this.isDecodingFrame = false
             this.pendingFrameBlob = null
 
@@ -253,6 +255,13 @@ export class DeviceScreenStore {
           const willRotate = this.needsFrameRotation(image.width, image.height)
 
           const frameToRender = willRotate ? this.rotateFrame(image) : image
+
+          // NOTE: When rotating, rotateFrame() produces a new bitmap, so the source
+          // bitmap is no longer needed and must be closed to avoid a per-frame leak.
+          // In the non-rotate path, transferFromImageBitmap() below consumes the bitmap.
+          if (willRotate) {
+            image.close()
+          }
 
           const dimensionsChanged =
             frameToRender.width !== this.lastFrameWidth || frameToRender.height !== this.lastFrameHeight

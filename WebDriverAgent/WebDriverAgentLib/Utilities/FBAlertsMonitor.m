@@ -48,19 +48,33 @@ static const NSTimeInterval FB_MONTORING_INTERVAL = 2.0;
   }
 
   dispatch_async(dispatch_get_main_queue(), ^{
+    id<FBAlertsMonitorDelegate> delegate = self.delegate;
     NSArray<XCUIApplication *> *activeApps = XCUIApplication.fb_activeApplications;
+    BOOL didDetectAlert = NO;
     for (XCUIApplication *activeApp in activeApps) {
       XCUIElement *alertElement = nil;
       @try {
         alertElement = activeApp.fb_alertElement;
         if (nil != alertElement) {
-          [self.delegate didDetectAlert:[FBAlert alertWithElement:alertElement]];
+          [delegate didDetectAlert:[FBAlert alertWithElement:alertElement]];
         }
       } @catch (NSException *e) {
         [FBLogger logFmt:@"Got an unexpected exception while monitoring alerts: %@\n%@", e.reason, e.callStackSymbols];
       }
       if (nil != alertElement) {
+        didDetectAlert = YES;
         break;
+      }
+    }
+
+    if (!didDetectAlert) {
+      @try {
+        XCUIElement *alertElement = [XCUIApplication fb_limitedAccessPromptAlertElement];
+        if (nil != alertElement) {
+          [delegate didDetectAlert:[FBAlert alertWithElement:alertElement]];
+        }
+      } @catch (NSException *e) {
+        [FBLogger logFmt:@"Got an unexpected exception while monitoring alerts: %@\n%@", e.reason, e.callStackSymbols];
       }
     }
 
