@@ -1,1 +1,0 @@
-import{j as m,bV as n}from"./create-root-with-providers-q47QkmlN.js";const p=".+\\@.+\\..+",r=({before:a,value:i,placeholder:s,onChange:l,onError:e})=>m.jsx(n,{before:a,placeholder:s,type:"email",value:i,required:!0,onChange:t=>{e(""),new RegExp(p,"i").test(t.target.value)||e("Invalid email"),l(t.target.value)}});export{r as E};

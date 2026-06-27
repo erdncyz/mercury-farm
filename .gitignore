@@ -14,11 +14,6 @@
 
 idb-applications
 
-# UI source lives in the private `mercury-ui` repository.
-# The public repo ships only the compiled output (ui/dist).
-/ui/*
-!/ui/dist/
-
 # Playwright
 node_modules/
 /test-results/

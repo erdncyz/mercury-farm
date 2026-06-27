@@ -1,1 +1,0 @@
-const o="_authPage_i5w08_1",t="_form_i5w08_17",_="_logo_i5w08_30",c="_poweredBy_i5w08_35",n="_contactButton_i5w08_43",i="_copyrightLink_i5w08_48",e={authPage:o,form:t,logo:_,poweredBy:c,contactButton:n,copyrightLink:i};export{e as s};

@@ -29,6 +29,7 @@
     "dev": "tsx ./bin/mercury.mjs",
     "ui:build": "npm --prefix ./ui run build:prod",
     "ui:watch": "npm --prefix ./ui run build:prod:watch",
+    "ui:commit": "bash scripts/ui-commit.sh",
     "mercury:domain:auto": "./scripts/update-mercury-domain.sh scripts/variables.env",
     "prestack:up:macos": "npm run -s mercury:domain:auto",
     "stack:up:macos": "docker compose -f docker-compose-macos.yaml --env-file scripts/variables.env up -d --build",
