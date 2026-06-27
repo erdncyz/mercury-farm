@@ -1,8 +1,0 @@
-.deviceStatistics {
-  flex: 1 0 auto;
-  border-radius: var(--app-radius-l);
-}
-
-.deviceStatistics + .deviceStatistics {
-  margin-left: 10px;
-}

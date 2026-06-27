@@ -204,6 +204,12 @@ npm run stack:up:macos
 
 Copyright 2026 Erdinc Yilmaz
 
+The backend and CLI in this repository are licensed under the Apache License,
+Version 2.0 (below). The web UI (`ui/`) is **proprietary**: its source is kept
+in a separate private repository and is **not** included here. This repository
+ships only the compiled UI output under `ui/dist`. All rights to the UI are
+reserved.
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at

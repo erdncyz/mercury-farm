@@ -17,12 +17,9 @@ RUN sed -i 's%./node_modules/.bin/tsx%node%g' ./bin/mercury.mjs && \
     ./node_modules/.bin/tsc -p tsconfig.node.json && \
     npm prune --production
 
-
-WORKDIR /app/ui
-
-RUN npm ci && \
-    npx tsc -b && \
-    npx vite build
+# The UI is proprietary and lives in the private `mercury-ui` repository.
+# This repo ships only the prebuilt output under ui/dist, so there is no UI
+# build step here. ui/dist is copied verbatim into the runtime image below.
 
 # -------- RUNTIME --------
 FROM node:20.18.0-bullseye-slim

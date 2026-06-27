@@ -1,7 +1,0 @@
-.tableContainer {
-  overflow: auto hidden;
-  width: 100%;
-  border: 1px solid var(--app-border);
-  border-radius: var(--app-radius-l);
-  background: var(--app-surface-strong);
-}
