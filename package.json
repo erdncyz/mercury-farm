@@ -33,6 +33,9 @@
     "mercury:domain:auto": "./scripts/update-mercury-domain.sh scripts/variables.env",
     "prestack:up:macos": "npm run -s mercury:domain:auto",
     "stack:up:macos": "docker compose -f docker-compose-macos.yaml --env-file scripts/variables.env up -d --build",
+    "stack:pull:macos": "docker compose -f docker-compose-macos.yaml --env-file scripts/variables.env pull",
+    "prestack:up:image:macos": "npm run -s mercury:domain:auto && npm run -s stack:pull:macos",
+    "stack:up:image:macos": "docker compose -f docker-compose-macos.yaml --env-file scripts/variables.env up -d",
     "stack:ps:macos": "docker compose -f docker-compose-macos.yaml ps"
   },
   "dependencies": {

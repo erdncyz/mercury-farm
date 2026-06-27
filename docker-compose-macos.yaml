@@ -76,7 +76,7 @@ services:
             mercury:
     mercury-migrate:
         build: .
-        image: erdncyz/mercury
+        image: ${MERCURY_IMAGE:-ghcr.io/erdncyz/mercury-farm:latest}
         container_name: mercury-migrate
         env_file:
             - scripts/variables.env
@@ -88,7 +88,7 @@ services:
             mercury:
     mercury-app:
         build: .
-        image: erdncyz/mercury
+        image: ${MERCURY_IMAGE:-ghcr.io/erdncyz/mercury-farm:latest}
         container_name: mercury-app
         env_file:
             - scripts/variables.env
@@ -101,7 +101,7 @@ services:
             mercury:
     mercury-auth:
         build: .
-        image: erdncyz/mercury
+        image: ${MERCURY_IMAGE:-ghcr.io/erdncyz/mercury-farm:latest}
         container_name: mercury-auth
         env_file:
             - scripts/variables.env
@@ -114,7 +114,7 @@ services:
             mercury:
     mercury-processor:
         build: .
-        image: erdncyz/mercury
+        image: ${MERCURY_IMAGE:-ghcr.io/erdncyz/mercury-farm:latest}
         container_name: mercury-processor
         env_file:
             - scripts/variables.env
@@ -127,7 +127,7 @@ services:
             mercury:
     mercury-reaper:
         build: .
-        image: erdncyz/mercury
+        image: ${MERCURY_IMAGE:-ghcr.io/erdncyz/mercury-farm:latest}
         container_name: mercury-reaper
         env_file:
             - scripts/variables.env
@@ -140,7 +140,7 @@ services:
             mercury:
     mercury-storage-plugin-apk:
         build: .
-        image: erdncyz/mercury
+        image: ${MERCURY_IMAGE:-ghcr.io/erdncyz/mercury-farm:latest}
         container_name: mercury-storage-plugin-apk
         env_file:
             - scripts/variables.env
@@ -153,7 +153,7 @@ services:
             mercury:
     mercury-storage-plugin-image:
         build: .
-        image: erdncyz/mercury
+        image: ${MERCURY_IMAGE:-ghcr.io/erdncyz/mercury-farm:latest}
         container_name: mercury-storage-plugin-image
         env_file:
             - scripts/variables.env
@@ -166,7 +166,7 @@ services:
             mercury:
     mercury-storage-temp:
         build: .
-        image: erdncyz/mercury
+        image: ${MERCURY_IMAGE:-ghcr.io/erdncyz/mercury-farm:latest}
         container_name: mercury-storage-temp
         env_file:
             - scripts/variables.env
@@ -179,7 +179,7 @@ services:
             mercury:
     mercury-triproxy-app:
         build: .
-        image: erdncyz/mercury
+        image: ${MERCURY_IMAGE:-ghcr.io/erdncyz/mercury-farm:latest}
         container_name: mercury-triproxy-app
         env_file:
             - scripts/variables.env
@@ -196,7 +196,7 @@ services:
             mercury:
     mercury-triproxy-dev:
         build: .
-        image: erdncyz/mercury
+        image: ${MERCURY_IMAGE:-ghcr.io/erdncyz/mercury-farm:latest}
         container_name: mercury-triproxy-dev
         env_file:
             - scripts/variables.env
@@ -213,7 +213,7 @@ services:
             mercury:
     mercury-websocket:
         build: .
-        image: erdncyz/mercury
+        image: ${MERCURY_IMAGE:-ghcr.io/erdncyz/mercury-farm:latest}
         container_name: mercury-websocket
         env_file:
             - scripts/variables.env
@@ -234,7 +234,7 @@ services:
             mercury:
     mercury-api:
         build: .
-        image: erdncyz/mercury
+        image: ${MERCURY_IMAGE:-ghcr.io/erdncyz/mercury-farm:latest}
         container_name: mercury-api
         env_file:
             - scripts/variables.env
@@ -247,7 +247,7 @@ services:
             mercury:
     mercury-api-groups-engine:
         build: .
-        image: erdncyz/mercury
+        image: ${MERCURY_IMAGE:-ghcr.io/erdncyz/mercury-farm:latest}
         container_name: mercury-api-groups-engine
         env_file:
             - scripts/variables.env
@@ -260,7 +260,7 @@ services:
             mercury:
     mercury-provider:
         build: .
-        image: erdncyz/mercury
+        image: ${MERCURY_IMAGE:-ghcr.io/erdncyz/mercury-farm:latest}
         container_name: mercury-provider
         env_file:
             - scripts/variables.env

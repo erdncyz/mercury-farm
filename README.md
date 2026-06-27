@@ -37,7 +37,12 @@ Settings Page:
 
 ---
 
-## Quick Start (Source Install)
+## Quick Start (Prebuilt Image)
+
+The web UI is proprietary and is **not** built from source by end users. The
+prebuilt Docker image published to GHCR already contains the compiled UI, so the
+recommended way to run Mercury is to pull that image. You still clone this repo
+to get the compose file, scripts, and the host-side iOS provider.
 
 ### 1) Prerequisites (macOS)
 
@@ -51,7 +56,7 @@ xcode-select --install
 
 Open Docker Desktop and Xcode at least once after installation.
 
-### 2) Clone and install
+### 2) Clone and install host tools
 
 ```bash
 git clone https://github.com/erdncyz/mercury-farm.git
@@ -59,12 +64,19 @@ cd mercury-farm
 npm ci
 ```
 
-### 3) Start stack
+> The `ui/` folder is a private submodule and stays empty for public users.
+> It is not required to run Mercury — the prebuilt image already includes the UI.
+
+### 3) Pull the image and start the stack
 
 ```bash
-npm run stack:up:macos
-./scripts/start-ios-provider.sh
+npm run stack:up:image:macos     # detects domain, pulls GHCR image, starts stack
+./scripts/start-ios-provider.sh  # host-side iOS provider
 ```
+
+This pulls `ghcr.io/erdncyz/mercury-farm:latest` and starts the containers
+**without building** anything locally. To pin a specific version, set
+`MERCURY_IMAGE`, e.g. `MERCURY_IMAGE=ghcr.io/erdncyz/mercury-farm:v1.5.0`.
 
 ### 4) Verify
 
@@ -80,6 +92,28 @@ Open with your detected host domain/IP:
 
 - `https://<MERCURY_DOMAIN>`
 - Example: `https://192.168.x.xxx`
+
+---
+
+## Build From Source (Maintainers Only)
+
+Building the image from source requires access to the private `mercury-ui`
+submodule. Authorized maintainers:
+
+```bash
+git clone --recurse-submodules https://github.com/erdncyz/mercury-farm.git
+cd mercury-farm
+npm ci
+npm --prefix ./ui ci          # UI deps (private submodule)
+npm run stack:up:macos        # builds the image locally (compiles the UI)
+./scripts/start-ios-provider.sh
+```
+
+Commit UI changes and bump the submodule pointer in one step:
+
+```bash
+npm run ui:commit -- "your message"
+```
 
 ---
 
@@ -99,16 +133,17 @@ Notes:
 
 ## Update After New Commits
 
-When users pull new code, run:
+When new code or a new image is published, run:
 
 ```bash
 git pull --rebase
 npm ci
-npm run stack:up:macos
+npm run stack:up:image:macos
 ./scripts/start-ios-provider.sh
 ```
 
-`npm run stack:up:macos` already runs `docker compose ... up -d --build`, so containers are rebuilt automatically.
+`npm run stack:up:image:macos` pulls the newest published image and recreates
+the containers (no local build).
 
 If iOS provider is managed by LaunchAgent:
 
@@ -139,7 +174,7 @@ docker pull ghcr.io/erdncyz/mercury-farm:latest
 
 Important:
 
-- For full Mercury usage on macOS (especially iOS), use source install + compose + host iOS provider.
+- For full Mercury usage on macOS (especially iOS), use the prebuilt image + compose + host iOS provider.
 - Pulling GHCR image alone is not a complete one-command setup for iOS host flows.
 
 ---
@@ -169,9 +204,12 @@ Important:
 git clone https://github.com/erdncyz/mercury-farm.git
 cd mercury-farm
 npm ci
-npm run stack:up:macos
+npm run stack:up:image:macos
 ./scripts/start-ios-provider.sh
 ```
+
+> Arayuz (UI) private bir submodule'dur ve public kullanicilar icin bostur;
+> calistirmak icin gerekmez, hazir Docker imaji UI'yi zaten icerir.
 
 ### Arayuz
 
@@ -187,11 +225,11 @@ npm run stack:up:macos
 ```bash
 git pull --rebase
 npm ci
-npm run stack:up:macos
+npm run stack:up:image:macos
 ./scripts/start-ios-provider.sh
 ```
 
-`npm run stack:up:macos` komutu zaten `docker compose ... up -d --build` calistirir; container rebuild otomatik yapilir.
+`npm run stack:up:image:macos` en guncel yayinlanan imaji ceker ve container'lari yeniden olusturur (yerel build yok).
 
 ### Sorun/Yardim
 
