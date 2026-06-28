@@ -30,13 +30,6 @@ Settings Page:
 
 ---
 
-## Documentation
-
-- [Architecture Document (EN)](docs/architecture.md)
-- [Mimari Dokümanı (TR)](docs/mimari.md)
-
----
-
 ## Quick Start (Prebuilt Image)
 
 The web UI is proprietary and is **not** built from source by end users. The
@@ -77,10 +70,6 @@ npm run stack:up:image:macos     # detects domain, pulls GHCR image, starts stac
 This pulls `ghcr.io/erdncyz/mercury-farm:latest` and starts the containers
 **without building** anything locally. To pin a specific version, set
 `MERCURY_IMAGE`, e.g. `MERCURY_IMAGE=ghcr.io/erdncyz/mercury-farm:v1.5.0`.
-
-> The GHCR package must be **public** for an anonymous `docker pull` to work.
-> If it is private, authenticate first:
-> `echo <TOKEN> | docker login ghcr.io -u <github-username> --password-stdin`
 
 ### 4) Verify
 
@@ -176,12 +165,6 @@ Pull example:
 docker pull ghcr.io/erdncyz/mercury-farm:latest
 ```
 
-Visibility:
-
-- The package must be **Public** (Package settings -> Change visibility) so users
-  can pull without authenticating. If kept private, users must run
-  `docker login ghcr.io` with a token that has `read:packages`.
-
 Important:
 
 - For full Mercury usage on macOS (especially iOS), use the prebuilt image + compose + host iOS provider.
@@ -194,6 +177,8 @@ Important:
 - Smart TV detayli rehber kisayolu: [Smart TV (Tizen) Guide (EN + TR)](docs/smart-tv-tizen.md)
 - [Documentation Index (EN + TR)](docs/index.md)
 - [Getting Started (EN + TR)](docs/getting-started.md)
+- [Architecture (EN)](docs/architecture.md)
+- [Mimari (TR)](docs/mimari.md)
 - [iOS Setup (EN + TR)](docs/ios-setup.md)
 - [Parallel Execution (EN + TR)](docs/parallel-execution.md)
 - [Appium Setup (EN + TR)](docs/appium-setup.md)
