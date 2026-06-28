@@ -4,6 +4,8 @@
 Mercury is a browser-based real-device lab for Android and iOS.
 This project is optimized for **macOS** because iOS automation requires Xcode tooling on host.
 
+**Website:** [mercury-farm-brand.netlify.app](https://mercury-farm-brand.netlify.app/#top)
+
 Logo: 
 <img width="2036" height="1086" alt="image" src="https://github.com/user-attachments/assets/4a0ada3e-a56f-40c3-93e1-37306cbb1e41" />
 
