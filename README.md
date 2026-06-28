@@ -78,6 +78,10 @@ This pulls `ghcr.io/erdncyz/mercury-farm:latest` and starts the containers
 **without building** anything locally. To pin a specific version, set
 `MERCURY_IMAGE`, e.g. `MERCURY_IMAGE=ghcr.io/erdncyz/mercury-farm:v1.5.0`.
 
+> The GHCR package must be **public** for an anonymous `docker pull` to work.
+> If it is private, authenticate first:
+> `echo <TOKEN> | docker login ghcr.io -u <github-username> --password-stdin`
+
 ### 4) Verify
 
 ```bash
@@ -171,6 +175,12 @@ Pull example:
 ```bash
 docker pull ghcr.io/erdncyz/mercury-farm:latest
 ```
+
+Visibility:
+
+- The package must be **Public** (Package settings -> Change visibility) so users
+  can pull without authenticating. If kept private, users must run
+  `docker login ghcr.io` with a token that has `read:packages`.
 
 Important:
 
