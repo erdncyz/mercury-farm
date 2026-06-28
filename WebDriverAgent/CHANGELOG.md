@@ -1,3 +1,44 @@
+## [15.1.0](https://github.com/appium/WebDriverAgent/compare/v15.0.0...v15.1.0) (2026-06-26)
+
+### Features
+
+* Expose device orientation via /wda/deviceOrientation ([#1162](https://github.com/appium/WebDriverAgent/issues/1162)) ([deb623c](https://github.com/appium/WebDriverAgent/commit/deb623c71a0598f1932c8018f985b973aa2fb9ff))
+
+## [15.0.0](https://github.com/appium/WebDriverAgent/compare/v14.2.1...v15.0.0) (2026-06-22)
+
+### ⚠ BREAKING CHANGES
+
+* AppleDevice is now abstract and only contains udid; it no longer exposes simctl or devicectl.
+* Preinstalled WDA launch/terminate no longer falls back to package-owned simctl or devicectl behavior. Callers must provide hostOps.simulator or hostOps.realDevicePreinstalled for those flows.
+
+### Features
+
+* Abstract out platform-specific actions ([#1160](https://github.com/appium/WebDriverAgent/issues/1160)) ([890d32b](https://github.com/appium/WebDriverAgent/commit/890d32b4ac3fa881784dacc012650d58274941c8))
+
+## [14.2.1](https://github.com/appium/WebDriverAgent/compare/v14.2.0...v14.2.1) (2026-06-19)
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump @types/node from 25.9.4 to 26.0.0 ([#1159](https://github.com/appium/WebDriverAgent/issues/1159)) ([93d7043](https://github.com/appium/WebDriverAgent/commit/93d704317483eb9c29a2d46070a6a2c2943ae014))
+
+## [14.2.0](https://github.com/appium/WebDriverAgent/compare/v14.1.1...v14.2.0) (2026-06-18)
+
+### Features
+
+* Limit the maximum request body size ([#1158](https://github.com/appium/WebDriverAgent/issues/1158)) ([9ea244b](https://github.com/appium/WebDriverAgent/commit/9ea244b29e3c2b160079a620fdf4ef445a3c1e38))
+
+## [14.1.1](https://github.com/appium/WebDriverAgent/compare/v14.1.0...v14.1.1) (2026-06-10)
+
+### Miscellaneous Chores
+
+* address runtime version rather than Xcode for selector based methods ([#1154](https://github.com/appium/WebDriverAgent/issues/1154)) ([6618b0b](https://github.com/appium/WebDriverAgent/commit/6618b0b6ccd06c69fc9e4a0947ef0c88c89b1e48))
+
+## [14.1.0](https://github.com/appium/WebDriverAgent/compare/v14.0.0...v14.1.0) (2026-06-10)
+
+### Features
+
+* Add VoiceOver automation support ([#1153](https://github.com/appium/WebDriverAgent/issues/1153)) ([6b3631a](https://github.com/appium/WebDriverAgent/commit/6b3631aed7a95439b01a9a3bb87189df384dcf06))
+
 ## [14.0.0](https://github.com/appium/WebDriverAgent/compare/v13.3.0...v14.0.0) (2026-06-09)
 
 ### ⚠ BREAKING CHANGES

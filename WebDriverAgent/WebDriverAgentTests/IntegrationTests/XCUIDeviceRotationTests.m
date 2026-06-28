@@ -69,6 +69,27 @@
   XCTAssertTrue(self.testedApplication.staticTexts[@"LandscapeRight"].exists);
 }
 
+- (void)testGetDeviceOrientationInPortrait
+{
+  BOOL success = [[XCUIDevice sharedDevice] fb_setDeviceInterfaceOrientation:UIDeviceOrientationPortrait];
+  XCTAssertTrue(success, @"Device should support Portrait");
+  XCTAssertEqualObjects([XCUIDevice sharedDevice].fb_deviceOrientation, @"UIDeviceOrientationPortrait");
+}
+
+- (void)testGetDeviceOrientationInLandscapeLeft
+{
+  BOOL success = [[XCUIDevice sharedDevice] fb_setDeviceInterfaceOrientation:UIDeviceOrientationLandscapeLeft];
+  XCTAssertTrue(success, @"Device should support LandscapeLeft");
+  XCTAssertEqualObjects([XCUIDevice sharedDevice].fb_deviceOrientation, @"UIDeviceOrientationLandscapeLeft");
+}
+
+- (void)testGetDeviceOrientationInLandscapeRight
+{
+  BOOL success = [[XCUIDevice sharedDevice] fb_setDeviceInterfaceOrientation:UIDeviceOrientationLandscapeRight];
+  XCTAssertTrue(success, @"Device should support LandscapeRight");
+  XCTAssertEqualObjects([XCUIDevice sharedDevice].fb_deviceOrientation, @"UIDeviceOrientationLandscapeRight");
+}
+
 - (void)testRotationTiltRotation
 {
   UIDeviceOrientation currentRotation = [XCUIDevice sharedDevice].orientation;
