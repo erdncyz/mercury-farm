@@ -405,6 +405,10 @@ Socket.IO-based real-time communication server:
 
 ## 5. Frontend Architecture
 
+> The web UI is **proprietary** and lives in the private `mercury-ui` repository,
+> referenced as a git submodule at `ui/`. The public repo does not contain UI
+> source; the prebuilt Docker image already includes the compiled UI.
+
 ### 5.1 Application Entry Point and Provider Chain
 
 The application starts with `main.tsx` → `createRootWithProviders()`:

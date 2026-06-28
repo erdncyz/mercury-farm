@@ -16,7 +16,7 @@ Fix:
 
 ```bash
 open -a Docker
-npm run stack:up:macos
+npm run stack:up:image:macos
 ```
 
 ### 2) Stack is up but UI is unreachable on `https://localhost`
@@ -104,7 +104,7 @@ Cozum:
 
 ```bash
 open -a Docker
-npm run stack:up:macos
+npm run stack:up:image:macos
 ```
 
 ### 2) Stack calisiyor ama `https://localhost` acilmiyor

@@ -405,6 +405,10 @@ Socket.IO tabanlı gerçek zamanlı iletişim sunucusu:
 
 ## 5. Frontend Mimarisi
 
+> Web arayuzu (UI) **tescilli/private**'dir ve `ui/` altinda git submodule olarak
+> baglanan private `mercury-ui` reposunda bulunur. Public repo UI kaynagini
+> icermez; hazir Docker imaji derlenmis UI'yi zaten barindirir.
+
 ### 5.1 Uygulama Giriş Noktası ve Provider Zinciri
 
 Uygulama `main.tsx` → `createRootWithProviders()` ile başlar:

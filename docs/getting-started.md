@@ -6,6 +6,18 @@ This is the canonical runbook to bring Mercury up on macOS.
 
 ## English
 
+### How it works
+
+Mercury runs in two parts:
+
+- **Docker stack** (all backend services + the **Android** provider) — started
+  with `npm run stack:up:image:macos`, using the prebuilt image from GHCR.
+- **iOS provider on the host** — started with `./scripts/start-ios-provider.sh`.
+  It must run outside Docker because iOS automation needs Xcode / WebDriverAgent
+  on the Mac.
+
+For Android-only you just need the Docker stack; add the host iOS provider for iOS.
+
 ### 1) Prerequisites
 
 ```bash
@@ -18,17 +30,25 @@ xcode-select --install
 
 Open Docker Desktop and Xcode at least once after installation.
 
-### 2) Install Dependencies
+### 2) Get the Code
 
 ```bash
+git clone https://github.com/erdncyz/mercury-farm.git
+cd mercury-farm
 npm ci
 ```
 
-### 3) Start Core Stack (Docker)
+> The web UI is a private submodule and is **not** needed locally — the prebuilt
+> image already contains it. `npm ci` only installs host tools for the iOS provider.
+
+### 3) Start Core Stack (prebuilt Docker image)
 
 ```bash
-npm run stack:up:macos
+npm run stack:up:image:macos
 ```
+
+This detects your domain, pulls `ghcr.io/erdncyz/mercury-farm:latest`, and starts
+all containers — no local build.
 
 ### 4) Start iOS Provider (Host)
 
@@ -65,7 +85,7 @@ Note:
 Full stack:
 
 ```bash
-npm run stack:up:macos
+npm run stack:up:image:macos
 ./scripts/start-ios-provider.sh
 ```
 
@@ -77,13 +97,13 @@ docker restart mercury-provider mercury-websocket mercury-nginx
 
 ### Update After New Commits (pull and re-run)
 
-When new code is pushed to your branch/repo, run:
+When a new version is released (a new image is published) or scripts change, run:
 
 ```bash
-git pull --rebase
-npm ci
-npm run stack:up:macos
-./scripts/start-ios-provider.sh
+git pull --rebase                 # updated compose files and scripts
+npm ci                            # updated host tools
+npm run stack:up:image:macos      # pulls the newest image, recreates containers
+./scripts/start-ios-provider.sh   # restart host iOS provider
 ```
 
 If you use LaunchAgent for iOS provider, reload it:
@@ -110,6 +130,18 @@ See dedicated guide:
 
 Bu dokuman, Mercury'yi macOS ortaminda ayaga kaldirmak icin ana calistirma rehberidir.
 
+### Nasil calisir
+
+Mercury iki parcadan olusur:
+
+- **Docker stack** (tum backend servisleri + **Android** provider) —
+  `npm run stack:up:image:macos` ile baslar; GHCR'daki hazir imaji kullanir.
+- **Host uzerinde iOS provider** — `./scripts/start-ios-provider.sh` ile baslar.
+  Docker disinda calismak zorundadir cunku iOS otomasyonu Mac uzerinde
+  Xcode / WebDriverAgent gerektirir.
+
+Sadece Android icin Docker stack yeterli; iOS icin host iOS provider'i ekleyin.
+
 ### 1) On Kosullar
 
 ```bash
@@ -122,17 +154,25 @@ xcode-select --install
 
 Kurulumdan sonra Docker Desktop ve Xcode'u en az bir kez acin.
 
-### 2) Bagimliliklari Kur
+### 2) Kodu Al
 
 ```bash
+git clone https://github.com/erdncyz/mercury-farm.git
+cd mercury-farm
 npm ci
 ```
 
-### 3) Cekirdek Stack'i Baslat (Docker)
+> Arayuz (UI) private bir submodule'dur ve yerelde gerekmez — hazir imaj UI'yi
+> zaten icerir. `npm ci` yalnizca iOS provider icin host araclarini kurar.
+
+### 3) Cekirdek Stack'i Baslat (hazir Docker imaji)
 
 ```bash
-npm run stack:up:macos
+npm run stack:up:image:macos
 ```
+
+Bu komut domain'i tespit eder, `ghcr.io/erdncyz/mercury-farm:latest` imajini
+ceker ve tum container'lari baslatir — yerel build yapmadan.
 
 ### 4) iOS Provider'i Baslat (Host)
 
@@ -169,7 +209,7 @@ Not:
 Tum stack:
 
 ```bash
-npm run stack:up:macos
+npm run stack:up:image:macos
 ./scripts/start-ios-provider.sh
 ```
 
@@ -181,13 +221,13 @@ docker restart mercury-provider mercury-websocket mercury-nginx
 
 ### Yeni commit/push sonrasi guncelleme (cekip tekrar calistirma)
 
-Repo'ya yeni kod geldiginde su adimlari calistirin:
+Yeni bir surum yayinlandiginda (yeni imaj cikinca) veya scriptler degisince su adimlari calistirin:
 
 ```bash
-git pull --rebase
-npm ci
-npm run stack:up:macos
-./scripts/start-ios-provider.sh
+git pull --rebase                 # guncel compose ve scriptler
+npm ci                            # guncel host araclari
+npm run stack:up:image:macos      # en yeni imaji ceker, container'lari yeniler
+./scripts/start-ios-provider.sh   # host iOS provider'i yeniden baslat
 ```
 
 Eger iOS provider LaunchAgent ile calisiyorsa su komutla yeniden yukleyin:
