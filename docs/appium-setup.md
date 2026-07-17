@@ -30,16 +30,18 @@ xcodebuild -version
 
 ---
 
-## 2) Install Appium 2
+## 2) Install Appium
 
 ```bash
 npm install -g appium
 appium -v
 ```
 
-Optional (Inspector):
+Install Appium Inspector:
 
-- Install **Appium Inspector** desktop app from the official release page.
+- Download **Appium Inspector** from the [official release page](https://github.com/appium/appium-inspector/releases).
+- Inspector is the client UI; the local `appium` server must be running before a session can be created.
+- Follow [Appium Integration](./appium-integration.md) for the exact Android and iOS Inspector fields and capabilities.
 
 ---
 
@@ -66,6 +68,8 @@ appium driver list --installed
 ---
 
 ## 4) Android setup details
+
+These USB steps validate a directly connected local device. For a Mercury device, reserve it first and use `adb connect <remoteConnectUrl>` as described in [Appium Integration](./appium-integration.md).
 
 1. Enable Developer Options + USB Debugging on device.
 2. Connect device by USB.
@@ -104,6 +108,7 @@ Notes:
 
 - Real iOS automation requires proper signing/provisioning through Xcode/WebDriverAgent flow.
 - In Mercury flow, host iOS provider handles WDA lifecycle.
+- A remote Appium/Inspector runner validates the WDA proxy URL instead of expecting the Mercury iOS device to appear over local USB.
 
 ---
 
@@ -215,16 +220,18 @@ xcodebuild -version
 
 ---
 
-## 2) Appium 2 kurulumu
+## 2) Appium kurulumu
 
 ```bash
 npm install -g appium
 appium -v
 ```
 
-Opsiyonel (Inspector):
+Appium Inspector’ı kur:
 
-- **Appium Inspector** masaüstü uygulamasını resmi sürüm sayfasından kur.
+- **Appium Inspector** uygulamasını [resmî sürüm sayfasından](https://github.com/appium/appium-inspector/releases) indir.
+- Inspector yalnızca istemci arayüzüdür; session oluşturmadan önce lokal `appium` server çalışıyor olmalıdır.
+- Android ve iOS için kullanılacak Inspector alanları ve capability değerleri [Appium Integration](./appium-integration.md) dokümanında bulunur.
 
 ---
 
@@ -251,6 +258,8 @@ appium driver list --installed
 ---
 
 ## 4) Android kurulum detayları
+
+Bu USB adımları doğrudan bağlı lokal cihazı doğrular. Mercury cihazı için önce rezervasyon yap ve [Appium Integration](./appium-integration.md) dokümanındaki `adb connect <remoteConnectUrl>` adımını kullan.
 
 1. Cihazda Developer Options + USB Debugging aç.
 2. Cihazı USB ile bağla.
@@ -289,6 +298,7 @@ Not:
 
 - Gerçek iOS otomasyonu için Xcode/WebDriverAgent signing süreci gerekir.
 - Mercury akışında WDA yaşam döngüsünü host iOS provider yönetir.
+- Uzak Appium/Inspector runner, Mercury iOS cihazının lokal USB’de görünmesini beklemek yerine WDA proxy URL’sini doğrular.
 
 ---
 

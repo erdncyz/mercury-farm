@@ -30,8 +30,8 @@ Full guide: [Getting Started](./getting-started.md).
 
 ### Appium
 
-- [Appium Setup](./appium-setup.md)
-- [Appium Integration](./appium-integration.md)
+- [Appium Setup](./appium-setup.md) - install Appium, Inspector, and platform drivers
+- [Appium Inspector Connection](./appium-integration.md) - reserve and inspect Mercury Android/iOS devices
 
 ### Smart TV
 
@@ -76,8 +76,8 @@ Ayrıntılı rehber: [Getting Started](./getting-started.md).
 
 ### Appium
 
-- [Appium Setup](./appium-setup.md)
-- [Appium Integration](./appium-integration.md)
+- [Appium Kurulumu](./appium-setup.md) - Appium, Inspector ve platform driver kurulumu
+- [Appium Inspector Bağlantısı](./appium-integration.md) - Mercury Android/iOS cihaz ayırma ve inceleme
 
 ### Smart TV
 

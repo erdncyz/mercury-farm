@@ -118,7 +118,7 @@ export default syrup.serial()
         }
 
         const stopAgent = () =>
-            devutil.killProcsByComm('mercury.agent', 'mercury.agent')
+            devutil.killProcsByComm('stf.agent', 'stf.agent')
 
         const callService = async(intent: string) => {
             const startServiceCmd = sdk.level < 26 ?
