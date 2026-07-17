@@ -121,18 +121,24 @@ npm run ui:commit -- "your message"
 
 ### Publish a stable release
 
-`package.json` is the release version source. Bump it without creating a local
-tag, commit both package files, and push to `main`:
+`package.json` is the release version source, but maintainers do not bump it
+manually anymore. Push to `main` with Conventional Commit messages and Mercury
+bumps the version automatically:
 
 ```bash
-npm version patch --no-git-tag-version  # or minor / major
-git add package.json package-lock.json
-git commit -m "chore(release): v$(node -p "require('./package.json').version")"
 git push origin main
 ```
 
-The release workflow creates the Git tag, multi-architecture GHCR image, macOS
-bundle, checksum, and GitHub Release together. Do not create release tags by hand.
+Version rules:
+
+- `feat:` -> minor bump
+- `type(scope)!:` or `BREAKING CHANGE` -> major bump
+- all other commits -> patch bump
+
+On push, the version workflow creates a `chore(release): vX.Y.Z` commit with
+updated package files. That commit then triggers the release workflow, which
+creates the Git tag, multi-architecture GHCR image, macOS bundle, checksum,
+and GitHub Release together. Do not create release tags by hand.
 
 ---
 

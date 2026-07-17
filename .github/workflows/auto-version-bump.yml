@@ -1,0 +1,68 @@
+name: Auto Version Bump
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: mercury-version-bump
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    if: github.event_name == 'push' && !startsWith(github.event.head_commit.message, 'chore(release):')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Determine bump level from commit messages
+        id: bump
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          messages=$(jq -r '.commits[]?.message // empty' "$GITHUB_EVENT_PATH")
+          if [[ -z "$messages" ]]; then
+            messages='${{ github.event.head_commit.message }}'
+          fi
+
+          bump="patch"
+          if grep -Eq 'BREAKING CHANGE|^[a-zA-Z]+(\([^)]+\))?!:' <<< "$messages"; then
+            bump="major"
+          elif grep -Eq '^feat(\([^)]+\))?:' <<< "$messages"; then
+            bump="minor"
+          fi
+
+          echo "bump=$bump" >> "$GITHUB_OUTPUT"
+
+      - name: Bump package version and push release commit
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          npm version "${{ steps.bump.outputs.bump }}" --no-git-tag-version
+          version=$(node -p "require('./package.json').version")
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add package.json package-lock.json
+          if git diff --cached --quiet; then
+            echo "No package version changes detected."
+            exit 0
+          fi
+
+          git commit -m "chore(release): v${version}"
+          git push origin HEAD:main
