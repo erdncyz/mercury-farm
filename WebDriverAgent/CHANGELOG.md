@@ -1,3 +1,31 @@
+## [15.1.6](https://github.com/appium/WebDriverAgent/compare/v15.1.5...v15.1.6) (2026-07-12)
+
+### Bug Fixes
+
+* use double instead of CGFloat for mjpegScalingFactor public API ([#1168](https://github.com/appium/WebDriverAgent/issues/1168)) ([33dbaa4](https://github.com/appium/WebDriverAgent/commit/33dbaa4f56337bccc44ce7b0e796366d04df3630))
+
+## [15.1.5](https://github.com/appium/WebDriverAgent/compare/v15.1.4...v15.1.5) (2026-07-12)
+
+### Bug Fixes
+
+* lock screen via IOHID Power press on iOS 27 ([#1171](https://github.com/appium/WebDriverAgent/issues/1171)) ([64be238](https://github.com/appium/WebDriverAgent/commit/64be2388ad5d1cefa184beaf34ae85fe8e14e0c8))
+
+## [15.1.4](https://github.com/appium/WebDriverAgent/compare/v15.1.3...v15.1.4) (2026-07-07)
+
+### Miscellaneous Chores
+
+* Drop mocha and chai ([#1169](https://github.com/appium/WebDriverAgent/issues/1169)) ([11ba27c](https://github.com/appium/WebDriverAgent/commit/11ba27c71a38d7a8f4882ea70716541b3679e67f))
+
+## [15.1.3](https://github.com/appium/WebDriverAgent/compare/v15.1.2...v15.1.3) (2026-07-01)
+
+### Miscellaneous Chores
+
+* downgrade conventional-changelog-conventionalcommits to v9 ([#1165](https://github.com/appium/WebDriverAgent/issues/1165)) ([6ac033d](https://github.com/appium/WebDriverAgent/commit/6ac033db8fdec31f11d246f8a254491517976013))
+
+## [15.1.2](https://github.com/appium/WebDriverAgent/compare/v15.1.1...v15.1.2) (2026-07-01)
+
+## [15.1.1](https://github.com/appium/WebDriverAgent/compare/v15.1.0...v15.1.1) (2026-06-29)
+
 ## [15.1.0](https://github.com/appium/WebDriverAgent/compare/v15.0.0...v15.1.0) (2026-06-26)
 
 ### Features
