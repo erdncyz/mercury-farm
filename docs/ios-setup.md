@@ -9,7 +9,7 @@ This document focuses on iOS-specific setup and troubleshooting.
 ### What runs where?
 
 - Docker services: API/UI/WebSocket/provider (Android path)
-- Host macOS service: iOS provider (`./scripts/start-ios-provider.sh`)
+- Host macOS service: iOS provider (`~/.mercury-farm/mercury ios`)
 - Why host: iOS automation depends on Xcode tooling and USB access
 
 ### Minimum checks
@@ -24,13 +24,13 @@ If no device appears, trust prompt and cable/hub quality are the first things to
 ### Start iOS provider (manual)
 
 ```bash
-./scripts/start-ios-provider.sh
+~/.mercury-farm/mercury ios
 ```
 
 ### Start iOS provider (persistent LaunchAgent)
 
 ```bash
-./scripts/deploy-ios-provider-runtime.sh
+~/.mercury-farm/mercury ios-auto
 ```
 
 ### Useful runtime variables
@@ -46,8 +46,12 @@ If no device appears, trust prompt and cable/hub quality are the first things to
 Example:
 
 ```bash
-IOS_PROVIDER_SHARD=1 IOS_ALLOW_SIMULATORS=0 ./scripts/start-ios-provider.sh
+IOS_PROVIDER_SHARD=1 IOS_ALLOW_SIMULATORS=0 ~/.mercury-farm/mercury ios
 ```
+
+For persistent LaunchAgent settings, add the variables to
+`~/.mercury-farm/config/variables.env`, then run
+`~/.mercury-farm/mercury ios-auto`.
 
 ### Common problems
 
@@ -60,6 +64,9 @@ rm -f "$HOME/Library/LaunchAgents/com.mercury.ios-provider.plist"
 pkill -f "mercury.mjs ios-provider" || true
 pkill -f WebDriverAgentRunner || true
 ```
+
+Running `~/.mercury-farm/mercury ios-auto` later re-enables and reinstalls the
+LaunchAgent.
 
 ### Logs
 
@@ -75,7 +82,7 @@ tail -f "$HOME/.mercury-farm-runtime/ios-provider.launchd.err.log"
 ### Ne nerede çalışır?
 
 - Docker servisleri: API/UI/WebSocket/provider (Android yolu)
-- Host macOS servisi: iOS provider (`./scripts/start-ios-provider.sh`)
+- Host macOS servisi: iOS provider (`~/.mercury-farm/mercury ios`)
 - Neden host: iOS otomasyonu Xcode araçları ve USB erişimi gerektirir
 
 ### Minimum kontroller
@@ -90,13 +97,13 @@ Cihaz görünmüyorsa önce güven onayı ve kablo/hub kalitesini kontrol edin.
 ### iOS provider başlatma (manuel)
 
 ```bash
-./scripts/start-ios-provider.sh
+~/.mercury-farm/mercury ios
 ```
 
 ### iOS provider başlatma (kalıcı LaunchAgent)
 
 ```bash
-./scripts/deploy-ios-provider-runtime.sh
+~/.mercury-farm/mercury ios-auto
 ```
 
 ### Önemli runtime değişkenleri
@@ -112,8 +119,12 @@ Cihaz görünmüyorsa önce güven onayı ve kablo/hub kalitesini kontrol edin.
 Örnek:
 
 ```bash
-IOS_PROVIDER_SHARD=1 IOS_ALLOW_SIMULATORS=0 ./scripts/start-ios-provider.sh
+IOS_PROVIDER_SHARD=1 IOS_ALLOW_SIMULATORS=0 ~/.mercury-farm/mercury ios
 ```
+
+Kalici LaunchAgent ayarlari icin degiskenleri
+`~/.mercury-farm/config/variables.env` dosyasina ekleyip
+`~/.mercury-farm/mercury ios-auto` calistirin.
 
 ### Sık sorun
 
@@ -126,6 +137,9 @@ rm -f "$HOME/Library/LaunchAgents/com.mercury.ios-provider.plist"
 pkill -f "mercury.mjs ios-provider" || true
 pkill -f WebDriverAgentRunner || true
 ```
+
+Daha sonra `~/.mercury-farm/mercury ios-auto` calistirmak LaunchAgent'i yeniden
+etkinlestirir ve kurar.
 
 ### Loglar
 

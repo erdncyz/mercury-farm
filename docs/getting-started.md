@@ -11,56 +11,68 @@ This is the canonical runbook to bring Mercury up on macOS.
 Mercury runs in two parts:
 
 - **Docker stack** (all backend services + the **Android** provider) — started
-  with `npm run stack:up:image:macos`, using the prebuilt image from GHCR.
-- **iOS provider on the host** — started with `./scripts/start-ios-provider.sh`.
+  with `~/.mercury-farm/mercury up`, using the prebuilt image from GHCR.
+- **iOS provider on the host** — installed with
+  `~/.mercury-farm/mercury ios-auto`.
   It must run outside Docker because iOS automation needs Xcode / WebDriverAgent
   on the Mac.
 
-For Android-only you just need the Docker stack; add the host iOS provider for iOS.
+The GitHub Release supplies host files. Its matching `vX.Y.Z` GHCR image supplies
+the backend and compiled UI. The installer keeps both parts on the same version.
 
 ### 1) Prerequisites
 
 ```bash
 brew install --cask docker
+brew install --cask android-platform-tools
+```
+
+For iOS support, also install:
+
+```bash
 brew install node
-brew install android-platform-tools
 brew install libimobiledevice usbmuxd
 xcode-select --install
 ```
 
 Open Docker Desktop and Xcode at least once after installation.
 
-### 2) Get the Code
+### 2) Install Mercury
 
 ```bash
-git clone https://github.com/erdncyz/mercury-farm.git
-cd mercury-farm
-npm ci
+curl -fsSL https://github.com/erdncyz/mercury-farm/releases/latest/download/install.sh | bash
 ```
 
-> The web UI is a private submodule and is **not** needed locally — the prebuilt
-> image already contains it. `npm ci` only installs host tools for the iOS provider.
+For Android only:
+
+```bash
+curl -fsSL https://github.com/erdncyz/mercury-farm/releases/latest/download/install.sh | bash -s -- --android-only
+```
+
+The installer verifies the release archive checksum and installs versioned host
+files under `~/.mercury-farm`. No repository clone or UI source is needed.
 
 ### 3) Start Core Stack (prebuilt Docker image)
 
 ```bash
-npm run stack:up:image:macos
+~/.mercury-farm/mercury up
 ```
 
-This detects your domain, pulls `ghcr.io/erdncyz/mercury-farm:latest`, and starts
-all containers — no local build.
+This detects your domain, pulls the exact image selected by the release, and
+starts all containers without a local build.
 
 ### 4) Start iOS Provider (Host)
 
 ```bash
-./scripts/start-ios-provider.sh
+~/.mercury-farm/mercury ios-auto
 ```
+
+Use `~/.mercury-farm/mercury ios` instead to run it in the foreground.
 
 ### 5) Verify
 
 ```bash
-npm run stack:ps:macos
-pgrep -af "mercury.mjs ios-provider|mercury-ios-provider|lib/cli ios-device"
+~/.mercury-farm/mercury status
 ```
 
 ### 6) Open UI
@@ -85,8 +97,7 @@ Note:
 Full stack:
 
 ```bash
-npm run stack:up:image:macos
-./scripts/start-ios-provider.sh
+~/.mercury-farm/mercury up
 ```
 
 Docker services only:
@@ -95,28 +106,38 @@ Docker services only:
 docker restart mercury-provider mercury-websocket mercury-nginx
 ```
 
-### Update After New Commits (pull and re-run)
+### Update
 
-When a new version is released (a new image is published) or scripts change, run:
-
-```bash
-git pull --rebase                 # updated compose files and scripts
-npm ci                            # updated host tools
-npm run stack:up:image:macos      # pulls the newest image, recreates containers
-./scripts/start-ios-provider.sh   # restart host iOS provider
-```
-
-If you use LaunchAgent for iOS provider, reload it:
+When a new stable version is released, run:
 
 ```bash
-launchctl kickstart -k gui/$(id -u)/com.mercury.ios-provider
+~/.mercury-farm/mercury update
 ```
 
-### Optional: Auto-start iOS Provider with LaunchAgent
+This updates the release files, backend, and compiled UI together. It preserves
+configuration and Docker volumes. An installed iOS LaunchAgent is refreshed too.
+Mercury completes the update only after all long-running services and the UI
+are healthy. A failed update is rolled back; an interrupted update is recovered
+on the next `mercury` command.
+
+### Install or Roll Back to an Exact Version
 
 ```bash
-./scripts/deploy-ios-provider-runtime.sh
+curl -fsSL https://github.com/erdncyz/mercury-farm/releases/latest/download/install.sh | bash -s -- --version v0.0.47
+~/.mercury-farm/mercury up
+~/.mercury-farm/mercury ios-auto  # when iOS support is enabled
 ```
+
+For an Android-only rollback, add `--android-only` to the installer command and
+omit `ios-auto`.
+
+### Release Channels
+
+- GitHub Releases are the user-facing downloads.
+- Git tags identify immutable source revisions.
+- GHCR packages contain the backend and compiled UI.
+- `stable` and `latest` point to the newest stable image, but the installer pins
+  that release's immutable image digest for reproducible updates.
 
 ### Logs and Troubleshooting
 
@@ -135,56 +156,68 @@ Bu dokuman, Mercury'yi macOS ortaminda ayaga kaldirmak icin ana calistirma rehbe
 Mercury iki parcadan olusur:
 
 - **Docker stack** (tum backend servisleri + **Android** provider) —
-  `npm run stack:up:image:macos` ile baslar; GHCR'daki hazir imaji kullanir.
-- **Host uzerinde iOS provider** — `./scripts/start-ios-provider.sh` ile baslar.
+  `~/.mercury-farm/mercury up` ile baslar; GHCR'daki hazir imaji kullanir.
+- **Host uzerinde iOS provider** —
+  `~/.mercury-farm/mercury ios-auto` ile kurulur.
   Docker disinda calismak zorundadir cunku iOS otomasyonu Mac uzerinde
   Xcode / WebDriverAgent gerektirir.
 
-Sadece Android icin Docker stack yeterli; iOS icin host iOS provider'i ekleyin.
+GitHub Release host dosyalarini, ayni `vX.Y.Z` etiketli GHCR image ise backend
+ile derlenmis UI'yi saglar. Kurucu iki parcayi ayni surumde tutar.
 
 ### 1) On Kosullar
 
 ```bash
 brew install --cask docker
+brew install --cask android-platform-tools
+```
+
+iOS destegi icin ek olarak:
+
+```bash
 brew install node
-brew install android-platform-tools
 brew install libimobiledevice usbmuxd
 xcode-select --install
 ```
 
 Kurulumdan sonra Docker Desktop ve Xcode'u en az bir kez acin.
 
-### 2) Kodu Al
+### 2) Mercury'yi Kur
 
 ```bash
-git clone https://github.com/erdncyz/mercury-farm.git
-cd mercury-farm
-npm ci
+curl -fsSL https://github.com/erdncyz/mercury-farm/releases/latest/download/install.sh | bash
 ```
 
-> Arayuz (UI) private bir submodule'dur ve yerelde gerekmez — hazir imaj UI'yi
-> zaten icerir. `npm ci` yalnizca iOS provider icin host araclarini kurar.
+Yalnizca Android icin:
+
+```bash
+curl -fsSL https://github.com/erdncyz/mercury-farm/releases/latest/download/install.sh | bash -s -- --android-only
+```
+
+Kurucu release arsivinin checksum degerini dogrular ve surumlu host dosyalarini
+`~/.mercury-farm` altina kurar. Repo clone etmek veya UI kaynagini indirmek gerekmez.
 
 ### 3) Cekirdek Stack'i Baslat (hazir Docker imaji)
 
 ```bash
-npm run stack:up:image:macos
+~/.mercury-farm/mercury up
 ```
 
-Bu komut domain'i tespit eder, `ghcr.io/erdncyz/mercury-farm:latest` imajini
-ceker ve tum container'lari baslatir — yerel build yapmadan.
+Bu komut domain'i tespit eder, release'in sabitledigi image digest'ini ceker ve
+yerel build yapmadan tum container'lari baslatir.
 
 ### 4) iOS Provider'i Baslat (Host)
 
 ```bash
-./scripts/start-ios-provider.sh
+~/.mercury-farm/mercury ios-auto
 ```
+
+On planda calistirmak icin `~/.mercury-farm/mercury ios` kullanin.
 
 ### 5) Dogrula
 
 ```bash
-npm run stack:ps:macos
-pgrep -af "mercury.mjs ios-provider|mercury-ios-provider|lib/cli ios-device"
+~/.mercury-farm/mercury status
 ```
 
 ### 6) Arayuzu Ac
@@ -209,8 +242,7 @@ Not:
 Tum stack:
 
 ```bash
-npm run stack:up:image:macos
-./scripts/start-ios-provider.sh
+~/.mercury-farm/mercury up
 ```
 
 Sadece Docker servisleri:
@@ -219,28 +251,38 @@ Sadece Docker servisleri:
 docker restart mercury-provider mercury-websocket mercury-nginx
 ```
 
-### Yeni commit/push sonrasi guncelleme (cekip tekrar calistirma)
+### Guncelleme
 
-Yeni bir surum yayinlandiginda (yeni imaj cikinca) veya scriptler degisince su adimlari calistirin:
-
-```bash
-git pull --rebase                 # guncel compose ve scriptler
-npm ci                            # guncel host araclari
-npm run stack:up:image:macos      # en yeni imaji ceker, container'lari yeniler
-./scripts/start-ios-provider.sh   # host iOS provider'i yeniden baslat
-```
-
-Eger iOS provider LaunchAgent ile calisiyorsa su komutla yeniden yukleyin:
+Yeni stabil surum yayinlandiginda:
 
 ```bash
-launchctl kickstart -k gui/$(id -u)/com.mercury.ios-provider
+~/.mercury-farm/mercury update
 ```
 
-### Opsiyonel: LaunchAgent ile iOS Provider otomatik baslatma
+Bu komut release dosyalarini, backend'i ve derlenmis UI'yi birlikte gunceller.
+Ayarlar ile Docker volume'lari korunur. Kurulu iOS LaunchAgent da yenilenir.
+Mercury ancak tum kalici servisler ve UI saglikliysa guncellemeyi tamamlar.
+Basarisiz guncelleme geri alinir; yarida kesilen guncelleme sonraki `mercury`
+komutunda kurtarilir.
+
+### Tam Bir Surumu Kurma veya Geri Donme
 
 ```bash
-./scripts/deploy-ios-provider-runtime.sh
+curl -fsSL https://github.com/erdncyz/mercury-farm/releases/latest/download/install.sh | bash -s -- --version v0.0.47
+~/.mercury-farm/mercury up
+~/.mercury-farm/mercury ios-auto  # iOS destegi aciksa
 ```
+
+Yalnizca Android geri donusu icin installer komutuna `--android-only` ekleyin ve
+`ios-auto` adimini calistirmayin.
+
+### Yayin Kanallari
+
+- GitHub Release kullanicinin indirdigi kurulum paketidir.
+- Git tag degismez kaynak surumunu isaretler.
+- GHCR package backend ile derlenmis UI'yi icerir.
+- `stable` ve `latest` en yeni stabil image'i gosterir; kurucu ise tekrarlanabilir
+  guncelleme icin o surumun degismez image digest'ini sabitler.
 
 ### Loglar ve Sorun Giderme
 

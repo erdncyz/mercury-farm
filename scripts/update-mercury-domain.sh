@@ -43,13 +43,21 @@ if [[ -z "${IP:-}" ]]; then
   exit 0
 fi
 
-tmp_file="$(mktemp)"
+TARGET_FILE="$ENV_FILE"
+if [[ -L "$ENV_FILE" ]]; then
+  TARGET_FILE="$(readlink "$ENV_FILE")"
+  if [[ "$TARGET_FILE" != /* ]]; then
+    TARGET_FILE="$(cd "$(dirname "$ENV_FILE")" && pwd)/$TARGET_FILE"
+  fi
+fi
+
+tmp_file="$(mktemp "$(dirname "$TARGET_FILE")/.variables.env.XXXXXX")"
 awk -v ip="$IP" '
   BEGIN {updated=0}
   /^MERCURY_DOMAIN=/ {print "MERCURY_DOMAIN=" ip; updated=1; next}
   {print}
   END {if (!updated) print "MERCURY_DOMAIN=" ip}
-' "$ENV_FILE" > "$tmp_file"
-mv "$tmp_file" "$ENV_FILE"
+' "$TARGET_FILE" > "$tmp_file"
+mv "$tmp_file" "$TARGET_FILE"
 
 echo "Updated MERCURY_DOMAIN=$IP in $ENV_FILE"

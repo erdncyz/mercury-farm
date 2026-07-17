@@ -1,4 +1,4 @@
-name: Auto Tag Release
+name: Release Mercury
 
 on:
   push:
@@ -6,12 +6,16 @@ on:
       - main
   workflow_dispatch:
 
+concurrency:
+  group: mercury-release
+  cancel-in-progress: false
+
 permissions:
   contents: write
   packages: write
 
 jobs:
-  tag:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -19,52 +23,183 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Calculate next patch version
+      - name: Read release version
         id: version
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           git fetch --tags --force
 
-          latest_tag=$(git tag -l 'v*' --sort=-v:refname | head -n 1)
-          if [ -z "$latest_tag" ]; then
-            latest_tag="v0.0.0"
+          version=$(node -p "require('./package.json').version")
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "package.json version must be SemVer (X.Y.Z), got: $version" >&2
+            exit 1
           fi
 
-          ver="${latest_tag#v}"
-          IFS='.' read -r major minor patch <<< "$ver"
-          patch=$((patch + 1))
+          tag="v${version}"
+          IFS='.' read -r major minor _ <<< "$version"
+          release_exists=false
+          should_promote=false
+          mark_latest=true
 
-          new_tag="v${major}.${minor}.${patch}"
-          echo "latest_tag=$latest_tag" >> "$GITHUB_OUTPUT"
-          echo "new_tag=$new_tag" >> "$GITHUB_OUTPUT"
+          latest_error=$(mktemp)
+          if ! latest_published_tag=$(gh api \
+            "repos/${GITHUB_REPOSITORY}/releases/latest" \
+            --jq '.tag_name' 2>"$latest_error"); then
+            if grep -q 'HTTP 404' "$latest_error"; then
+              latest_published_tag=""
+            else
+              cat "$latest_error" >&2
+              exit 1
+            fi
+          fi
+          rm -f "$latest_error"
 
-      - name: Create and push tag
+          if [[ -n "$latest_published_tag" ]]; then
+            latest_published_version="${latest_published_tag#v}"
+            if ! node -e "
+              const current = process.argv[1].split('.').map(Number)
+              const latest = process.argv[2].split('.').map(Number)
+              const comparison = current.findIndex((part, index) => part !== latest[index])
+              process.exit(comparison < 0 || current[comparison] > latest[comparison] ? 0 : 1)
+            " "$version" "$latest_published_version"; then
+              mark_latest=false
+            fi
+          fi
+
+          if git rev-parse "refs/tags/$tag" >/dev/null 2>&1; then
+            tag_commit=$(git rev-list -n 1 "$tag")
+            create_tag=false
+
+            if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+              release_exists=true
+              is_draft=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" \
+                --json isDraft --jq '.isDraft')
+              asset_names=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" \
+                --json assets --jq '.assets[].name')
+              assets_complete=true
+
+              for asset in install.sh mercury-farm-macos.tar.gz mercury-farm-macos.tar.gz.sha256; do
+                if ! grep -Fxq "$asset" <<< "$asset_names"; then
+                  assets_complete=false
+                fi
+              done
+
+              if [[ "$is_draft" == "false" && "$assets_complete" == "true" ]]; then
+                latest_release_tag=$(gh api \
+                  "repos/${GITHUB_REPOSITORY}/releases/latest" \
+                  --jq '.tag_name')
+                echo "Tag and complete GitHub Release $tag already exist."
+                should_release=false
+                if [[ "$latest_release_tag" == "$tag" ]]; then
+                  echo "Ensuring image channels for the latest release."
+                  should_promote=true
+                else
+                  echo "Skipping channel promotion because latest is $latest_release_tag."
+                fi
+              elif [[ "$tag_commit" == "$GITHUB_SHA" ]]; then
+                echo "Release $tag is draft or incomplete; resuming publication."
+                should_release=true
+                should_promote="$mark_latest"
+              else
+                echo "Incomplete release tag $tag points to $tag_commit, not $GITHUB_SHA." >&2
+                echo "Re-run the workflow for the tagged commit before releasing a new version." >&2
+                exit 1
+              fi
+            elif [[ "$tag_commit" != "$GITHUB_SHA" ]]; then
+              echo "Tag $tag points to $tag_commit, not $GITHUB_SHA. Bump package.json before releasing." >&2
+              exit 1
+            else
+              echo "Tag $tag exists without a GitHub Release; resuming publication."
+              should_release=true
+              should_promote="$mark_latest"
+            fi
+          else
+            create_tag=true
+            should_release=true
+            should_promote="$mark_latest"
+          fi
+
+          {
+            echo "version=$version"
+            echo "tag=$tag"
+            echo "major=$major"
+            echo "minor=$minor"
+            echo "create_tag=$create_tag"
+            echo "should_release=$should_release"
+            echo "should_promote=$should_promote"
+            echo "mark_latest=$mark_latest"
+            echo "release_exists=$release_exists"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Validate release inputs
+        if: steps.version.outputs.should_release == 'true'
         shell: bash
         run: |
           set -euo pipefail
-          tag="${{ steps.version.outputs.new_tag }}"
 
-          if git rev-parse "$tag" >/dev/null 2>&1; then
-            echo "Tag $tag already exists, skipping"
-            exit 0
-          fi
+          bash -n \
+            scripts/install.sh \
+            scripts/mercuryctl.sh \
+            scripts/auto-configure-network.sh \
+            scripts/deploy-ios-provider-runtime.sh \
+            scripts/install-ios-provider-launchagent.sh
+          sh -n scripts/generate-ssl.sh
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node -e "
+            const packageVersion = require('./package.json').version
+            const lockVersion = require('./package-lock.json').version
+            if (packageVersion !== lockVersion) {
+              throw new Error('package.json and package-lock.json versions differ')
+            }
+          "
 
-          git tag "$tag"
-          git push origin "$tag"
+          docker compose \
+            -f docker-compose-macos.yaml \
+            --env-file scripts/variables.env \
+            config --quiet
 
-          echo "Created and pushed $tag"
+      - name: Prepare macOS release bundle
+        if: steps.version.outputs.should_release == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          release_dir="$RUNNER_TEMP/mercury-release"
+          bundle_dir="$release_dir/mercury-farm"
+          mkdir -p "$bundle_dir"
+
+          git archive --format=tar HEAD | tar -xf - -C "$bundle_dir"
+          rm -rf "$bundle_dir/ui"
+          printf '%s\n' "${{ steps.version.outputs.tag }}" > "$bundle_dir/.release-version"
+          chmod +x "$bundle_dir/scripts/install.sh" "$bundle_dir/scripts/mercuryctl.sh"
+
+          cp scripts/install.sh "$release_dir/install.sh"
+          chmod +x "$release_dir/install.sh"
+
+          echo "release_dir=$release_dir" >> "$GITHUB_ENV"
+
+      - name: Checkout private UI
+        if: steps.version.outputs.create_tag == 'true'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          token: ${{ secrets.UI_SUBMODULE_TOKEN }}
+          persist-credentials: false
 
       - name: Set up QEMU
+        if: steps.version.outputs.create_tag == 'true'
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
+        if: steps.version.outputs.should_release == 'true' || steps.version.outputs.should_promote == 'true'
         uses: docker/setup-buildx-action@v3
 
       - name: Log in to GHCR
+        if: steps.version.outputs.create_tag == 'true' || steps.version.outputs.should_promote == 'true'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -72,11 +207,175 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push image to GHCR
+        if: steps.version.outputs.create_tag == 'true'
+        id: image
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: |
-            ghcr.io/${{ github.repository }}:${{ steps.version.outputs.new_tag }}
-            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ github.repository }}:${{ steps.version.outputs.tag }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.version=${{ steps.version.outputs.tag }}
+            org.opencontainers.image.revision=${{ github.sha }}
+
+      - name: Finalize macOS release bundle
+        if: steps.version.outputs.should_release == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          image="ghcr.io/${GITHUB_REPOSITORY}"
+          version_tag="${{ steps.version.outputs.tag }}"
+          digest="${{ steps.image.outputs.digest }}"
+
+          if [[ -z "$digest" ]]; then
+            digest=$(docker buildx imagetools inspect "${image}:${version_tag}" \
+              | awk '/^Digest:/ {print $2; exit}')
+          fi
+
+          if [[ ! "$digest" =~ ^sha256:[a-f0-9]{64}$ ]]; then
+            echo "Could not resolve an immutable image digest for $version_tag" >&2
+            exit 1
+          fi
+
+          printf '%s@%s\n' "$image" "$digest" \
+            > "$release_dir/mercury-farm/.image-reference"
+
+          tar -czf "$release_dir/mercury-farm-macos.tar.gz" \
+            -C "$release_dir" mercury-farm
+
+          (
+            cd "$release_dir"
+            sha256sum mercury-farm-macos.tar.gz > mercury-farm-macos.tar.gz.sha256
+          )
+
+      - name: Validate macOS release bundle
+        if: steps.version.outputs.should_release == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          (
+            cd "$release_dir"
+            sha256sum -c mercury-farm-macos.tar.gz.sha256
+          )
+
+          bundle_version=$(tar -xOf "$release_dir/mercury-farm-macos.tar.gz" \
+            mercury-farm/.release-version)
+          image_reference=$(tar -xOf "$release_dir/mercury-farm-macos.tar.gz" \
+            mercury-farm/.image-reference)
+          expected_image="ghcr.io/${GITHUB_REPOSITORY}@sha256:"
+
+          if [[ "$bundle_version" != "${{ steps.version.outputs.tag }}" ]]; then
+            echo "Bundle version mismatch: $bundle_version" >&2
+            exit 1
+          fi
+
+          if [[ "$image_reference" != "$expected_image"* ]] || \
+            [[ ! "${image_reference#"${expected_image}"}" =~ ^[a-f0-9]{64}$ ]]; then
+            echo "Bundle image reference is invalid: $image_reference" >&2
+            exit 1
+          fi
+
+          if tar -tzf "$release_dir/mercury-farm-macos.tar.gz" \
+            | grep '^mercury-farm/ui/' >/dev/null; then
+            echo "Private UI files must not be included in the host bundle." >&2
+            exit 1
+          fi
+
+      - name: Create and push tag
+        if: steps.version.outputs.should_release == 'true' && steps.version.outputs.create_tag == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="${{ steps.version.outputs.tag }}"
+
+          tag_object=$(gh api --method POST \
+            "repos/${GITHUB_REPOSITORY}/git/tags" \
+            --raw-field "tag=$tag" \
+            --raw-field "message=Mercury $tag" \
+            --raw-field "object=$GITHUB_SHA" \
+            --raw-field "type=commit" \
+            --jq '.sha')
+
+          gh api --method POST \
+            "repos/${GITHUB_REPOSITORY}/git/refs" \
+            --raw-field "ref=refs/tags/$tag" \
+            --raw-field "sha=$tag_object"
+
+      - name: Stage GitHub Release assets
+        if: steps.version.outputs.should_release == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="${{ steps.version.outputs.tag }}"
+
+          if [[ "${{ steps.version.outputs.release_exists }}" == "true" ]]; then
+            gh release upload "$tag" \
+              "$release_dir/install.sh" \
+              "$release_dir/mercury-farm-macos.tar.gz" \
+              "$release_dir/mercury-farm-macos.tar.gz.sha256" \
+              --clobber
+          else
+            gh release create "$tag" \
+              "$release_dir/install.sh" \
+              "$release_dir/mercury-farm-macos.tar.gz" \
+              "$release_dir/mercury-farm-macos.tar.gz.sha256" \
+              --verify-tag \
+              --draft \
+              --generate-notes \
+              --title "Mercury $tag"
+          fi
+
+      - name: Publish GitHub Release
+        if: steps.version.outputs.should_release == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [[ "${{ steps.version.outputs.mark_latest }}" == "true" ]]; then
+            gh release edit "${{ steps.version.outputs.tag }}" --draft=false --latest
+          else
+            gh release edit "${{ steps.version.outputs.tag }}" --draft=false --latest=false
+          fi
+
+      - name: Promote stable image channels
+        if: steps.version.outputs.should_promote == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          image="ghcr.io/${GITHUB_REPOSITORY}"
+          version_tag="${{ steps.version.outputs.tag }}"
+          promotion_dir=$(mktemp -d)
+          trap 'rm -rf "$promotion_dir"' EXIT
+
+          gh release download "$version_tag" \
+            --pattern mercury-farm-macos.tar.gz \
+            --dir "$promotion_dir"
+
+          image_reference=$(tar -xOf "$promotion_dir/mercury-farm-macos.tar.gz" \
+            mercury-farm/.image-reference)
+          expected_image="${image}@sha256:"
+
+          if [[ "$image_reference" != "$expected_image"* ]] || \
+            [[ ! "${image_reference#"${expected_image}"}" =~ ^[a-f0-9]{64}$ ]]; then
+            echo "Release $version_tag contains an invalid image reference." >&2
+            exit 1
+          fi
+
+          docker buildx imagetools create \
+            --tag "${image}:${{ steps.version.outputs.major }}.${{ steps.version.outputs.minor }}" \
+            --tag "${image}:${{ steps.version.outputs.major }}" \
+            --tag "${image}:stable" \
+            --tag "${image}:latest" \
+            "$image_reference"

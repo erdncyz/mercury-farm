@@ -1,6 +1,6 @@
 {
   "name": "mercury-device-farm",
-  "version": "1.5.0",
+  "version": "0.0.47",
   "description": "Mercury Device Farm - Remote Device Management Platform",
   "type": "module",
   "keywords": [
@@ -35,8 +35,8 @@
     "stack:up:macos": "docker compose -f docker-compose-macos.yaml --env-file scripts/variables.env up -d --build",
     "stack:pull:macos": "docker compose -f docker-compose-macos.yaml --env-file scripts/variables.env pull",
     "prestack:up:image:macos": "npm run -s mercury:domain:auto && npm run -s stack:pull:macos",
-    "stack:up:image:macos": "docker compose -f docker-compose-macos.yaml --env-file scripts/variables.env up -d",
-    "stack:ps:macos": "docker compose -f docker-compose-macos.yaml ps"
+    "stack:up:image:macos": "docker compose -f docker-compose-macos.yaml --env-file scripts/variables.env up -d --no-build --remove-orphans",
+    "stack:ps:macos": "docker compose -f docker-compose-macos.yaml --env-file scripts/variables.env ps"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.772.0",

@@ -57,20 +57,28 @@ get_lan_ip() {
 update_domain_in_file() {
   local file="$1"
   local ip="$2"
+  local target_file="$file"
 
   [[ -f "$file" ]] || return 0
 
+  if [[ -L "$file" ]]; then
+    target_file="$(readlink "$file")"
+    if [[ "$target_file" != /* ]]; then
+      target_file="$(cd "$(dirname "$file")" && pwd)/$target_file"
+    fi
+  fi
+
   local tmp_file
-  tmp_file="$(mktemp)"
+  tmp_file="$(mktemp "$(dirname "$target_file")/.variables.env.XXXXXX")"
 
   awk -v ip="$ip" '
     BEGIN {updated=0}
     /^MERCURY_DOMAIN=/ {print "MERCURY_DOMAIN=" ip; updated=1; next}
     {print}
     END {if (!updated) print "MERCURY_DOMAIN=" ip}
-  ' "$file" > "$tmp_file"
+  ' "$target_file" > "$tmp_file"
 
-  mv "$tmp_file" "$file"
+  mv "$tmp_file" "$target_file"
 }
 
 MODE="$(read_mode)"

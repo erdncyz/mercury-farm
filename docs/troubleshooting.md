@@ -16,7 +16,7 @@ Fix:
 
 ```bash
 open -a Docker
-npm run stack:up:image:macos
+~/.mercury-farm/mercury up
 ```
 
 ### 2) Stack is up but UI is unreachable on `https://localhost`
@@ -28,7 +28,7 @@ Why:
 Fix:
 
 ```bash
-npm run -s mercury:domain:auto
+~/.mercury-farm/mercury up
 ```
 
 Open:
@@ -44,13 +44,13 @@ Example:
 Check:
 
 ```bash
-pgrep -af "mercury.mjs ios-provider|mercury-ios-provider|lib/cli ios-device"
+~/.mercury-farm/mercury status
 ```
 
 Start:
 
 ```bash
-./scripts/start-ios-provider.sh
+~/.mercury-farm/mercury ios-auto
 ```
 
 ### 4) iOS still enters automation mode after Docker stop
@@ -82,12 +82,10 @@ Expected:
 ### 5) Useful logs
 
 ```bash
-npm run stack:ps:macos
-docker logs -f mercury-nginx
-docker logs -f mercury-api
-docker logs -f mercury-provider
-docker logs -f mercury-websocket
-tail -f /tmp/mercury-ios-provider.log
+~/.mercury-farm/mercury status
+~/.mercury-farm/mercury logs nginx mercury-api mercury-provider mercury-websocket
+tail -f ~/.mercury-farm-runtime/ios-provider.launchd.out.log
+tail -f ~/.mercury-farm-runtime/ios-provider.launchd.err.log
 ```
 
 ---
@@ -104,7 +102,7 @@ Cozum:
 
 ```bash
 open -a Docker
-npm run stack:up:image:macos
+~/.mercury-farm/mercury up
 ```
 
 ### 2) Stack calisiyor ama `https://localhost` acilmiyor
@@ -116,7 +114,7 @@ Neden:
 Cozum:
 
 ```bash
-npm run -s mercury:domain:auto
+~/.mercury-farm/mercury up
 ```
 
 Sunu acin:
@@ -132,13 +130,13 @@ Ornek:
 Kontrol:
 
 ```bash
-pgrep -af "mercury.mjs ios-provider|mercury-ios-provider|lib/cli ios-device"
+~/.mercury-farm/mercury status
 ```
 
 Baslat:
 
 ```bash
-./scripts/start-ios-provider.sh
+~/.mercury-farm/mercury ios-auto
 ```
 
 ### 4) Docker kapaliyken iOS yine automation moduna geciyor
@@ -170,10 +168,8 @@ Beklenen:
 ### 5) Faydali loglar
 
 ```bash
-npm run stack:ps:macos
-docker logs -f mercury-nginx
-docker logs -f mercury-api
-docker logs -f mercury-provider
-docker logs -f mercury-websocket
-tail -f /tmp/mercury-ios-provider.log
+~/.mercury-farm/mercury status
+~/.mercury-farm/mercury logs nginx mercury-api mercury-provider mercury-websocket
+tail -f ~/.mercury-farm-runtime/ios-provider.launchd.out.log
+tail -f ~/.mercury-farm-runtime/ios-provider.launchd.err.log
 ```

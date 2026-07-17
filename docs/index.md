@@ -9,12 +9,12 @@ Use this page as the single entry point for Mercury documentation.
 ### Quick Install (Docker image)
 
 ```bash
-git clone https://github.com/erdncyz/mercury-farm.git
-cd mercury-farm
-npm ci
-npm run stack:up:image:macos     # pulls the prebuilt GHCR image, starts the stack
-./scripts/start-ios-provider.sh  # iOS only (host, needs Xcode)
+curl -fsSL https://github.com/erdncyz/mercury-farm/releases/latest/download/install.sh | bash
+~/.mercury-farm/mercury up
 ```
+
+For iOS, run `~/.mercury-farm/mercury ios-auto` after installing Xcode and the
+host prerequisites. Use installer option `--android-only` when iOS is not needed.
 
 Full guide: [Getting Started](./getting-started.md).
 
@@ -55,12 +55,13 @@ Bu sayfayı Mercury dokümantasyonu için ana giriş noktası olarak kullanın.
 ### Hızlı Kurulum (Docker imajı)
 
 ```bash
-git clone https://github.com/erdncyz/mercury-farm.git
-cd mercury-farm
-npm ci
-npm run stack:up:image:macos     # hazır GHCR imajını çeker, stack'i başlatır
-./scripts/start-ios-provider.sh  # sadece iOS (host, Xcode gerektirir)
+curl -fsSL https://github.com/erdncyz/mercury-farm/releases/latest/download/install.sh | bash
+~/.mercury-farm/mercury up
 ```
+
+iOS icin Xcode ve host gereksinimlerini kurduktan sonra
+`~/.mercury-farm/mercury ios-auto` calistirin. iOS gerekmiyorsa kurucuyu
+`--android-only` secenegiyle kullanin.
 
 Ayrıntılı rehber: [Getting Started](./getting-started.md).
 

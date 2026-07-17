@@ -163,7 +163,7 @@ For Mercury remote flow, see:
 ## 8) Quick health checks
 
 ```bash
-./scripts/check-appium-setup.sh
+/bin/bash ~/.mercury-farm/current/scripts/check-appium-setup.sh
 appium -v
 appium driver list --installed
 adb devices
@@ -353,7 +353,7 @@ Mercury remote akışı için:
 ## 8) Hızlı sağlık kontrolleri
 
 ```bash
-./scripts/check-appium-setup.sh
+/bin/bash ~/.mercury-farm/current/scripts/check-appium-setup.sh
 appium -v
 appium driver list --installed
 adb devices

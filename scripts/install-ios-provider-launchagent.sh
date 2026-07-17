@@ -47,6 +47,7 @@ cat > "$PLIST_PATH" <<PLIST
 PLIST
 
 launchctl bootout "gui/${USER_UID}/${LABEL}" >/dev/null 2>&1 || true
+launchctl enable "gui/${USER_UID}/${LABEL}" >/dev/null 2>&1 || true
 
 bootstrap_ok=0
 for _ in 1 2 3; do

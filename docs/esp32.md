@@ -16,7 +16,7 @@ Mercury starts with ESP32 integration disabled by default:
 ### Enable ESP32 integration
 
 ```bash
-IOS_DISABLE_ESP32=0 ./scripts/start-ios-provider.sh
+IOS_DISABLE_ESP32=0 ~/.mercury-farm/mercury ios
 ```
 
 ### Recommended approach
@@ -41,7 +41,7 @@ Mercury varsayılan olarak ESP32 entegrasyonunu kapalı başlatır:
 ### ESP32 entegrasyonunu açma
 
 ```bash
-IOS_DISABLE_ESP32=0 ./scripts/start-ios-provider.sh
+IOS_DISABLE_ESP32=0 ~/.mercury-farm/mercury ios
 ```
 
 ### Önerilen yaklaşım

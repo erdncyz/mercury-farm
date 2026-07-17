@@ -47,10 +47,10 @@ Mercury stack'i birden fazla Docker container'dan oluşur. Aşağıdaki tablo he
 
 ```bash
 # Show all container statuses / Tüm container durumlarını göster
-docker compose -f docker-compose-macos.yaml ps
+~/.mercury-farm/mercury status
 
 # Follow logs for all services / Tüm servislerin loglarını aynı anda izle
-docker compose -f docker-compose-macos.yaml logs -f
+~/.mercury-farm/mercury logs
 
 # Show last 100 lines of a specific service / Belirli bir servisin son 100 satır logunu göster
 docker logs --tail 100 mercury-websocket

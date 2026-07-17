@@ -24,12 +24,14 @@ WORKDIR /app/ui
 
 RUN npm ci && \
     npx tsc -b && \
-    npx vite build
+    npx vite build && \
+    mv /app/ui/dist /tmp/mercury-ui-dist && \
+    rm -rf /app/ui
 
 # -------- RUNTIME --------
 FROM node:20.18.0-bullseye-slim
 
-LABEL org.opencontainers.image.source=https://github.com/erdncyz/mercury
+LABEL org.opencontainers.image.source=https://github.com/erdncyz/mercury-farm
 LABEL org.opencontainers.image.title=Mercury
 LABEL org.opencontainers.image.vendor=erdncyz
 LABEL org.opencontainers.image.description="Control and manage Android and iOS devices from your browser."
@@ -48,8 +50,7 @@ RUN apt-get update && apt-get install -y \
 RUN useradd --system --create-home --shell /usr/sbin/nologin mercury-user
 
 COPY --from=builder /app .
-RUN rm -rf ./ui
-COPY --from=builder /app/ui/dist ./ui/dist
+COPY --from=builder /tmp/mercury-ui-dist ./ui/dist
 
 RUN ln -s /app/bin/mercury.mjs /app/bin/mercury && \
     ln -s /app/bin/mercury.mjs /app/bin/dh

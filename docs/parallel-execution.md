@@ -59,10 +59,10 @@ Example:
 
 ```bash
 # shard 0
-IOS_PROVIDER_SHARD=0 ./scripts/start-ios-provider.sh
+IOS_PROVIDER_SHARD=0 ~/.mercury-farm/mercury ios
 
 # shard 1
-IOS_PROVIDER_SHARD=1 ./scripts/start-ios-provider.sh
+IOS_PROVIDER_SHARD=1 ~/.mercury-farm/mercury ios
 ```
 
 Important:
@@ -280,10 +280,10 @@ Shard değişkenleri:
 
 ```bash
 # shard 0
-IOS_PROVIDER_SHARD=0 ./scripts/start-ios-provider.sh
+IOS_PROVIDER_SHARD=0 ~/.mercury-farm/mercury ios
 
 # shard 1
-IOS_PROVIDER_SHARD=1 ./scripts/start-ios-provider.sh
+IOS_PROVIDER_SHARD=1 ~/.mercury-farm/mercury ios
 ```
 
 Önemli:

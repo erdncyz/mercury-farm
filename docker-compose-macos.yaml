@@ -1,10 +1,12 @@
+name: mercury-farm
+
 networks:
     mercury:
         driver: bridge
 
 services:
     nginx:
-        image: "nginx:bookworm"
+        image: "nginx:bookworm@sha256:8adbdcb969e2676478ee2c7ad333956f0c8e0e4c5a7463f4611d7a2e7a7ff5dc"
         container_name: mercury-nginx
         volumes:
             - ./scripts/nginx.conf:/etc/nginx/nginx.conf:ro
@@ -37,7 +39,7 @@ services:
         networks:
             mercury:
     mercury-mongo:
-        image: mongo:7.0
+        image: mongo:7.0@sha256:340c1c56fb10e95cf79ff547f8664b96bc6ead9909bc355238cbf865a9695a6f
         hostname: mercury-mongo
         container_name: mercury-mongo
         ports:
@@ -63,7 +65,7 @@ services:
         volumes:
             - mercury-db-volume:/data/db
     mercury-mongosetup:
-        image: mongo:7.0
+        image: mongo:7.0@sha256:340c1c56fb10e95cf79ff547f8664b96bc6ead9909bc355238cbf865a9695a6f
         container_name: mercury-mongosetup
         depends_on:
             mercury-mongo:
@@ -168,6 +170,8 @@ services:
         build: .
         image: ${MERCURY_IMAGE:-ghcr.io/erdncyz/mercury-farm:latest}
         container_name: mercury-storage-temp
+        ports:
+            - "127.0.0.1:7100:3000"
         env_file:
             - scripts/variables.env
         command: mercury storage-temp --port 3000 --save-dir /tmp --connect-sub tcp://mercury-triproxy-app:7150 --connect-push tcp://mercury-triproxy-app:7170 --secret=${MERCURY_SECRET}
@@ -282,11 +286,13 @@ services:
         networks:
             mercury:
     mercury-ssl:
-        image: paulczar/omgwtfssl
+        image: "nginx:bookworm@sha256:8adbdcb969e2676478ee2c7ad333956f0c8e0e4c5a7463f4611d7a2e7a7ff5dc"
         environment:
-            - SSL_SUBJECT=${MERCURY_DOMAIN}:${MERCURY_PORT}
+            - SSL_SUBJECT=${MERCURY_DOMAIN}
         volumes:
             - certs:/certs:rw
+            - ./scripts/generate-ssl.sh:/scripts/generate-ssl.sh:ro
+        entrypoint: ["/bin/sh", "/scripts/generate-ssl.sh"]
 volumes:
     mercury-db-volume:
     certs:
