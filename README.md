@@ -71,11 +71,17 @@ The installer verifies the release archive checksum, installs it under
 `~/.mercury-farm`, and pins the Docker image by its immutable release digest.
 The UI source is not downloaded because the compiled UI is already in that image.
 
+If iOS support is enabled, installer output can include npm deprecation warnings
+from transitive dependencies. These warnings do not block installation.
+
 ### 3) Start Mercury
 
 ```bash
 ~/.mercury-farm/mercury up
 ```
+
+The first run can take several minutes because Docker pulls the Mercury image
+and base images. Progress lines like `[+] pull x/y` are expected.
 
 For iOS, install the host provider as a LaunchAgent so it starts automatically:
 
