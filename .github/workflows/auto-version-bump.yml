@@ -10,6 +10,7 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
+  actions: write
   contents: write
 
 jobs:
@@ -66,3 +67,11 @@ jobs:
 
           git commit -m "chore(release): v${version}"
           git push origin HEAD:main
+
+      - name: Trigger release workflow for bumped version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh workflow run auto-tag-release.yml --repo "$GITHUB_REPOSITORY" --ref main

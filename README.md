@@ -142,9 +142,9 @@ Version rules:
 - all other commits -> patch bump
 
 On push, the version workflow creates a `chore(release): vX.Y.Z` commit with
-updated package files. That commit then triggers the release workflow, which
-creates the Git tag, multi-architecture GHCR image, macOS bundle, checksum,
-and GitHub Release together. Do not create release tags by hand.
+updated package files, then dispatches the release workflow for `main`. The
+release workflow creates the Git tag, multi-architecture GHCR image, macOS
+bundle, checksum, and GitHub Release together. Do not create release tags by hand.
 
 ---
 
