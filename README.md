@@ -83,7 +83,34 @@ from transitive dependencies. These warnings do not block installation.
 The first run can take several minutes because Docker pulls the Mercury image
 and base images. Progress lines like `[+] pull x/y` are expected.
 
-For iOS, install the host provider as a LaunchAgent so it starts automatically:
+For iOS, complete the one-time WebDriverAgent (WDA) signing setup in Xcode:
+
+```bash
+open ~/.mercury-farm/current/WebDriverAgent/WebDriverAgent.xcodeproj
+```
+
+In Xcode:
+
+1. Select the **WebDriverAgent** project → **WebDriverAgentRunner** target.
+2. Open **Signing & Capabilities**, enable **Automatically manage signing**,
+   and pick your **Team** (a free Apple ID works).
+3. If the bundle identifier conflicts, change it to something unique, e.g.
+   `com.yourname.WebDriverAgentRunner`.
+4. On the device, trust the developer certificate
+   (**Settings → General → VPN & Device Management**) and enable
+   **Developer Mode** (iOS 16+: **Settings → Privacy & Security → Developer Mode**).
+
+WDA is installed on the iPhone/iPad, not on the Mac. After this one-time
+setup, the iOS provider rebuilds and installs WDA automatically via
+`xcodebuild -allowProvisioningUpdates`; you do not need to open Xcode again.
+
+Note: always edit the project under `~/.mercury-farm/current/`. The
+`~/.mercury-farm-runtime/` folder is a working copy that the provider
+recreates from `current` on every deploy, so manual edits there are lost.
+After `mercury update` replaces `current` with a new release, the Team
+setting is reset and this signing step must be repeated.
+
+Then install the host provider as a LaunchAgent so it starts automatically:
 
 ```bash
 ~/.mercury-farm/mercury ios-auto
@@ -305,7 +332,38 @@ Kurucu arsiv checksum degerini dogrular ve Mercury'yi
 Bu komut Release'e ait degismez Docker image digest'ini ceker, servisleri
 baslatir ve saglik kontrollerini yapar.
 
-### 6) iOS provider'i otomatik baslat
+### 6) WDA imzalama ayarini yap (tek seferlik, iOS icin)
+
+iOS kullanacaksaniz once WebDriverAgent (WDA) projesini Xcode'da acip imzalayin:
+
+```bash
+open ~/.mercury-farm/current/WebDriverAgent/WebDriverAgent.xcodeproj
+```
+
+Xcode'da:
+
+1. Sol panelde **WebDriverAgent** projesini, target listesinden
+   **WebDriverAgentRunner** target'ini secin.
+2. **Signing & Capabilities** sekmesinde **Automatically manage signing**
+   secenegini isaretleyin ve **Team** olarak kendi Apple hesabinizi secin
+   (ucretsiz Apple ID yeterlidir).
+3. Bundle identifier cakisma hatasi verirse benzersiz bir deger yazin,
+   ornek: `com.adiniz.WebDriverAgentRunner`.
+4. Telefonda gelistirici sertifikasina guven verin
+   (**Ayarlar → Genel → VPN ve Aygit Yonetimi**) ve **Gelistirici Modu**'nu
+   acin (iOS 16+: **Ayarlar → Gizlilik ve Guvenlik → Gelistirici Modu**).
+
+WDA, Mac'e degil iPhone/iPad'e kurulur. Bu tek seferlik ayardan sonra iOS
+provider WDA'yi `xcodebuild -allowProvisioningUpdates` ile otomatik derleyip
+cihaza kurar; Xcode'u tekrar acmaniz gerekmez.
+
+Not: Duzenlemeyi her zaman `~/.mercury-farm/current/` altindaki projede yapin.
+`~/.mercury-farm-runtime/` klasoru her deploy'da `current` uzerinden yeniden
+olusturulan calisma kopyasidir; oradaki elle yapilan degisiklikler kaybolur.
+`mercury update` yeni surum indirdiginde `current` degistigi icin Team ayari
+sifirlanir ve bu imzalama adimini tekrarlamaniz gerekir.
+
+### 7) iOS provider'i otomatik baslat
 
 iOS kullanacaksaniz:
 
@@ -316,13 +374,13 @@ iOS kullanacaksaniz:
 Bu komut iOS provider'i macOS LaunchAgent olarak kurar. Mac yeniden basladiginda
 iOS provider otomatik olarak yeniden baslar.
 
-### 7) Kurulumu dogrula
+### 8) Kurulumu dogrula
 
 ```bash
 ~/.mercury-farm/mercury status
 ```
 
-### 8) Arayuzu ac
+### 9) Arayuzu ac
 
 Terminalde yazan adresi tarayicida acin:
 
@@ -332,14 +390,14 @@ Terminalde yazan adresi tarayicida acin:
 Sertifika yerel olarak olusturuldugu icin tarayici ilk acilista guvenlik
 uyarisi gosterebilir.
 
-### 9) Admin girisi yap
+### 10) Admin girisi yap
 
 - Name: `Mercury`
 - Email: `mercury@test.com`
 
 Mock auth modunda ilk basarili giris yapan kullanici admin olarak olusturulur.
 
-### 10) Yeni surume guncelle
+### 11) Yeni surume guncelle
 
 ```bash
 ~/.mercury-farm/mercury update
@@ -349,7 +407,7 @@ Guncelleme; host dosyalarini, backend'i ve UI'yi birlikte yeniler. Ayarlar ve
 MongoDB verileri korunur. Saglik kontrolu basarisiz olursa onceki surum otomatik
 geri yuklenir.
 
-### 11) Belirli bir surume geri don
+### 12) Belirli bir surume geri don
 
 ```bash
 curl -fsSL https://github.com/erdncyz/mercury-farm/releases/latest/download/install.sh | bash -s -- --version v0.0.47
@@ -357,7 +415,7 @@ curl -fsSL https://github.com/erdncyz/mercury-farm/releases/latest/download/inst
 ~/.mercury-farm/mercury ios-auto  # iOS kullaniyorsaniz
 ```
 
-### 12) Loglari goruntule
+### 13) Loglari goruntule
 
 ```bash
 ~/.mercury-farm/mercury logs
