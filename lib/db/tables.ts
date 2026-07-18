@@ -83,4 +83,7 @@ export default {
     stats: {
         primaryKey: 'id',
     },
+    builds: {
+        primaryKey: 'id',
+    },
 } as const

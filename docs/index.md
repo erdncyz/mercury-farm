@@ -39,8 +39,8 @@ Full guide: [Getting Started](./getting-started.md).
 
 ### Parallel and Automation
 
-- [Parallel Execution](./parallel-execution.md)
-- [Automation API](./automation-api.md)
+- [Automation API](./automation-api.md) - reserve devices, name runs, and track them on the **Builds** page
+- [Parallel Execution](./parallel-execution.md) - multiple devices and CI workers
 
 ### API Reference
 
@@ -86,8 +86,8 @@ Ayrıntılı rehber: [Getting Started](./getting-started.md).
 
 ### Paralel Koşum ve Otomasyon
 
-- [Parallel Execution](./parallel-execution.md)
-- [Automation API](./automation-api.md)
+- [Automation API](./automation-api.md) - cihaz ayırma, koşum adlandırma ve **Builds** sayfasından izleme
+- [Parallel Execution](./parallel-execution.md) - çoklu cihaz ve CI worker'ları
 
 ### API Referansı
 

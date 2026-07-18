@@ -27,6 +27,8 @@ tags:
   description: Privileged Operations
 - name: autotests
   description: Autotests Operations
+- name: builds
+  description: Automation Builds Operations
 paths:
   /groups:
     get:
@@ -3555,6 +3557,93 @@ paths:
                 $ref: '#/components/schemas/UnexpectedErrorResponse'
       x-codegen-request-body-name: serial
     x-swagger-router-controller: autotests
+  /builds:
+    get:
+      tags:
+        - builds
+      summary: Get automation builds
+      description: Returns the history of automation runs (builds) with their devices
+      operationId: getBuilds
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of builds to return
+          schema:
+            minimum: 1
+            maximum: 500
+            type: integer
+      responses:
+        "200":
+          description: Builds information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuildListResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    delete:
+      tags:
+        - builds
+      summary: Delete builds
+      description: Removes finished builds; admins remove all builds, users remove their own
+      operationId: deleteBuilds
+      responses:
+        "200":
+          description: Builds removed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: builds
+  /builds/{id}:
+    delete:
+      tags:
+        - builds
+      summary: Delete a build
+      description: Removes one build by identifier; allowed for the build owner and admins
+      operationId: deleteBuild
+      parameters:
+        - name: id
+          in: path
+          description: Build identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Build removed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => not the owner or build is running
+              * 404: Not Found => unknown build
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: builds
   /stats:
     post:
       tags:
@@ -3929,6 +4018,84 @@ components:
           default: true
         description:
           type: string
+    BuildDevice:
+      required:
+      - serial
+      type: object
+      properties:
+        serial:
+          type: string
+        model:
+          type: string
+          nullable: true
+        marketName:
+          type: string
+          nullable: true
+        version:
+          type: string
+          nullable: true
+        manufacturer:
+          type: string
+          nullable: true
+        ios:
+          type: boolean
+    Build:
+      required:
+      - id
+      - name
+      - state
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        runUrl:
+          type: string
+          nullable: true
+        owner:
+          type: object
+          nullable: true
+          properties:
+            email:
+              type: string
+            name:
+              type: string
+        started:
+          type: string
+          format: date-time
+        plannedStop:
+          type: string
+          format: date-time
+        finishedAt:
+          type: string
+          format: date-time
+          nullable: true
+        state:
+          type: string
+          enum:
+          - running
+          - finished
+          - failed
+        devices:
+          type: array
+          items:
+            $ref: '#/components/schemas/BuildDevice'
+    BuildListResponse:
+      required:
+      - builds
+      - success
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        description:
+          type: string
+        builds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Build'
     AdbPortResponse:
       required:
       - description

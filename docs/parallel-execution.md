@@ -91,6 +91,12 @@ You can then:
 - assign one test worker per device serial,
 - call `POST /api/v1/autotests/useDevice` per worker/device to get `remoteConnectUrl`.
 
+All devices reserved in one call belong to a single run named by the `run`
+parameter. That run appears on the **Builds** page with every device listed as
+a chip; while it is `Running` you can click any chip to watch that device live.
+Use a unique name per pipeline execution (for example `ci-parallel-${BUILD_NUMBER}`)
+and add `runUrl` to link back to the CI job.
+
 Reference:
 
 - [automation-api.md](./automation-api.md)
@@ -311,6 +317,13 @@ Sonra:
 
 - her worker kendi serial’ı için `POST /api/v1/autotests/useDevice` çağırır,
 - `remoteConnectUrl` ile Appium bağlanır.
+
+Tek çağrıda ayrılan tüm cihazlar, `run` parametresiyle adlandırılan tek bir
+koşuma aittir. Bu koşum **Builds** sayfasında tüm cihazları chip olarak
+listelenmiş şekilde görünür; `Çalışıyor` durumundayken herhangi bir chip'e
+tıklayarak o cihazı canlı izleyebilirsin. Her pipeline koşusu için benzersiz
+bir isim kullan (örn. `ci-parallel-${BUILD_NUMBER}`) ve CI job'ına dönmek için
+`runUrl` ekle.
 
 Referans:
 

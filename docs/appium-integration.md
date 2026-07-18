@@ -78,7 +78,7 @@ DEVICE_SERIAL="$(printf '%s' "$CAPTURE_RESPONSE" | jq -r '.group.devices[0].seri
 printf 'group=%s\nserial=%s\n' "$GROUP_ID" "$DEVICE_SERIAL"
 ```
 
-Save `GROUP_ID`; it is required for cleanup. `timeout=1800` reserves the device for 30 minutes. Adjust it to the expected session duration.
+Save `GROUP_ID`; it is required for cleanup. `timeout=1800` reserves the device for 30 minutes. Adjust it to the expected session duration. The `RUN_ID` value becomes the run name on the **Builds** page (see step 6).
 
 ---
 
@@ -233,6 +233,20 @@ Always put group release in the CI `finally`/cleanup step. Closing Inspector or 
 
 ---
 
+## 6) Track the run on the Builds page
+
+The `run=$RUN_ID` value used in step 2 automatically creates a record on the
+**Builds** page (top navigation, between **Devices** and **Settings**):
+
+- While reserved, the run shows as `Running`; click a green device chip to **watch the device screen live**.
+- After the release call (or timeout), the run flips to `Finished` and stays as history with start/end time, duration, and the devices used.
+- Add `&runUrl=https://ci.example/job/123` to the capture request to make the run name a clickable link to your CI job.
+- Old runs are cleaned up automatically after 30 days (`BUILDS_RETENTION_DAYS`); finished runs can also be deleted from the UI.
+
+See [Automation API](./automation-api.md) for details.
+
+---
+
 ## Troubleshooting
 
 | Symptom | Check |
@@ -313,7 +327,7 @@ DEVICE_SERIAL="$(printf '%s' "$CAPTURE_RESPONSE" | jq -r '.group.devices[0].seri
 printf 'group=%s\nserial=%s\n' "$GROUP_ID" "$DEVICE_SERIAL"
 ```
 
-`GROUP_ID` değerini sakla; cihazı serbest bırakırken gerekecek. `timeout=1800`, cihazı 30 dakika ayırır. Bu değeri beklenen session süresine göre değiştir.
+`GROUP_ID` değerini sakla; cihazı serbest bırakırken gerekecek. `timeout=1800`, cihazı 30 dakika ayırır. Bu değeri beklenen session süresine göre değiştir. `RUN_ID` değeri **Builds** sayfasındaki koşum adı olur (bkz. 6. adım).
 
 ---
 
@@ -464,7 +478,21 @@ curl -sS -X DELETE \
   "$MERCURY_BASE_URL/api/v1/autotests?group=$GROUP_ID"
 ```
 
-Grup silme işlemini CI tarafında mutlaka `cleanup/finally` içine koy. Yalnızca Inspector’ı kapatmak veya Appium session’ını silmek Mercury rezervasyonunu bırakmaz.
+Grup silme işlemini CI tarafında mutlaka `cleanup/finally` içine koy. Yalnızca Inspector'ı kapatmak veya Appium session'ını silmek Mercury rezervasyonunu bırakmaz.
+
+---
+
+## 6) Koşumu Builds sayfasından izle
+
+2. adımda kullanılan `run=$RUN_ID` değeri **Builds** sayfasında (üst menü,
+**Devices** ile **Settings** arasında) otomatik olarak bir kayıt oluşturur:
+
+- Rezervasyon sürerken koşum `Çalışıyor` görünür; yeşil cihaz chip'ine tıklayarak **cihaz ekranını canlı izleyebilirsin**.
+- Release çağrısından (veya timeout'tan) sonra koşum `Tamamlandı` olur; başlangıç/bitiş, süre ve kullanılan cihazlarla birlikte geçmişte kalır.
+- Capture isteğine `&runUrl=https://ci.example/job/123` eklersen koşum adı CI job'ına tıklanabilir link olur.
+- Eski koşumlar 30 gün sonra otomatik temizlenir (`BUILDS_RETENTION_DAYS`); biten koşumlar UI'dan da silinebilir.
+
+Detaylar için: [Automation API](./automation-api.md)
 
 ---
 

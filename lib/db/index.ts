@@ -120,6 +120,10 @@ export default class DbClient {
         return DbClient.collection('teams')
     }
 
+    static get builds() {
+        return DbClient.collection('builds')
+    }
+
     static async createZMQSockets(
         {
             sub,
