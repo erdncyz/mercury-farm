@@ -1,5 +1,5 @@
 # -------- BUILDER --------
-FROM node:20.18.0-bullseye-slim AS builder
+FROM node:20.18.0-bookworm-slim AS builder
 
 WORKDIR /app
 
@@ -29,7 +29,7 @@ RUN npm ci && \
     rm -rf /app/ui
 
 # -------- RUNTIME --------
-FROM node:20.18.0-bullseye-slim
+FROM node:20.18.0-bookworm-slim
 
 LABEL org.opencontainers.image.source=https://github.com/erdncyz/mercury-farm
 LABEL org.opencontainers.image.title=Mercury
