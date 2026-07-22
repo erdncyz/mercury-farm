@@ -30,13 +30,15 @@ jobs:
 
       - name: Determine bump level from commit messages
         id: bump
+        env:
+          HEAD_COMMIT_MSG: ${{ github.event.head_commit.message }}
         shell: bash
         run: |
           set -euo pipefail
 
           messages=$(jq -r '.commits[]?.message // empty' "$GITHUB_EVENT_PATH")
           if [[ -z "$messages" ]]; then
-            messages='${{ github.event.head_commit.message }}'
+            messages="$HEAD_COMMIT_MSG"
           fi
 
           bump="patch"
