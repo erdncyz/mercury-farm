@@ -42,6 +42,16 @@ Full guide: [Getting Started](./getting-started.md).
 - [Automation API](./automation-api.md) - reserve devices, name runs, and track them on the **Builds** page
 - [Parallel Execution](./parallel-execution.md) - multiple devices and CI workers
 
+### Hardware & Performance
+
+- [Hardware Recommendations](../README.md#hardware-recommendations-android--ios-fleet) - Mac mini, USB hubs, device specs for production setups
+- [H.264/WebRTC Feature Plan](./h264-webrtc-feature-plan.md) - current streaming tech, roadmap, and gate-based decision framework for WebRTC migration
+
+### Architecture
+
+- [Architecture](./architecture.md) - system design, component overview, and data flow
+- [Docker Services & Logs](./docker-logs.md) - container reference and debugging
+
 ### API Reference
 
 - [API Reference](./API.md)
@@ -88,6 +98,16 @@ Ayrıntılı rehber: [Getting Started](./getting-started.md).
 
 - [Automation API](./automation-api.md) - cihaz ayırma, koşum adlandırma ve **Builds** sayfasından izleme
 - [Parallel Execution](./parallel-execution.md) - çoklu cihaz ve CI worker'ları
+
+### Donanım & Performans
+
+- [Donanım Önerileri](../README.md#donanim-onerileri-android-ve-ios-filo) - Mac mini, USB hub'lar, üretim ortamı cihaz özellikleri
+- [H.264/WebRTC Özellik Planı](./h264-webrtc-feature-plan.md) - mevcut streaming teknolojisi, yol haritası, WebRTC geçişi için kapı-temelli karar çerçevesi
+
+### Mimari
+
+- [Mimari](./mimari.md) - sistem tasarımı, bileşen özeti ve veri akışı
+- [Docker Servisleri & Loglar](./docker-logs.md) - container referansı ve debugging
 
 ### API Referansı
 

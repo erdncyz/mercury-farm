@@ -220,6 +220,55 @@ omit `ios-auto`.
 
 ---
 
+## Hardware Recommendations (Android & iOS Fleet)
+
+Common questions from users planning a physical device farm with Android and/or iOS devices.
+
+### Internet / Network
+
+A **1 Gbps** wired connection at the device location is more than sufficient for up to 20 concurrent devices. Screen streaming + control traffic per device is well under 10 Mbps. The real bottleneck is almost never the uplink — it is the host CPU/RAM, USB hub quality, and device agent stability (ADB for Android, WebDriverAgent for iOS).
+
+> Connect the host machine via **wired Ethernet** (not Wi-Fi). WebSocket screen streams are sensitive to packet jitter.
+
+### Mac mini
+
+| Model | Notes |
+|---|---|
+| **Mac mini M2 Pro / M4 Pro** ✓ | Recommended for 10–20 devices. Extra CPU cores and memory bandwidth handle concurrent device workers comfortably. |
+| Mac mini M2 / M4 base | Adequate for up to ~10 devices. |
+
+> iOS automation requires macOS + Xcode. Android-only setups can also run on Linux, but macOS is the primary supported platform.
+
+### USB Hubs
+
+Avoid generic or passive hubs — they are the #1 cause of device drops with large fleets, for both Android and iOS.
+
+- Use **powered USB hubs** with per-port power switching (e.g. Anker PowerExpand, BYEASY industrial USB 3.0 hubs rated 20W+ per port).
+- Connect **no more than 7–8 devices per hub**, even if the hub supports more ports. For 20 devices, spread them across **3 hubs**.
+- Plug hubs directly into Mac mini USB-A or USB-C ports — **do not chain hubs**.
+- Use **short cables (0.5 m)** — long cables increase connection noise.
+
+### Android Devices
+
+- Enable **Developer Options** and turn on **USB Debugging** on each device.
+- Set **Stay awake while charging** to prevent the screen from sleeping during sessions.
+- Keep devices on a consistent Android version per test requirement; ADB reconnects automatically on reboot.
+
+### iOS Devices (iPhones / iPads)
+
+- Keep all devices on the **same iOS version** if possible — simplifies WebDriverAgent builds and avoids per-device re-pairing.
+- Enable **Developer Mode** on each device before provisioning (iOS 16+: Settings → Privacy & Security → Developer Mode).
+- Trust the developer certificate on each device after WDA signing (Settings → General → VPN & Device Management).
+
+### Screen Streaming Notes
+
+| Platform | Technology | Notes |
+|---|---|---|
+| **Android** | Minicap / Scrcpy over WebSocket | Works out of the box, low latency |
+| **iOS** | WebDriverAgent MJPEG over WebSocket | Works out of the box; native H.264/WebRTC would require additional development |
+
+---
+
 ## Support
 
 - In-app `Contact Support` points to: [GitHub Issues](https://github.com/erdncyz/mercury-farm/issues)
@@ -251,20 +300,24 @@ docker pull ghcr.io/erdncyz/mercury-farm:stable
 
 ## Documentation
 
-- Smart TV detayli rehber kisayolu: [Smart TV (Tizen) Guide (EN + TR)](docs/smart-tv-tizen.md)
-- [Documentation Index (EN + TR)](docs/index.md)
+**Start here:** [Documentation Index](docs/index.md) — organized by topic, available in English and Turkish.
+
+Key documents:
+
 - [Getting Started (EN + TR)](docs/getting-started.md)
-- [Architecture (EN)](docs/architecture.md)
-- [Mimari (TR)](docs/mimari.md)
+- [Hardware Recommendations](#hardware-recommendations-android--ios-fleet) — Mac mini specs, USB hubs, network setup
+- [H.264/WebRTC Feature Plan (EN + TR)](docs/h264-webrtc-feature-plan.md) — streaming upgrade roadmap with test-driven gates
 - [iOS Setup (EN + TR)](docs/ios-setup.md)
 - [Parallel Execution (EN + TR)](docs/parallel-execution.md)
 - [Appium Setup (EN + TR)](docs/appium-setup.md)
 - [Appium Integration (EN + TR)](docs/appium-integration.md)
 - [Automation API (EN + TR)](docs/automation-api.md)
-- [API Reference (EN + TR)](docs/API.md)
+- [Architecture (EN)](docs/architecture.md) / [Mimari (TR)](docs/mimari.md)
+- [Troubleshooting (EN + TR)](docs/troubleshooting.md)
+- [Smart TV (Tizen) Guide (EN + TR)](docs/smart-tv-tizen.md)
 - [ESP32 Notes (EN + TR)](docs/esp32.md)
 - [Docker Services & Logs (EN + TR)](docs/docker-logs.md)
-- [Troubleshooting (EN + TR)](docs/troubleshooting.md)
+- [API Reference (EN + TR)](docs/API.md)
 
 ---
 
@@ -420,6 +473,55 @@ curl -fsSL https://github.com/erdncyz/mercury-farm/releases/latest/download/inst
 ```bash
 ~/.mercury-farm/mercury logs
 ```
+
+### Donanim Onerileri (Android ve iOS Filo)
+
+Android ve/veya iOS cihaz filosu kurmayı planlayan kullanıcıların sıkça sorduğu sorular.
+
+**İnternet / Ağ**
+
+Cihazların bulunduğu konumda **1 Gbps** kablolu bağlantı, 20 eş zamanlı cihaz için fazlasıyla yeterlidir. Cihaz başına ekran akışı + kontrol trafiği 10 Mbps'nin çok altındadır. Gerçek darboğaz neredeyse hiçbir zaman internet hattı değil; host CPU/RAM, USB hub kalitesi ve cihaz agent stabilitesidir (Android için ADB, iOS için WebDriverAgent).
+
+> Host makineyi **kablolu Ethernet** ile bağlayın (Wi-Fi değil). WebSocket ekran akışları paket gecikmesine duyarlıdır.
+
+**Mac mini**
+
+| Model | Notlar |
+|---|---|
+| **Mac mini M2 Pro / M4 Pro** ✓ | 10–20 cihaz için önerilir. Fazladan CPU çekirdeği ve bellek bant genişliği, eş zamanlı cihaz worker'larını rahatça kaldırır. |
+| Mac mini M2 / M4 base | ~10 cihaza kadar yeterlidir. |
+
+> iOS otomasyonu macOS + Xcode gerektirir. Yalnızca Android kullanıyorsanız Linux'ta da çalışır; ancak birincil desteklenen platform macOS'tur.
+
+**USB Hub**
+
+Ucuz veya pasif hub kullanmayın — büyük filolarda hem Android hem iOS cihaz düşmelerinin 1 numaralı nedeni budur.
+
+- Port başına 20W+ güç sağlayan **harici güçlü (powered) USB hub** kullanın (örn. Anker PowerExpand, BYEASY endüstriyel USB 3.0 hub).
+- Hub başına **en fazla 7–8 cihaz** bağlayın, hub'ın daha fazla portu olsa bile. 20 cihaz için **3 hub**'a dağıtın.
+- Hub'ları Mac mini USB-A veya USB-C portlarına doğrudan takın — **hub'ları birbirine zincirlemeyin**.
+- **Kısa kablo (0,5 m)** kullanın — uzun kablolar bağlantı gürültüsünü artırır.
+
+**Android Cihaz Hazırlığı**
+
+- Her cihazda **Geliştirici Seçenekleri**'ni açın ve **USB Hata Ayıklama**'yı etkinleştirin.
+- Oturum sırasında ekranın kararmaması için **Şarj olurken açık kal** seçeneğini aktif edin.
+- ADB yeniden başlatma sonrasında otomatik bağlanır; cihazları test gereksinimine göre tutarlı Android sürümünde tutun.
+
+**iOS Cihaz Hazırlığı (iPhone / iPad)**
+
+- Mümkünse tüm cihazları **aynı iOS sürümünde** tutun — WebDriverAgent derlemeyi kolaylaştırır ve yeniden eşleştirme sorunlarını önler.
+- Her cihazda **Geliştirici Modu**'nu etkinleştirin (iOS 16+: Ayarlar → Gizlilik ve Güvenlik → Geliştirici Modu).
+- WDA imzalandıktan sonra her cihazda geliştirici sertifikasına güven verin (Ayarlar → Genel → VPN ve Aygıt Yönetimi).
+
+**Ekran Akışı Notları**
+
+| Platform | Teknoloji | Notlar |
+|---|---|---|
+| **Android** | Minicap / Scrcpy over WebSocket | Kutudan çıkar, düşük gecikme |
+| **iOS** | WebDriverAgent MJPEG over WebSocket | Kutudan çıkar; native H.264/WebRTC ek geliştirme gerektirir |
+
+---
 
 ### Sorun/Yardim
 
