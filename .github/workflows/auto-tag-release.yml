@@ -193,13 +193,15 @@ jobs:
             echo "::warning::UI_SUBMODULE_TOKEN secret is not set — skipping UI submodule checkout."
             exit 0
           fi
-          # Apply the token as an AUTHORIZATION header for all github.com requests.
-          # We must use the broad https://github.com/ scope because the submodule
-          # URL ends with .git and a trailing-slash-scoped key would not match it.
-          encoded=$(printf 'x-access-token:%s' "${UI_TOKEN}" | base64 -w0)
-          git config --global http.https://github.com/.extraheader "AUTHORIZATION: basic ${encoded}"
-          git submodule update --init --recursive
-          git config --global --unset http.https://github.com/.extraheader || true
+          # Embed the token directly in the clone URL so that no git config
+          # inheritance is required. This is the most reliable approach when
+          # git spawns a child process (git clone) that does not inherit the
+          # parent's http.extraheader git config.
+          ui_commit=$(git ls-files -s -- ui | awk '{print $2}')
+          rm -rf ui
+          git clone \
+            "https://x-access-token:${UI_TOKEN}@github.com/erdncyz/mercury-ui.git" ui
+          git -C ui checkout "${ui_commit}"
 
       - name: Set up QEMU
         if: steps.version.outputs.create_tag == 'true'
