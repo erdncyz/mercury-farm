@@ -190,19 +190,16 @@ jobs:
         run: |
           set -euo pipefail
           if [[ -z "${UI_TOKEN:-}" ]]; then
-            echo "::warning::UI_SUBMODULE_TOKEN secret is not set — skipping UI submodule checkout. Docker image will be built without the UI."
+            echo "::warning::UI_SUBMODULE_TOKEN secret is not set — skipping UI submodule checkout."
             exit 0
           fi
-          # Use the same AUTHORIZATION header approach that actions/checkout uses
-          # internally, scoped only to the UI submodule repo so the main-repo
-          # GITHUB_TOKEN is not replaced.
+          # Apply the token as an AUTHORIZATION header for all github.com requests.
+          # We must use the broad https://github.com/ scope because the submodule
+          # URL ends with .git and a trailing-slash-scoped key would not match it.
           encoded=$(printf 'x-access-token:%s' "${UI_TOKEN}" | base64 -w0)
-          git config --global \
-            http.https://github.com/erdncyz/mercury-ui/.extraheader \
-            "AUTHORIZATION: basic ${encoded}"
+          git config --global http.https://github.com/.extraheader "AUTHORIZATION: basic ${encoded}"
           git submodule update --init --recursive
-          # Remove the credential from global config after use
-          git config --global --unset http.https://github.com/erdncyz/mercury-ui/.extraheader || true
+          git config --global --unset http.https://github.com/.extraheader || true
 
       - name: Set up QEMU
         if: steps.version.outputs.create_tag == 'true'
