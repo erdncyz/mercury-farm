@@ -143,8 +143,8 @@ ios_provider_args=(
   --connect-sub tcp://127.0.0.1:7250
   --connect-push tcp://127.0.0.1:7270
   --storage-url http://localhost:7100/
-  --screen-jpeg-quality 15
-  --screen-frame-rate 30
+  --screen-jpeg-quality "${SCREEN_JPEG_QUALITY:-15}"
+  --screen-frame-rate "${SCREEN_FRAME_RATE:-15}"
   --screen-ping-interval 60000
   --screen-ws-url-pattern "wss://${MERCURY_DOMAIN}:${MERCURY_PORT}/d/${IOS_PROVIDER_NAME}/<%= publicPort %>/"
   --host 0.0.0.0

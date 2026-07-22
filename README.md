@@ -267,6 +267,22 @@ Avoid generic or passive hubs — they are the #1 cause of device drops with lar
 | **Android** | Minicap / Scrcpy over WebSocket | Works out of the box, low latency |
 | **iOS** | WebDriverAgent MJPEG over WebSocket | Works out of the box; native H.264/WebRTC would require additional development |
 
+**Bandwidth tuning** — defaults are optimized for ~1-2 Mbps per device (15 fps), matching commercial device farms. Streams automatically pause when the browser tab is hidden, and iOS frame resolution adapts to the viewer window size. Override via environment variables:
+
+| Variable | Default | Effect |
+|---|---|---|
+| `SCREEN_FRAME_RATE` | `15` | Frames per second (both platforms). Raise to 24-30 for smoother motion at 2-4x bandwidth |
+| `SCREEN_JPEG_QUALITY` | `25` (Android) / `15` (iOS) | JPEG compression quality (1-100) |
+| `IOS_WDA_MJPEG_QUALITY` | `10` | WDA-side JPEG quality for iOS capture |
+| `IOS_WDA_MJPEG_SCALING` | `50` | iOS frame resolution scaling cap (percent); actual scaling adapts to viewer window |
+| `IOS_WDA_WAIT_FOR_IDLE_TIMEOUT` | `0` | Seconds WDA waits for UI idle before taps; `0` gives snappiest touch response |
+
+Example — higher quality on a fast LAN:
+
+```bash
+SCREEN_FRAME_RATE=30 SCREEN_JPEG_QUALITY=40 ./scripts/install.sh
+```
+
 ---
 
 ## Support
@@ -520,6 +536,16 @@ Ucuz veya pasif hub kullanmayın — büyük filolarda hem Android hem iOS cihaz
 |---|---|---|
 | **Android** | Minicap / Scrcpy over WebSocket | Kutudan çıkar, düşük gecikme |
 | **iOS** | WebDriverAgent MJPEG over WebSocket | Kutudan çıkar; native H.264/WebRTC ek geliştirme gerektirir |
+
+**Bant genişliği ayarı** — varsayılanlar cihaz başına ~1-2 Mbps (15 fps) için optimize edilmiştir; ticari cihaz çiftlikleriyle aynı seviyededir. Tarayıcı sekmesi gizlendiğinde akış otomatik duraklar, iOS kare çözünürlüğü izleyici pencere boyutuna uyum sağlar. Ortam değişkenleriyle değiştirilebilir:
+
+| Değişken | Varsayılan | Etkisi |
+|---|---|---|
+| `SCREEN_FRAME_RATE` | `15` | Saniyedeki kare sayısı (her iki platform). Daha akıcı görüntü için 24-30 yapın (2-4 kat bant genişliği) |
+| `SCREEN_JPEG_QUALITY` | `25` (Android) / `15` (iOS) | JPEG sıkıştırma kalitesi (1-100) |
+| `IOS_WDA_MJPEG_QUALITY` | `10` | iOS yakalama tarafında WDA JPEG kalitesi |
+| `IOS_WDA_MJPEG_SCALING` | `50` | iOS kare çözünürlük ölçekleme tavanı (yüzde); gerçek ölçek izleyici pencereye uyum sağlar |
+| `IOS_WDA_WAIT_FOR_IDLE_TIMEOUT` | `0` | WDA'nın tap öncesi UI idle bekleme süresi (saniye); `0` en hızlı dokunma tepkisi |
 
 ---
 

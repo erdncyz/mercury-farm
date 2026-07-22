@@ -274,7 +274,7 @@ services:
             mercury-migrate:
                 condition: service_completed_successfully
         restart: unless-stopped
-        command: mercury provider --name mercury-provider --adb-host host.docker.internal --no-cleanup --connect-sub tcp://mercury-triproxy-dev:7250 --connect-push tcp://mercury-triproxy-dev:7270 --storage-url http://mercury-storage-plugin-apk:3000/ --public-ip ${MERCURY_DOMAIN} --min-port=12010 --max-port=12100 --heartbeat-interval 10000 --screen-ws-url-pattern "wss://${MERCURY_DOMAIN}:${MERCURY_PORT}/d/mercury-provider/<%= publicPort %>/" --screen-frame-rate ${SCREEN_FRAME_RATE:-24} --screen-jpeg-quality ${SCREEN_JPEG_QUALITY:-30} --secret=${MERCURY_SECRET}
+        command: mercury provider --name mercury-provider --adb-host host.docker.internal --no-cleanup --connect-sub tcp://mercury-triproxy-dev:7250 --connect-push tcp://mercury-triproxy-dev:7270 --storage-url http://mercury-storage-plugin-apk:3000/ --public-ip ${MERCURY_DOMAIN} --min-port=12010 --max-port=12100 --heartbeat-interval 10000 --screen-ws-url-pattern "wss://${MERCURY_DOMAIN}:${MERCURY_PORT}/d/mercury-provider/<%= publicPort %>/" --screen-frame-rate ${SCREEN_FRAME_RATE:-15} --screen-jpeg-quality ${SCREEN_JPEG_QUALITY:-25} --secret=${MERCURY_SECRET}
         deploy:
             resources:
                 limits:
