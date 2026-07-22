@@ -184,12 +184,20 @@ jobs:
 
       - name: Checkout private UI
         if: steps.version.outputs.create_tag == 'true'
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          submodules: recursive
-          token: ${{ secrets.UI_SUBMODULE_TOKEN }}
-          persist-credentials: false
+        env:
+          UI_TOKEN: ${{ secrets.UI_SUBMODULE_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Use GITHUB_TOKEN for the main repo (already checked out) and
+          # UI_SUBMODULE_TOKEN only for the private mercury-ui submodule.
+          # Using actions/checkout with token: UI_SUBMODULE_TOKEN would
+          # re-fetch the main repo with that token, which fails if the token
+          # only has access to the UI repo.
+          git config --global \
+            url."https://x-access-token:${UI_TOKEN}@github.com/erdncyz/mercury-ui".insteadOf \
+            "https://github.com/erdncyz/mercury-ui"
+          git submodule update --init --recursive
 
       - name: Set up QEMU
         if: steps.version.outputs.create_tag == 'true'
