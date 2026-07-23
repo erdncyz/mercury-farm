@@ -110,6 +110,26 @@ recreates from `current` on every deploy, so manual edits there are lost.
 After `mercury update` replaces `current` with a new release, the Team
 setting is reset and this signing step must be repeated.
 
+**Troubleshooting — empty WebDriverAgent folder:** if iOS devices stay stuck
+in **Preparing**, or `WebDriverAgent.xcodeproj` does not open, check whether
+the WDA folder is empty (release bundles v0.4.1–v0.4.2 shipped without it):
+
+```bash
+ls ~/.mercury-farm/current/WebDriverAgent
+```
+
+If it is empty, restore it manually:
+
+```bash
+mkdir -p ~/.mercury-farm/current/WebDriverAgent
+cd ~/.mercury-farm/current/WebDriverAgent
+git clone --depth 1 --branch v15.1.6 https://github.com/appium/WebDriverAgent.git .
+```
+
+Then repeat the signing step above and re-run
+`~/.mercury-farm/mercury ios-auto`. Updating to the latest release
+(`~/.mercury-farm/mercury update`) also fixes this permanently.
+
 Then install the host provider as a LaunchAgent so it starts automatically:
 
 ```bash
@@ -454,6 +474,28 @@ Not: Duzenlemeyi her zaman `~/.mercury-farm/current/` altindaki projede yapin.
 olusturulan calisma kopyasidir; oradaki elle yapilan degisiklikler kaybolur.
 `mercury update` yeni surum indirdiginde `current` degistigi icin Team ayari
 sifirlanir ve bu imzalama adimini tekrarlamaniz gerekir.
+
+**Sorun giderme — bos WebDriverAgent klasoru:** iOS cihazlar surekli
+**Preparing** durumunda kaliyorsa veya `WebDriverAgent.xcodeproj` acilmiyorsa
+WDA klasorunun bos olup olmadigini kontrol edin (v0.4.1–v0.4.2 paketleri bu
+klasor bos gelebilir):
+
+```bash
+ls ~/.mercury-farm/current/WebDriverAgent
+```
+
+Klasor bossa elle doldurun:
+
+```bash
+mkdir -p ~/.mercury-farm/current/WebDriverAgent
+cd ~/.mercury-farm/current/WebDriverAgent
+git clone --depth 1 --branch v15.1.6 https://github.com/appium/WebDriverAgent.git .
+```
+
+Ardindan yukaridaki imzalama adimini tekrarlayin ve
+`~/.mercury-farm/mercury ios-auto` komutunu yeniden calistirin. En son surume
+guncellemek (`~/.mercury-farm/mercury update`) de bu sorunu kalici olarak
+cozer.
 
 ### 7) iOS provider'i otomatik baslat
 
