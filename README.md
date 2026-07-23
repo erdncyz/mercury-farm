@@ -152,6 +152,29 @@ Commit UI changes and bump the submodule pointer in one step:
 npm run ui:commit -- "your message"
 ```
 
+### WebDriverAgent submodule
+
+`WebDriverAgent/` tracks upstream [`appium/WebDriverAgent`](https://github.com/appium/WebDriverAgent)
+as a git submodule pinned to a specific commit. Dependabot opens a weekly PR to
+bump the pointer when upstream advances (see `.github/dependabot.yml`).
+
+After a `git pull` (or when the Dependabot PR is merged) sync the submodule:
+
+```bash
+git submodule update --init --recursive
+```
+
+Manual bump to a specific WDA version:
+
+```bash
+cd WebDriverAgent
+git fetch --tags
+git checkout vX.Y.Z
+cd ..
+git add WebDriverAgent
+git commit -m "chore(deps): bump WebDriverAgent to vX.Y.Z"
+```
+
 ### Publish a stable release
 
 `package.json` is the release version source, but maintainers do not bump it
