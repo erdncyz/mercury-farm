@@ -1,3 +1,7 @@
 [submodule "ui"]
 	path = ui
 	url = https://github.com/erdncyz/mercury-ui.git
+[submodule "WebDriverAgent"]
+	path = WebDriverAgent
+	url = https://github.com/appium/WebDriverAgent.git
+	branch = master
