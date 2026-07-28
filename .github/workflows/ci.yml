@@ -1,0 +1,38 @@
+name: CI
+
+# Gate every PR (including Dependabot bumps) and every push to main with a
+# runtime smoke test. Motivated by two incidents where a grouped dependency
+# bump landed untested and broke production units at startup (express 5 broke
+# auth units; protobufjs 7 broke every Android device worker).
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js (same major as the Docker runtime image)
+        uses: actions/setup-node@v4
+        with:
+          # Keep in sync with the base image in ./Dockerfile.
+          node-version: 20.18.0
+          cache: npm
+
+      - name: Install dependencies (npm ci, same as the image build)
+        run: npm_config_python=/usr/bin/python3 npm ci
+
+      - name: Runtime smoke test
+        run: node scripts/smoke-test.mjs

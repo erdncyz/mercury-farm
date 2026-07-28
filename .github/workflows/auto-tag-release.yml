@@ -243,6 +243,20 @@ jobs:
             org.opencontainers.image.version=${{ steps.version.outputs.tag }}
             org.opencontainers.image.revision=${{ github.sha }}
 
+      # Runtime gate: run the smoke test INSIDE the image that was just
+      # built. If a dependency bump (or anything else) breaks unit startup,
+      # this fails the job before the tag/release exist, so `mercury update`
+      # can never pick up a broken version. (The GHCR tag itself may exist,
+      # but no GitHub release will reference it.)
+      - name: Smoke test released image
+        if: steps.version.outputs.create_tag == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          image="ghcr.io/${GITHUB_REPOSITORY}:${{ steps.version.outputs.tag }}"
+          docker run --rm --platform linux/amd64 --entrypoint node \
+            "$image" scripts/smoke-test.mjs
+
       - name: Finalize macOS release bundle
         if: steps.version.outputs.should_release == 'true'
         shell: bash

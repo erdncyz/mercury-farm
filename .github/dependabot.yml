@@ -7,6 +7,43 @@ registries:
     password: ${{secrets.DEPENDABOT_GITHUB_TOKEN}}
 
 updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+    # Group only minor/patch updates. Major updates arrive as INDIVIDUAL PRs
+    # so each one is reviewed and smoke-tested (ci.yml) on its own — a grouped
+    # 20-package bump with hidden majors is what broke auth (express 5) and
+    # Android workers (protobufjs 7) in July 2026.
+    groups:
+      minor-and-patch:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
+      security-minor-and-patch:
+        applies-to: security-updates
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # protobufjs v6+ removed loadProtoFile/Builder API used by the Android
+      # STFService wire protocol (lib/units/device/resources/service.js and
+      # plugins/service.js). Bumping past v5 silently breaks every Android
+      # device worker (stuck in "Preparing"). Keep pinned like upstream STF.
+      - dependency-name: "protobufjs"
+        versions: [">=6.0.0"]
+      # express 6+ must be a deliberate migration; the 4->5 bump broke every
+      # auth unit at startup (bare '*' routes, res.send(status)).
+      - dependency-name: "express"
+        versions: [">=6.0.0"]
+    commit-message:
+      prefix: "build(deps)"
+
   - package-ecosystem: "gitsubmodule"
     directory: "/"
     registries:
