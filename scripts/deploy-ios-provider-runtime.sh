@@ -87,6 +87,31 @@ rsync -a --delete \
   --exclude "ios-provider.launchd.err.log" \
   "$PROJECT_DIR/" "$STAGING_DIR/"
 
+# Never deploy a runtime without WebDriverAgent sources: release bundles
+# v0.4.1-v0.4.2 shipped an empty WebDriverAgent folder, and mirroring it
+# would delete a manually restored (and signed) copy in the runtime.
+WDA_PBXPROJ="WebDriverAgent/WebDriverAgent.xcodeproj/project.pbxproj"
+if [ ! -f "$STAGING_DIR/$WDA_PBXPROJ" ]; then
+  if [ -f "$RUNTIME_DIR/$WDA_PBXPROJ" ]; then
+    echo "WARNING: WebDriverAgent sources are missing in $PROJECT_DIR." >&2
+    echo "Preserving the existing WebDriverAgent from $RUNTIME_DIR." >&2
+    rsync -a \
+      --no-times \
+      --omit-dir-times \
+      --no-perms \
+      --no-owner \
+      --no-group \
+      --exclude ".git" \
+      "$RUNTIME_DIR/WebDriverAgent/" "$STAGING_DIR/WebDriverAgent/"
+  else
+    echo "ERROR: WebDriverAgent sources not found in $PROJECT_DIR/WebDriverAgent." >&2
+    echo "Update Mercury to restore them: ~/.mercury-farm/mercury update" >&2
+    echo "Or restore manually:" >&2
+    echo "  git clone --depth 1 --branch v16.0.1 https://github.com/appium/WebDriverAgent.git \"$PROJECT_DIR/WebDriverAgent\"" >&2
+    exit 1
+  fi
+fi
+
 echo "Installing iOS provider runtime dependencies..."
 (
   cd "$STAGING_DIR"

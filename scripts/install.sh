@@ -333,12 +333,21 @@ upsert_env() {
   mv "$temp_file" "$file"
 }
 
+WDA_PBXPROJ="WebDriverAgent/WebDriverAgent.xcodeproj/project.pbxproj"
 if [[ ! -f "${RELEASE_DIR}/.release-files-installed" ]]; then
   rm -rf "$RELEASE_DIR"
   mv "$BUNDLE_DIR" "$RELEASE_DIR"
   touch "${RELEASE_DIR}/.release-files-installed"
 else
   echo "Mercury ${RELEASE_TAG} release files are already installed."
+
+  # Repair release directories created from bundles that shipped without
+  # WebDriverAgent sources (v0.4.1-v0.4.2) or that lost them on disk.
+  if [[ ! -f "${RELEASE_DIR}/${WDA_PBXPROJ}" && -f "${BUNDLE_DIR}/${WDA_PBXPROJ}" ]]; then
+    echo "Restoring missing WebDriverAgent sources in ${RELEASE_DIR}..."
+    rm -rf "${RELEASE_DIR}/WebDriverAgent"
+    mv "${BUNDLE_DIR}/WebDriverAgent" "${RELEASE_DIR}/WebDriverAgent"
+  fi
 fi
 
 rm -f "${RELEASE_DIR}/scripts/variables.env"

@@ -123,12 +123,15 @@ If it is empty, restore it manually:
 ```bash
 mkdir -p ~/.mercury-farm/current/WebDriverAgent
 cd ~/.mercury-farm/current/WebDriverAgent
-git clone --depth 1 --branch v15.1.6 https://github.com/appium/WebDriverAgent.git .
+git clone --depth 1 --branch v16.0.1 https://github.com/appium/WebDriverAgent.git .
 ```
 
 Then repeat the signing step above and re-run
 `~/.mercury-farm/mercury ios-auto`. Updating to the latest release
-(`~/.mercury-farm/mercury update`) also fixes this permanently.
+(`~/.mercury-farm/mercury update`) also fixes this permanently: the installer
+restores missing WDA sources in already-installed releases, and `ios-auto`
+refuses to deploy a runtime without WDA instead of deleting a manually
+restored copy in `~/.mercury-farm-runtime/`.
 
 Then install the host provider as a LaunchAgent so it starts automatically:
 
@@ -489,7 +492,7 @@ Klasor bossa elle doldurun:
 ```bash
 mkdir -p ~/.mercury-farm/current/WebDriverAgent
 cd ~/.mercury-farm/current/WebDriverAgent
-git clone --depth 1 --branch v15.1.6 https://github.com/appium/WebDriverAgent.git .
+git clone --depth 1 --branch v16.0.1 https://github.com/appium/WebDriverAgent.git .
 ```
 
 Ardindan yukaridaki imzalama adimini tekrarlayin ve

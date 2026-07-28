@@ -155,6 +155,9 @@ rollback_update() {
   if [[ "$recovery_ok" -eq 1 ]]; then
     rm -f "$UPDATE_MARKER" "$UPDATE_CONFIG_BACKUP"
   fi
+
+  echo "UPDATE DID NOT TAKE EFFECT: Mercury is still on the previous release." >&2
+  echo "Fix the error reported above, then run 'mercury update' again." >&2
 }
 
 cleanup_update_transaction() {
@@ -261,7 +264,7 @@ wait_for_stack() {
   port="$(read_env MERCURY_PORT)"
   port="${port:-443}"
 
-  for _ in {1..30}; do
+  for _ in {1..90}; do
     services_ready=1
     for service in "${required_services[@]}"; do
       service_id="$(compose ps -q "$service" 2>/dev/null || true)"
@@ -293,7 +296,7 @@ wait_for_stack() {
     sleep 2
   done
 
-  echo "Mercury did not become healthy within 60 seconds." >&2
+  echo "Mercury did not become healthy within 180 seconds." >&2
   if [[ "$services_ready" -ne 1 ]]; then
     echo "Service not running: ${service:-unknown}" >&2
   fi
@@ -389,7 +392,12 @@ command_update() {
   rm -f "$UPDATE_MARKER" "$UPDATE_CONFIG_BACKUP"
   cleanup_update_files
   trap - EXIT HUP INT TERM
-  echo "Mercury update completed successfully."
+
+  local new_release=""
+  if [[ -f "${INSTALL_ROOT}/current/.release-version" ]]; then
+    new_release="$(tr -d '[:space:]' < "${INSTALL_ROOT}/current/.release-version")"
+  fi
+  echo "Mercury update completed successfully.${new_release:+ Installed release: ${new_release}}"
 }
 
 command_status() {
