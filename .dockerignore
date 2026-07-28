@@ -15,4 +15,5 @@ helm/
 WebDriverAgent/
 .eslintcache
 scripts/
+!scripts/smoke-test.mjs
 .mypy_cache
