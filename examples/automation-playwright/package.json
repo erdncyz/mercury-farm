@@ -1,0 +1,19 @@
+{
+  "name": "mercury-automation-playwright",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Mercury device farm + Playwright (Android) automation examples",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "single": "node single-run.mjs",
+    "parallel": "node parallel-run.mjs",
+    "test:pass": "node web-test-pass.mjs",
+    "test:fail": "node web-test-fail.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.45.0"
+  }
+}

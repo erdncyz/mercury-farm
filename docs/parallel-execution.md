@@ -11,6 +11,7 @@ This guide explains how to run tests in parallel on Mercury for Android and iOS.
 - Parallel execution = reserving multiple devices at once and running separate test workers.
 - Device reservation is done with Automation API (`/api/v1/autotests`).
 - Real capacity depends on provider port ranges and host USB/CPU limits.
+- Ready-to-run Ruby scripts: [examples/automation-ruby/parallel_run.rb](../examples/automation-ruby/parallel_run.rb) (multi-device) and [examples/automation-ruby/single_run.rb](../examples/automation-ruby/single_run.rb) (single device).
 
 ---
 

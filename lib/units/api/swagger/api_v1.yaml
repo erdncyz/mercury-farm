@@ -3311,11 +3311,15 @@ paths:
             type: integer
         - name: amount
           in: query
-          description: Device amount needed for autotests run
-          required: true
+          description: Device amount needed for autotests run (required unless serials is provided)
           schema:
             minimum: 1
             type: integer
+        - name: serials
+          in: query
+          description: Comma-separated list of device serials to reserve (takes precedence over amount and filters)
+          schema:
+            type: string
         - name: need_amount
           in: query
           description: "need only specified amount, not less"
@@ -3338,7 +3342,7 @@ paths:
             type: string
         - name: type
           in: query
-          description: device type
+          description: device type (android or ios)
           schema:
             type: string
         - name: version
@@ -3416,11 +3420,15 @@ paths:
             type: string
         - name: amount
           in: query
-          description: Device amount needed for autotests run
-          required: true
+          description: Device amount needed for autotests run (required unless serials is provided)
           schema:
             minimum: 1
             type: integer
+        - name: serials
+          in: query
+          description: Comma-separated list of device serials to add (takes precedence over amount and filters)
+          schema:
+            type: string
         - name: need_amount
           in: query
           description: "need only specified amount, not less"
@@ -3443,7 +3451,7 @@ paths:
             type: string
         - name: type
           in: query
-          description: device type
+          description: device type (android or ios)
           schema:
             type: string
         - name: version

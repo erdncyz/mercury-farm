@@ -107,13 +107,22 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
 
 Common query params:
 
-- `amount` required
+- `amount` required (unless `serials` is provided)
 - `timeout` required (seconds)
 - `run` required (run id/name) — **this is the name shown on the Builds page**, so pick something readable like `nightly-regression-2026-07-19` or your CI build number
 - `runUrl` optional — link to your CI pipeline/job; the run name on the Builds page becomes a clickable link to it
-- `type` optional (`android` or `ios`)
+- `type` optional (`android` or `ios`) — **always set this for platform-specific runs**; without it any free device (including the other platform) can be picked
+- `serials` optional — comma-separated serial list to reserve **specific devices**; takes precedence over `amount` and the other filters. All listed devices must be free, otherwise the call fails with 409. The response still returns the `group.id` to use for release.
 - `need_amount` optional strict count
 - `abi`, `model`, `sdk`, `version` optional filters
+
+Reserve specific devices by serial:
+
+```bash
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  "https://YOUR_DOMAIN/api/v1/autotests?timeout=600&run=my-run&serials=SERIAL_A,SERIAL_B"
+# → response contains group.id → release with DELETE /api/v1/autotests?group=<group.id>
+```
 
 Important: non-admin users are limited to **2 devices** per run.
 
@@ -222,99 +231,63 @@ finally:
     ).raise_for_status()
 ```
 
-## Ruby Example (Single Device, with Appium, both topologies)
+## Ruby Examples (single + parallel runs)
 
-Gem: `gem install appium_lib_core`
+Ready-to-run Ruby scripts live in the repo — click to open:
 
-```ruby
-require 'json'
-require 'net/http'
-require 'uri'
-require 'appium_lib_core'
+- [examples/automation-ruby/mercury_client.rb](../examples/automation-ruby/mercury_client.rb) — shared client (`reserve` / `use_device` / `release`), plain Ruby stdlib, no gems
+- [examples/automation-ruby/single_run.rb](../examples/automation-ruby/single_run.rb) — **single run**: reserve 1 device (by filter or by serial), connect, run tests, release
+- [examples/automation-ruby/parallel_run.rb](../examples/automation-ruby/parallel_run.rb) — **parallel run**: reserve N devices in one group, drive each in its own thread, release once
+- [examples/automation-ruby/settings_test_pass.rb](../examples/automation-ruby/settings_test_pass.rb) — **passing Appium scenario**: open Settings, tap General, verify, PASS
+- [examples/automation-ruby/settings_test_fail.rb](../examples/automation-ruby/settings_test_fail.rb) — **failing Appium scenario**: looks for a nonexistent menu, exits 1, device still released
+- [examples/automation-ruby/README.md](../examples/automation-ruby/README.md) — environment variables and quick start
 
-BASE_URL = ENV.fetch('MERCURY_BASE_URL')            # e.g. https://YOUR_DOMAIN
-TOKEN = ENV.fetch('MERCURY_TOKEN')
-APPIUM_URL = ENV.fetch('APPIUM_URL', 'http://127.0.0.1:4723') # Topology A (local)
-# Topology B (central Appium on the farm host):
-#   APPIUM_URL=http://YOUR_DOMAIN:4723
-APPIUM_HOST_SSH = ENV['APPIUM_HOST_SSH'] # e.g. user@YOUR_DOMAIN for Topology B
+```bash
+export MERCURY_BASE_URL=https://YOUR_DOMAIN
+export MERCURY_TOKEN=...              # keep it out of source control
+export MERCURY_TYPE=android           # android | ios — always set for platform-specific runs
 
-def request(method:, path:, params: {}, body: nil)
-  uri = URI("#{BASE_URL}#{path}")
-  uri.query = URI.encode_www_form(params) unless params.empty?
+ruby examples/automation-ruby/single_run.rb                       # single run
+MERCURY_AMOUNT=2 ruby examples/automation-ruby/parallel_run.rb    # parallel run
+# specific devices instead of filters:
+MERCURY_SERIALS=SERIAL_A,SERIAL_B ruby examples/automation-ruby/parallel_run.rb
+```
 
-  http = Net::HTTP.new(uri.host, uri.port)
-  http.use_ssl = uri.scheme == 'https'
+Both scripts print the `remoteConnectUrl` per device (Android: `adb connect`,
+iOS: `appium:webDriverAgentUrl`), keep the run visible as `Running` on the
+**Builds** page, and always release the group in an `ensure` block.
 
-  klass = { get: Net::HTTP::Get, post: Net::HTTP::Post, delete: Net::HTTP::Delete }.fetch(method)
-  req = klass.new(uri)
-  req['Authorization'] = "Bearer #{TOKEN}"
-  if body
-    req['Content-Type'] = 'application/json'
-    req.body = JSON.generate(body)
-  end
+## Java Examples (single + parallel runs)
 
-  res = http.request(req)
-  raise "HTTP #{res.code}: #{res.body}" unless res.is_a?(Net::HTTPSuccess)
+Same flow in Java 17 + Maven (Appium `java-client` + `gson`) — click to open:
 
-  JSON.parse(res.body)
-end
+- [examples/automation-java/README.md](../examples/automation-java/README.md) — quick start and file list
+- [examples/automation-java/src/main/java/mercury/MercuryClient.java](../examples/automation-java/src/main/java/mercury/MercuryClient.java) — shared client
+- [examples/automation-java/src/main/java/mercury/SingleRun.java](../examples/automation-java/src/main/java/mercury/SingleRun.java) — **single run**
+- [examples/automation-java/src/main/java/mercury/ParallelRun.java](../examples/automation-java/src/main/java/mercury/ParallelRun.java) — **parallel run** (thread pool)
+- [examples/automation-java/src/main/java/mercury/SettingsTestPass.java](../examples/automation-java/src/main/java/mercury/SettingsTestPass.java) / [SettingsTestFail.java](../examples/automation-java/src/main/java/mercury/SettingsTestFail.java) — passing + failing Appium scenarios
 
-# 1) Reserve -- 'run' is the name shown on the Builds page
-capture = request(
-  method: :get,
-  path: '/api/v1/autotests',
-  params: {
-    amount: 1,
-    timeout: 600,
-    run: "ruby-run-#{Time.now.to_i}",
-    runUrl: ENV['CI_JOB_URL'].to_s, # optional, clickable on Builds
-    need_amount: true,
-    type: 'android'
-  }
-)
+```bash
+cd examples/automation-java
+mvn -q compile exec:java -Dexec.mainClass=mercury.SingleRun
+MERCURY_AMOUNT=2 mvn -q compile exec:java -Dexec.mainClass=mercury.ParallelRun
+```
 
-group_id = capture.dig('group', 'id')
-device = capture.dig('group', 'devices', 0)
-raise 'No device captured' unless group_id && device
+## Playwright Examples (Android only)
 
-serial = device['serial']
-puts "Captured #{serial}"
+Playwright's experimental `_android` API drives Chrome on the device over adb —
+no Appium needed, but **Android only** (use the Appium examples for iOS):
 
-begin
-  # 2) Put the device in automation mode and get the connect address
-  use = request(method: :post, path: '/api/v1/autotests/useDevice', body: { serial: serial })
-  remote = use.fetch('remoteConnectUrl')
+- [examples/automation-playwright/README.md](../examples/automation-playwright/README.md) — quick start, requirements
+- [examples/automation-playwright/mercury-client.mjs](../examples/automation-playwright/mercury-client.mjs) — shared client (Node 18+, zero deps)
+- [examples/automation-playwright/single-run.mjs](../examples/automation-playwright/single-run.mjs) — **single run**
+- [examples/automation-playwright/parallel-run.mjs](../examples/automation-playwright/parallel-run.mjs) — **parallel run** (`Promise.all`)
+- [examples/automation-playwright/web-test-pass.mjs](../examples/automation-playwright/web-test-pass.mjs) / [web-test-fail.mjs](../examples/automation-playwright/web-test-fail.mjs) — passing + failing Chrome scenarios
 
-  # 3) Attach ADB -- must run on the SAME machine as Appium.
-  #    Topology A: local `adb connect`. Topology B: over SSH on the farm host.
-  adb_cmd = "adb connect #{remote}"
-  ok = APPIUM_HOST_SSH ? system('ssh', APPIUM_HOST_SSH, adb_cmd) : system(adb_cmd)
-  raise 'adb connect failed' unless ok
-
-  # 4) Appium session -- while this runs, the run shows as "Running" on Builds
-  core = Appium::Core.for(
-    caps: {
-      platformName: 'Android',
-      'appium:automationName' => 'UiAutomator2',
-      'appium:udid' => remote,
-      'appium:newCommandTimeout' => 300,
-      'appium:noReset' => true
-    },
-    appium_lib: { server_url: APPIUM_URL }
-  )
-  driver = core.start_driver
-  begin
-    puts driver.current_activity
-    # ... your tests ...
-  ensure
-    driver.quit
-  end
-ensure
-  # 5) Release -- flips the run to "Finished" on the Builds page
-  request(method: :delete, path: '/api/v1/autotests', params: { group: group_id })
-  puts "Released group=#{group_id}"
-end
+```bash
+cd examples/automation-playwright && npm install
+node single-run.mjs
+MERCURY_AMOUNT=2 node parallel-run.mjs
 ```
 
 ## Azure Pipeline Example (Ruby + Mercury)
@@ -352,13 +325,17 @@ steps:
     sleep 5
   displayName: Start local Appium
 
-- script: ruby mercury_single_device.rb
+- script: ruby examples/automation-ruby/single_run.rb
   displayName: Run Ruby mobile tests on Mercury
   env:
     MERCURY_BASE_URL: $(MERCURY_BASE_URL)
     MERCURY_TOKEN: $(MERCURY_TOKEN)
-    APPIUM_URL: $(APPIUM_URL)
+    MERCURY_TYPE: android
 ```
+
+For multi-device pipelines switch the script to
+[examples/automation-ruby/parallel_run.rb](../examples/automation-ruby/parallel_run.rb)
+and set `MERCURY_AMOUNT` (or `MERCURY_SERIALS`).
 
 Store `MERCURY_TOKEN` as a secret variable.
 
@@ -450,13 +427,22 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
 
 Sık kullanılan parametreler:
 
-- `amount` zorunlu
+- `amount` zorunlu (`serials` verilmediyse)
 - `timeout` zorunlu (saniye)
 - `run` zorunlu (koşu adı/id) — **Builds sayfasında görünecek isim budur**; `nightly-regression-2026-07-19` veya CI build numarası gibi okunaklı bir değer seç
 - `runUrl` opsiyonel — CI pipeline/job linki; Builds sayfasındaki koşum adı bu linke tıklanabilir olur
-- `type` opsiyonel (`android` veya `ios`)
+- `type` opsiyonel (`android` veya `ios`) — **platforma özel koşularda mutlaka ver**; verilmezse boştaki herhangi bir cihaz (diğer platform dahil) seçilebilir
+- `serials` opsiyonel — **belirli cihazları** ayırmak için virgülle ayrılmış serial listesi; `amount` ve diğer filtrelerden önceliklidir. Listedeki tüm cihazlar boşta olmalıdır, aksi halde çağrı 409 döner. Yanıtta release için kullanılacak `group.id` yine döner.
 - `need_amount` opsiyonel (tam sayı zorlaması)
 - `abi`, `model`, `sdk`, `version` opsiyonel filtre
+
+Serial ile belirli cihaz ayırma:
+
+```bash
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  "https://YOUR_DOMAIN/api/v1/autotests?timeout=600&run=my-run&serials=SERIAL_A,SERIAL_B"
+# → yanıttaki group.id ile bırak: DELETE /api/v1/autotests?group=<group.id>
+```
 
 Not: admin olmayan kullanıcılar koşu başına en fazla **2 cihaz** alabilir.
 
@@ -498,7 +484,16 @@ curl -X DELETE -H "Authorization: Bearer YOUR_TOKEN" \
 İngilizce bölümdeki örnekler her iki topolojiyi de destekler; ortam değişkeniyle seçilir:
 
 - **Python**: [Python end-to-end example](#python-end-to-end-example-with-appium-both-topologies) — `APPIUM` değişkenini `http://127.0.0.1:4723` (Topoloji A) veya `http://YOUR_DOMAIN:4723` (Topoloji B) yap.
-- **Ruby**: [Ruby Example](#ruby-example-single-device-with-appium-both-topologies) — `APPIUM_URL` ile Appium adresini, Topoloji B'de ek olarak `APPIUM_HOST_SSH=user@YOUR_DOMAIN` ile `adb connect`'in farm sunucusunda koşmasını sağla.
+- **Ruby (hazır script'ler)** — tıklayıp aç:
+  - [examples/automation-ruby/single_run.rb](../examples/automation-ruby/single_run.rb) — **tekli koşum**: 1 cihaz ayır (filtreyle veya serial ile), bağlan, testi koştur, bırak
+  - [examples/automation-ruby/parallel_run.rb](../examples/automation-ruby/parallel_run.rb) — **çoklu (paralel) koşum**: N cihazı tek grupta ayır, her cihazı ayrı thread'de koştur, tek sefer bırak
+  - [examples/automation-ruby/settings_test_pass.rb](../examples/automation-ruby/settings_test_pass.rb) — **başarılı Appium senaryosu**: Ayarlar'ı aç, Genel'e tıkla, doğrula, PASS
+  - [examples/automation-ruby/settings_test_fail.rb](../examples/automation-ruby/settings_test_fail.rb) — **başarısız Appium senaryosu**: olmayan menüyü arar, exit 1; cihaz yine bırakılır
+  - [examples/automation-ruby/mercury_client.rb](../examples/automation-ruby/mercury_client.rb) — ortak istemci (`reserve` / `use_device` / `release`), ek gem gerekmez
+  - Kurulum ve ortam değişkenleri: [examples/automation-ruby/README.md](../examples/automation-ruby/README.md)
+- **Java (hazır proje)** — aynı akış Java 17 + Maven ile (Appium java-client): [examples/automation-java/README.md](../examples/automation-java/README.md) — tekli [SingleRun.java](../examples/automation-java/src/main/java/mercury/SingleRun.java), çoklu [ParallelRun.java](../examples/automation-java/src/main/java/mercury/ParallelRun.java), başarılı/başarısız senaryolar dahil.
+- **Playwright (sadece Android)** — Appium'suz, adb üzerinden cihazdaki Chrome'u sürer: [examples/automation-playwright/README.md](../examples/automation-playwright/README.md) — tekli [single-run.mjs](../examples/automation-playwright/single-run.mjs), çoklu [parallel-run.mjs](../examples/automation-playwright/parallel-run.mjs), başarılı/başarısız web senaryoları dahil. iOS için Appium örneklerine bak.
+- **Azure Pipelines**: [Azure Pipeline Example](#azure-pipeline-example-ruby--mercury) — Topoloji A'da Appium CI agent'ta kurulup başlatılır; Topoloji B'de Appium adımları kaldırılıp `APPIUM_URL` farm sunucusuna yönlendirilir.
 - **Azure Pipelines**: [Azure Pipeline Example](#azure-pipeline-example-ruby--mercury) — Topoloji A'da Appium CI agent'ta kurulup başlatılır; Topoloji B'de Appium adımları kaldırılıp `APPIUM_URL` farm sunucusuna yönlendirilir.
 
 Her örnekte akış aynıdır: ayır (`run` adı Builds'de görünür) → `useDevice` → `adb connect` (Appium'un çalıştığı makinede!) → Appium session → `finally` içinde release.
