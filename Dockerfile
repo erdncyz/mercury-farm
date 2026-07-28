@@ -1,5 +1,5 @@
 # -------- BUILDER --------
-FROM node:20.18.0-bookworm-slim AS builder
+FROM node:22.18.0-bookworm-slim AS builder
 
 WORKDIR /app
 
@@ -23,13 +23,12 @@ RUN sed -i 's%./node_modules/.bin/tsx%node%g' ./bin/mercury.mjs && \
 WORKDIR /app/ui
 
 RUN npm ci && \
-    npx tsc -b && \
-    npx vite build && \
+    npm run build:prod && \
     mv /app/ui/dist /tmp/mercury-ui-dist && \
     rm -rf /app/ui
 
 # -------- RUNTIME --------
-FROM node:20.18.0-bookworm-slim
+FROM node:22.18.0-bookworm-slim
 
 LABEL org.opencontainers.image.source=https://github.com/erdncyz/mercury-farm
 LABEL org.opencontainers.image.title=Mercury

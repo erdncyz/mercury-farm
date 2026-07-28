@@ -124,7 +124,7 @@ Mercury Device Farm, gerçek Android ve iOS cihazları tarayıcı üzerinden uza
 
 | Kategori | Teknoloji | Versiyon | Kullanım Amacı |
 |----------|-----------|----------|----------------|
-| **Runtime** | Node.js | 20.18.0 | Sunucu çalışma ortamı |
+| **Runtime** | Node.js | 22.18.0 | Sunucu çalışma ortamı |
 | **Dil** | TypeScript + JavaScript | 5.9.x | Tip güvenli geliştirme |
 | **HTTP Framework** | Express.js | 4.21.2 | REST API ve statik dosya sunumu |
 | **Veritabanı** | MongoDB | 7.0 | Belge tabanlı veri depolama (Replica Set) |
@@ -1058,7 +1058,7 @@ mercury-farm/
 
 - Non-root kullanıcı (`mercury-user`) ile konteyner çalıştırma
 - Multi-stage build (sadece runtime bağımlılıkları)
-- Minimal base image (node:20.18.0-bullseye-slim)
+- Minimal base image (node:22.18.0-bookworm-slim)
 
 ---
 

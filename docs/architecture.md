@@ -124,7 +124,7 @@ Mercury Device Farm is a **device farm** platform that enables remote control of
 
 | Category | Technology | Version | Purpose |
 |----------|-----------|---------|---------|
-| **Runtime** | Node.js | 20.18.0 | Server runtime environment |
+| **Runtime** | Node.js | 22.18.0 | Server runtime environment |
 | **Language** | TypeScript + JavaScript | 5.9.x | Type-safe development |
 | **HTTP Framework** | Express.js | 4.21.2 | REST API and static file serving |
 | **Database** | MongoDB | 7.0 | Document-based data storage (Replica Set) |
@@ -1058,7 +1058,7 @@ mercury-farm/
 
 - Non-root user (`mercury-user`) for container execution
 - Multi-stage build (runtime dependencies only)
-- Minimal base image (node:20.18.0-bullseye-slim)
+- Minimal base image (node:22.18.0-bookworm-slim)
 
 ---
 

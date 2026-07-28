@@ -28,7 +28,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           # Keep in sync with the base image in ./Dockerfile.
-          node-version: 20.18.0
+          node-version: 22.18.0
           cache: npm
 
       - name: Install dependencies (npm ci, same as the image build)

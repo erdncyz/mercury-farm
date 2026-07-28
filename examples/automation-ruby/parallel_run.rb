@@ -33,6 +33,7 @@ require_relative 'mercury_client'
 
 client   = MercuryClient.new
 serials  = ENV['MERCURY_SERIALS'].to_s.split(',').map(&:strip).reject(&:empty?)
+requested_type = ENV['MERCURY_TYPE']
 run_name = ENV.fetch('MERCURY_RUN', "parallel-run-#{Time.now.strftime('%Y%m%d-%H%M%S')}")
 
 reservation = client.reserve(
@@ -40,7 +41,7 @@ reservation = client.reserve(
   run_url: ENV['CI_JOB_URL'],                     # Optional: clickable link on Builds / Opsiyonel: Builds'de tıklanabilir link
   timeout: Integer(ENV.fetch('MERCURY_TIMEOUT', '900')), # Seconds / Saniye
   amount: Integer(ENV.fetch('MERCURY_AMOUNT', '2')),
-  type: ENV['MERCURY_TYPE'],                      # android | ios
+  type: requested_type,                           # android | ios
   serials: serials,                               # If given, reserve exactly these devices / Veriliyse tam bu cihazlar ayrılır
   need_amount: true                               # All or nothing / Hepsi ya da hiçbiri
 )
@@ -54,11 +55,12 @@ begin
   threads = devices.map do |device|
     Thread.new do
       serial = device['serial']
+      type = client.device_type(device, requested: requested_type)
       Thread.current.name = serial
       remote = client.use_device(serial)
       puts "[#{serial}] remoteConnectUrl: #{remote}"
 
-      if ENV['MERCURY_TYPE'] == 'ios'
+      if type == 'ios'
         # iOS: capability for each Appium session:
         #   'appium:webDriverAgentUrl' => remote
         # iOS: her cihaz için Appium session'ında:
@@ -76,7 +78,6 @@ begin
       end
 
       # ---- TESTS FOR THIS DEVICE RUN HERE -----------------------------------
-      sleep Integer(ENV.fetch('MERCURY_HOLD_SECONDS', '30')) # example: just wait
       # ---- BU CİHAZIN TESTLERİ BURADA KOŞAR --------------------------------
       sleep Integer(ENV.fetch('MERCURY_HOLD_SECONDS', '30')) # örnek amaçlı bekleme
       # ------------------------------------------------------------------------
