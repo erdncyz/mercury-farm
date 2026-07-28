@@ -104,7 +104,33 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # Squash merge keeps the title as commit message ("chore(release): vX.Y.Z")
-          # which triggers the release workflow after CI passes.
           gh pr merge "${{ steps.pr.outputs.branch }}" \
             --auto --squash --delete-branch
+
+      - name: Wait for release PR to merge and trigger release
+        if: steps.pr.outputs.branch != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          branch="${{ steps.pr.outputs.branch }}"
+
+          # Poll until the PR is merged (auto-merge fires after CI passes).
+          # Timeout after ~10 minutes.
+          for i in $(seq 1 40); do
+            state=$(gh pr view "$branch" --json state --jq '.state' 2>/dev/null || echo "UNKNOWN")
+            echo "[$i/40] PR state: $state"
+            if [[ "$state" == "MERGED" ]]; then
+              echo "PR merged — dispatching release workflow."
+              # workflow_dispatch is exempt from the GITHUB_TOKEN push-event
+              # suppression, so this reliably triggers the release job.
+              gh workflow run auto-tag-release.yml \
+                --repo "$GITHUB_REPOSITORY" --ref main
+              exit 0
+            fi
+            sleep 15
+          done
+
+          echo "Timed out waiting for release PR to merge." >&2
+          exit 1
