@@ -12,6 +12,7 @@ concurrency:
 permissions:
   actions: write
   contents: write
+  pull-requests: write
 
 jobs:
   bump:
@@ -50,7 +51,10 @@ jobs:
 
           echo "bump=$bump" >> "$GITHUB_OUTPUT"
 
-      - name: Bump package version and push release commit
+      - name: Bump package version and open release PR
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
@@ -61,19 +65,42 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+          branch="chore/release-v${version}"
+
+          # If a release branch already exists for this version, skip creation.
+          if git ls-remote --exit-code origin "refs/heads/$branch" >/dev/null 2>&1; then
+            echo "Branch $branch already exists; skipping PR creation."
+            echo "branch=$branch" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git checkout -b "$branch"
           git add package.json package-lock.json
+
           if git diff --cached --quiet; then
             echo "No package version changes detected."
             exit 0
           fi
 
           git commit -m "chore(release): v${version}"
-          git push origin HEAD:main
+          git push origin "$branch"
 
-      - name: Trigger release workflow for bumped version
+          gh pr create \
+            --base main \
+            --head "$branch" \
+            --title "chore(release): v${version}" \
+            --body "Automated version bump to \`v${version}\`."
+
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+
+      - name: Enable auto-merge on release PR
+        if: steps.pr.outputs.branch != ''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
-          gh workflow run auto-tag-release.yml --repo "$GITHUB_REPOSITORY" --ref main
+          # Squash merge keeps the title as commit message ("chore(release): vX.Y.Z")
+          # which triggers the release workflow after CI passes.
+          gh pr merge "${{ steps.pr.outputs.branch }}" \
+            --auto --squash --delete-branch
