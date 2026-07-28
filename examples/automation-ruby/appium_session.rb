@@ -14,7 +14,7 @@ require 'appium_lib_core'
 
 def with_mercury_appium_session(run_name:)
   client  = MercuryClient.new
-  type    = ENV.fetch('MERCURY_TYPE', 'android') # android | ios
+  requested_type = ENV['MERCURY_TYPE']
   serials = ENV['MERCURY_SERIALS'].to_s.split(',').map(&:strip).reject(&:empty?)
 
   # 1) Reserve a device / Cihaz ayır
@@ -23,12 +23,13 @@ def with_mercury_appium_session(run_name:)
     run_url: ENV['CI_JOB_URL'],
     timeout: Integer(ENV.fetch('MERCURY_TIMEOUT', '600')),
     amount: 1,
-    type: type,
+    type: requested_type || 'android',
     serials: serials.first(1)
   )
   group_id = reservation[:group_id]
   device   = reservation[:devices].first
   serial   = device['serial']
+  type     = client.device_type(device, requested: requested_type)
   puts "Reserved / Ayrıldı: #{serial} (#{device['model']} / #{device['version']}) — group=#{group_id}"
 
   begin

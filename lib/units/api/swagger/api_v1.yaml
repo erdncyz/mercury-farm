@@ -3356,6 +3356,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: runUrl
+          in: query
+          description: Optional link to the CI pipeline or job shown on the Builds page
+          schema:
+            type: string
+            format: uri
       responses:
         "200":
           description: Group created for run
@@ -4803,7 +4809,7 @@ components:
     AutoTestResponse:
       required:
         - description
-        - groups
+        - group
         - success
       type: object
       properties:

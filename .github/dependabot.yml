@@ -41,6 +41,10 @@ updates:
       # auth unit at startup (bare '*' routes, res.send(status)).
       - dependency-name: "express"
         versions: [">=6.0.0"]
+      # minimatch v4+ removed the default export used by lib/util/grouputil.
+      # Keep v3 until both JS and TS call sites are deliberately migrated.
+      - dependency-name: "minimatch"
+        versions: [">=4.0.0"]
     commit-message:
       prefix: "build(deps)"
 

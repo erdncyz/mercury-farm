@@ -14,6 +14,7 @@ Ek gem gerekmez — Ruby stdlib (`net/http`) ile çalışır. Detaylı API dokü
 | [appium_session.rb](./appium_session.rb) | Örnek testler için yardımcı: ayır + Appium session aç + her durumda bırak |
 | [settings_test_pass.rb](./settings_test_pass.rb) | **✅ Başarılı senaryo** — Ayarlar'ı aç, "Genel"e tıkla, doğrula, PASS ile bit |
 | [settings_test_fail.rb](./settings_test_fail.rb) | **❌ Başarısız senaryo** — olmayan menüyü arar, FAIL (exit 1) ama cihaz yine bırakılır |
+| [test_mercury_client.rb](./test_mercury_client.rb) | Yerel kontrat testi: istemci + tekli/paralel script akışları (cihaz gerekmez) |
 
 ## Hızlı başlangıç
 
@@ -26,11 +27,18 @@ ruby single_run.rb                            # tekli koşum
 MERCURY_AMOUNT=2 ruby parallel_run.rb         # çoklu koşum
 ```
 
-## Örnek Appium test senaryoları
-
-Gerçek Appium session'ıyla uçtan uca iki hazır senaryo (tek gem: `appium_lib_core`):
+Yerel kontrat testi için Mercury deploy'u veya cihaz gerekmez:
 
 ```bash
+ruby test_mercury_client.rb
+```
+
+## Örnek Appium test senaryoları
+
+Gerçek Appium session'ıyla uçtan uca iki hazır senaryo (Ruby 3.1+ ve tek gem: `appium_lib_core`):
+
+```bash
+ruby --version                              # 3.1 veya üstü olmalı
 gem install appium_lib_core
 appium --address 127.0.0.1 --port 4723 &      # Appium'u başlat (UiAutomator2/XCUITest driver kurulu olmalı)
 
@@ -52,7 +60,7 @@ ruby settings_test_fail.rb   # ❌ olmayan menü → element bulunamaz → FAIL 
 | --- | --- | --- |
 | `MERCURY_BASE_URL` | evet | Farm adresi, örn. `https://YOUR_DOMAIN` |
 | `MERCURY_TOKEN` | evet | Access token (**koda yazma**, secret olarak sakla) |
-| `MERCURY_TYPE` | önerilir | `android` veya `ios`; verilmezse boştaki herhangi bir cihaz (diğer platform dahil) seçilebilir |
+| `MERCURY_TYPE` | önerilir | `android` veya `ios`; verilmezse boştaki herhangi bir cihaz seçilir ve script platformu cihaz bilgisinden algılar |
 | `MERCURY_SERIALS` | hayır | Belirli cihazlar için virgüllü serial listesi; filtrelerden önceliklidir |
 | `MERCURY_AMOUNT` | hayır | Cihaz sayısı (parallel_run, varsayılan 2; admin olmayanlar en fazla 2) |
 | `MERCURY_TIMEOUT` | hayır | Rezervasyon süresi sn (varsayılan: tekli 600, paralel 900) |
