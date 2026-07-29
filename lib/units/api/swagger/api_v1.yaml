@@ -3356,6 +3356,11 @@ paths:
           required: true
           schema:
             type: string
+        - name: project
+          in: query
+          description: Optional project name used to group runs on the Builds page; pass the name of the project being run
+          schema:
+            type: string
         - name: runUrl
           in: query
           description: Optional link to the CI pipeline or job shown on the Builds page
@@ -3388,10 +3393,18 @@ paths:
       parameters:
         - name: group
           in: query
-          description: Device amount needed for autotests run
+          description: Group id(s) created for the run, comma-separated
           required: true
           schema:
             type: string
+        - name: result
+          in: query
+          description: Optional test outcome shown as a badge on the Builds page
+          schema:
+            type: string
+            enum:
+              - passed
+              - failed
       responses:
         "200":
           description: Group created for run
@@ -3626,6 +3639,37 @@ paths:
                 $ref: '#/components/schemas/UnexpectedErrorResponse'
     x-swagger-router-controller: builds
   /builds/{id}:
+    get:
+      tags:
+        - builds
+      summary: Get one build
+      description: Returns one build with its full scenario list; allowed for the build owner and admins
+      operationId: getBuild
+      parameters:
+        - name: id
+          in: path
+          description: Build identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Build information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => not the build owner
+              * 404: Not Found => unknown build
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
     delete:
       tags:
         - builds
@@ -3657,6 +3701,75 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: builds
+  /builds/{id}/scenarios:
+    put:
+      tags:
+        - builds
+      summary: Report scenario results for a build
+      description: Replaces the scenario result list of a run; allowed for the build owner and admins
+      operationId: setBuildScenarios
+      parameters:
+        - name: id
+          in: path
+          description: Build identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Scenario results reported by the test client
+        content:
+          application/json:
+            schema:
+              required:
+                - scenarios
+              type: object
+              properties:
+                scenarios:
+                  type: array
+                  maxItems: 500
+                  items:
+                    required:
+                      - name
+                      - status
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Scenario name shown on the Builds page
+                      status:
+                        type: string
+                        enum:
+                          - passed
+                          - failed
+                          - skipped
+                      durationSec:
+                        type: number
+                        description: Optional scenario duration in seconds
+                      error:
+                        type: string
+                        description: Optional short failure message
+        required: true
+      responses:
+        "200":
+          description: Scenarios stored
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 400: Bad Request => invalid scenarios payload
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => not the build owner
+              * 404: Not Found => unknown build
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: scenarios
     x-swagger-router-controller: builds
   /stats:
     post:

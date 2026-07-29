@@ -103,6 +103,49 @@ class MercuryClientTest < Minitest::Test
     server&.stop
   end
 
+  def test_release_reports_result_badge
+    server = MockMercuryServer.new([
+      { json: { success: true } },
+      { json: { success: true } }
+    ])
+    client = MercuryClient.new(base_url: server.base_url, token: 'token')
+
+    client.release('group-9', result: 'failed')
+    failed_query = URI.decode_www_form(URI(server.next_request[:target]).query).to_h
+    assert_equal({ 'group' => 'group-9', 'result' => 'failed' }, failed_query)
+
+    client.release('group-9', result: 'not-a-result')
+    invalid_query = URI.decode_www_form(URI(server.next_request[:target]).query).to_h
+    assert_equal({ 'group' => 'group-9' }, invalid_query)
+  ensure
+    server&.stop
+  end
+
+  def test_reserve_sends_project_and_scenarios_are_reported
+    server = MockMercuryServer.new([
+      { json: { group: { id: 'proj-group', devices: [{ serial: 'A' }] } } },
+      { json: { success: true, count: 2 } }
+    ])
+    client = MercuryClient.new(base_url: server.base_url, token: 'token')
+
+    client.reserve(run: 'daily-run', amount: 1, project: 'MyProject')
+    reserve_query = URI.decode_www_form(URI(server.next_request[:target]).query).to_h
+    assert_equal 'MyProject', reserve_query['project']
+
+    client.report_scenarios('proj-group', [
+      { name: 'Login', status: 'passed', durationSec: 12.5 },
+      { name: 'Checkout', status: 'failed', error: 'button missing' }
+    ])
+    scenario_request = server.next_request
+    assert_equal 'PUT', scenario_request[:method]
+    assert_equal '/api/v1/builds/proj-group/scenarios', scenario_request[:target]
+    payload = JSON.parse(scenario_request[:body])
+    assert_equal %w[Login Checkout], payload['scenarios'].map { |s| s['name'] }
+    assert_equal %w[passed failed], payload['scenarios'].map { |s| s['status'] }
+  ensure
+    server&.stop
+  end
+
   def test_serials_take_precedence_over_filters
     server = MockMercuryServer.new([
       { json: { group: { id: 'group-2', devices: [{ serial: 'A' }, { serial: 'B' }] } } }
@@ -158,7 +201,10 @@ class MercuryClientTest < Minitest::Test
     assert status.success?, stderr
     assert_includes stdout, '[iOS] Appium capability'
     assert_includes stdout, 'Released group: single-group'
-    assert_equal %w[GET POST DELETE], 3.times.map { server.next_request[:method] }
+    requests = 3.times.map { server.next_request }
+    assert_equal %w[GET POST DELETE], requests.map { |request| request[:method] }
+    release_query = URI.decode_www_form(URI(requests.last[:target]).query).to_h
+    assert_equal 'passed', release_query['result']
   ensure
     server&.stop
   end
@@ -186,7 +232,10 @@ class MercuryClientTest < Minitest::Test
 
     refute status.success?
     assert_includes stderr, 'HTTP 500'
-    assert_equal %w[GET POST DELETE], 3.times.map { server.next_request[:method] }
+    requests = 3.times.map { server.next_request }
+    assert_equal %w[GET POST DELETE], requests.map { |request| request[:method] }
+    release_query = URI.decode_www_form(URI(requests.last[:target]).query).to_h
+    assert_equal 'failed', release_query['result']
   ensure
     server&.stop
   end
