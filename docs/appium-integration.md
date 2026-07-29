@@ -2,7 +2,7 @@
 
 This guide explains how to run Appium with Mercury and how to open Appium Inspector after a device is put in `use` mode.
 
-> **Important / Önemli:** Appium Inspector always connects to the Appium server running on your machine at `http://127.0.0.1:4723`. Mercury's `remoteConnectUrl` is an ADB endpoint on Android and a WebDriverAgent (WDA) proxy endpoint on iOS; it is not the Inspector server address.
+> **Important / Önemli:** Appium Inspector connects to the Appium server you choose: local (`http://127.0.0.1:4723`) or central (`http://APPIUM_HOST:4723`). Mercury's `remoteConnectUrl` is an Android ADB endpoint or iOS WebDriverAgent (WDA) proxy; it is never the Inspector/Appium server address.
 
 Quick navigation / Hızlı erişim:
 
@@ -17,11 +17,13 @@ Quick navigation / Hızlı erişim:
 
 ## Core idea
 
-Mercury is the device broker and control plane. Appium and Appium Inspector run on your developer machine or CI runner.
+Mercury is the device broker and control plane. Appium is a separate server and
+may run locally or on a central farm host. Appium Inspector/test code is the
+client and may run on another machine.
 
 | Connection | Android | iOS |
 | --- | --- | --- |
-| Inspector connects to | Local Appium at `127.0.0.1:4723` | Local Appium at `127.0.0.1:4723` |
+| Inspector connects to | Selected Appium server (`127.0.0.1:4723` or central host) | Selected Appium server (`127.0.0.1:4723` or central host) |
 | Mercury returns | ADB endpoint, normally `HOST:PORT` | WDA proxy endpoint, normally `HOST:PORT` |
 | `remoteConnectUrl` is used by | `adb connect` and `appium:udid` | `appium:webDriverAgentUrl` |
 
@@ -31,16 +33,16 @@ Flow:
 2. Put device in use / enable remote connect
 3. Get `remoteConnectUrl`
 4. Prepare the ADB connection (Android) or WDA URL (iOS)
-5. Start Appium locally and create the session from Inspector
+5. Create the session through the selected local or central Appium server
 6. Delete the Inspector session and release the Mercury group
 
 Prerequisites:
 
 - `curl` and `jq`
 - Appium Inspector from the [official releases](https://github.com/appium/appium-inspector/releases)
-- Appium with `uiautomator2` for Android or `xcuitest` for iOS
-- ADB, Java, and Android platform tools for Android
-- macOS, Xcode, and a healthy Mercury iOS provider for iOS
+- Appium with `uiautomator2` for Android or `xcuitest` for iOS, installed on the **Appium host** (not necessarily the Inspector/test machine)
+- ADB, Java, and Android platform tools on the Appium host for Android
+- macOS/Xcode on the Appium host and a healthy Mercury iOS provider for iOS
 
 See [Appium Setup](./appium-setup.md) for installation instructions.
 
@@ -99,33 +101,58 @@ printf 'remoteConnectUrl=%s\n' "$REMOTE_CONNECT_URL"
 
 The Appium machine must be able to reach this address. Do not paste it into Inspector's **Remote Host** field.
 
+Choose the Appium server separately:
+
+- **Local Appium:** start it on the test machine and use `127.0.0.1:4723`.
+- **Central Appium:** use `APPIUM_HOST:4723`; do not install/start Appium on the test machine. The required driver and, for Android, the ADB connection must exist on the central Appium host.
+
 ---
 
 ## 4A) Android + Appium Inspector
 
 For Android, `remoteConnectUrl` is the Mercury ADB endpoint. It is normally returned as `HOST:ADB_PORT` without `http://`.
 
-Connect ADB through Mercury:
+Before the first connection, register the **Appium host's** ADB public key in
+Mercury under **Settings → Keys → ADB Keys**. For local Appium this is the test
+machine's `~/.android/adbkey.pub`; for central Appium it is the central host's
+key. The same operation is available through the API:
 
 ```bash
+ADB_PUBLIC_KEY="$(cat ~/.android/adbkey.pub)" # run/read this on the Appium host
+curl -sS -X POST \
+  -H "Authorization: Bearer $MERCURY_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "$(jq -n --arg publickey "$ADB_PUBLIC_KEY" --arg title "$(hostname)" \
+    '{publickey: $publickey, title: $title}')" \
+  "$MERCURY_BASE_URL/api/v1/user/adbPublicKeys"
+```
+
+Run `adb connect` on the **same machine as Appium**:
+
+```bash
+# Local Appium: run directly on this machine
 adb connect "$REMOTE_CONNECT_URL"
 adb devices -l
 adb -s "$REMOTE_CONNECT_URL" get-state
+
+# Central Appium: run remotely on the Appium host instead
+ssh user@APPIUM_HOST "adb connect '$REMOTE_CONNECT_URL' && adb -s '$REMOTE_CONNECT_URL' get-state"
 ```
 
 The exact first-column value shown by `adb devices -l` is the Appium `udid`. The state must be `device`, not `offline` or `unauthorized`.
 
-Start Appium in a separate terminal and leave it running:
+For local Appium, start it in a separate terminal. For central Appium, skip this
+command and verify `curl http://APPIUM_HOST:4723/status` instead:
 
 ```bash
 appium --address 127.0.0.1 --port 4723
 ```
 
-Open **New Session** in Appium Inspector and configure the local Appium server:
+Open **New Session** in Appium Inspector and configure the selected Appium server:
 
 | Inspector field | Value |
 | --- | --- |
-| Remote Host | `127.0.0.1` |
+| Remote Host | `127.0.0.1` (local) or `APPIUM_HOST` (central) |
 | Remote Port | `4723` |
 | Remote Path | `/` |
 | SSL | Disabled |
@@ -173,17 +200,18 @@ curl -sS "${WDA_URL%/}/status" | jq .
 
 The status request must return a WDA response. A timeout means routing, firewall, WDA, or the Mercury iOS provider must be fixed first.
 
-Start Appium in a separate terminal and leave it running:
+For local Appium, start it in a separate terminal. For central Appium, skip this
+command and verify `curl http://APPIUM_HOST:4723/status` instead:
 
 ```bash
 appium --address 127.0.0.1 --port 4723
 ```
 
-Open **New Session** in Appium Inspector and configure the local Appium server:
+Open **New Session** in Appium Inspector and configure the selected Appium server:
 
 | Inspector field | Value |
 | --- | --- |
-| Remote Host | `127.0.0.1` |
+| Remote Host | `127.0.0.1` (local) or `APPIUM_HOST` (central) |
 | Remote Port | `4723` |
 | Remote Path | `/` |
 | SSL | Disabled |
@@ -240,6 +268,7 @@ The `run=$RUN_ID` value used in step 2 automatically creates a record on the
 
 - While reserved, the run shows as `Running`; click a green device chip to **watch the device screen live**.
 - After the release call (or timeout), the run flips to `Finished` and stays as history with start/end time, duration, and the devices used.
+- `Finished` means the reservation closed (explicit release or timeout); it does **not** mean the test assertions passed. Pass/fail comes from the test process exit code and assertions.
 - Add `&runUrl=https://ci.example/job/123` to the capture request to make the run name a clickable link to your CI job.
 - Old runs are cleaned up automatically after 30 days (`BUILDS_RETENTION_DAYS`); finished runs can also be deleted from the UI.
 
@@ -255,6 +284,8 @@ See [Automation API](./automation-api.md) for details.
 | Inspector returns `404` or unknown route | Use Remote Path `/`; use `/wd/hub` only with a matching Appium `--base-path`. |
 | `Could not find a driver for automationName` | Run `appium driver list --installed` and install `uiautomator2` or `xcuitest`. |
 | Android is missing or `offline` | Repeat `adb connect`, inspect `adb devices -l`, and use its exact first-column value as `appium:udid`. |
+| `adb connect` says `failed to authenticate` or `unauthorized` | Register the Appium host's `~/.android/adbkey.pub` under **Settings → Keys → ADB Keys**, then reconnect. |
+| Android works from the test laptop but central Appium cannot see it | `adb connect` ran on the wrong machine. Run it on the central Appium host (or use the Ruby helper with `MERCURY_ADB_SSH=user@APPIUM_HOST`). |
 | iOS WDA status is unreachable | Check the host iOS provider, WDA logs, firewall, and reachability from the Appium machine. |
 | XCUITest attempts to build another WDA | Verify `appium:webDriverAgentUrl` and `appium:useNewWDA: false`. |
 | Session drops quickly | Increase `appium:newCommandTimeout`, confirm the Mercury group has not expired, and inspect Appium/provider logs. |
@@ -266,11 +297,13 @@ See [Automation API](./automation-api.md) for details.
 
 ## Temel mantık
 
-Mercury cihaz rezervasyonunu ve erişim köprüsünü yönetir. Appium ile Appium Inspector geliştirici bilgisayarında veya CI runner üzerinde çalışır.
+Mercury cihaz rezervasyonunu ve erişim köprüsünü yönetir. Appium ayrı bir
+sunucudur; lokal veya merkezi farm hostunda çalışabilir. Appium Inspector/test
+kodu istemcidir ve başka bir makinede çalışabilir.
 
 | Bağlantı | Android | iOS |
 | --- | --- | --- |
-| Inspector nereye bağlanır? | Lokal Appium: `127.0.0.1:4723` | Lokal Appium: `127.0.0.1:4723` |
+| Inspector nereye bağlanır? | Seçilen Appium sunucusu (`127.0.0.1:4723` veya merkezi host) | Seçilen Appium sunucusu (`127.0.0.1:4723` veya merkezi host) |
 | Mercury ne döndürür? | Genellikle `HOST:PORT` biçiminde ADB adresi | Genellikle `HOST:PORT` biçiminde WDA proxy adresi |
 | `remoteConnectUrl` nerede kullanılır? | `adb connect` ve `appium:udid` | `appium:webDriverAgentUrl` |
 
@@ -280,16 +313,16 @@ Akış:
 2. Cihazı `use` moduna al
 3. `remoteConnectUrl` al
 4. Android için ADB bağlantısını veya iOS için WDA URL’sini hazırla
-5. Lokal Appium’u başlat ve Inspector’dan session oluştur
+5. Seçilen lokal veya merkezi Appium üzerinden session oluştur
 6. Inspector session’ını sil ve Mercury grubunu serbest bırak
 
 Ön koşullar:
 
 - `curl` ve `jq`
 - [Resmî sürümler](https://github.com/appium/appium-inspector/releases) sayfasından Appium Inspector
-- Android için `uiautomator2`, iOS için `xcuitest` driver’ı kurulmuş Appium
-- Android için ADB, Java ve Android platform tools
-- iOS için macOS, Xcode ve çalışan Mercury iOS provider
+- **Appium hostunda** Android için `uiautomator2`, iOS için `xcuitest` driver'ı kurulmuş Appium (Inspector/test makinesinde olması şart değildir)
+- Android için Appium hostunda ADB, Java ve Android platform tools
+- iOS için Appium hostunda macOS/Xcode ve çalışan Mercury iOS provider
 
 Kurulum adımları için [Appium Setup](./appium-setup.md) dokümanına bak.
 
@@ -348,33 +381,58 @@ printf 'remoteConnectUrl=%s\n' "$REMOTE_CONNECT_URL"
 
 Appium’un çalıştığı makine bu adrese erişebilmelidir. Bu değeri Inspector’daki **Remote Host** alanına yazma.
 
+Appium sunucusunu ayrıca seç:
+
+- **Lokal Appium:** test makinesinde başlat ve `127.0.0.1:4723` kullan.
+- **Merkezi Appium:** `APPIUM_HOST:4723` kullan; test makinesine Appium kurup başlatma. Gerekli driver ve Android için ADB bağlantısı merkezi Appium hostunda olmalıdır.
+
 ---
 
 ## 4A) Android + Appium Inspector
 
 Android’de `remoteConnectUrl`, Mercury ADB adresidir. Normalde `http://` olmadan `HOST:ADB_PORT` biçiminde döner.
 
-Mercury üzerinden ADB bağlantısı kur:
+İlk bağlantıdan önce **Appium hostunun** ADB public key'ini Mercury'de
+**Settings → Keys → ADB Keys** altında kaydet. Lokal Appium'da bu test
+makinesinin, merkezi Appium'da merkezi hostun `~/.android/adbkey.pub`
+anahtarıdır. Aynı işlem API ile de yapılabilir:
 
 ```bash
+ADB_PUBLIC_KEY="$(cat ~/.android/adbkey.pub)" # Appium hostunda çalıştır/oku
+curl -sS -X POST \
+  -H "Authorization: Bearer $MERCURY_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "$(jq -n --arg publickey "$ADB_PUBLIC_KEY" --arg title "$(hostname)" \
+    '{publickey: $publickey, title: $title}')" \
+  "$MERCURY_BASE_URL/api/v1/user/adbPublicKeys"
+```
+
+`adb connect` komutunu **Appium ile aynı makinede** çalıştır:
+
+```bash
+# Lokal Appium: doğrudan bu makinede
 adb connect "$REMOTE_CONNECT_URL"
 adb devices -l
 adb -s "$REMOTE_CONNECT_URL" get-state
+
+# Merkezi Appium: komutu Appium hostunda çalıştır
+ssh user@APPIUM_HOST "adb connect '$REMOTE_CONNECT_URL' && adb -s '$REMOTE_CONNECT_URL' get-state"
 ```
 
 `adb devices -l` çıktısının ilk sütunundaki değer Appium `udid` değeridir. Durum `offline` veya `unauthorized` değil, `device` olmalıdır.
 
-Appium’u ayrı bir terminalde başlat ve çalışır durumda bırak:
+Lokal Appium'da ayrı bir terminalde başlat. Merkezi Appium'da bu komutu atla ve
+`curl http://APPIUM_HOST:4723/status` ile uzak sunucuyu doğrula:
 
 ```bash
 appium --address 127.0.0.1 --port 4723
 ```
 
-Appium Inspector’da **New Session** ekranını aç ve lokal Appium server alanlarını doldur:
+Appium Inspector’da **New Session** ekranını aç ve seçilen Appium server alanlarını doldur:
 
 | Inspector alanı | Değer |
 | --- | --- |
-| Remote Host | `127.0.0.1` |
+| Remote Host | `127.0.0.1` (lokal) veya `APPIUM_HOST` (merkezi) |
 | Remote Port | `4723` |
 | Remote Path | `/` |
 | SSL | Kapalı |
@@ -422,17 +480,18 @@ curl -sS "${WDA_URL%/}/status" | jq .
 
 Status isteği bir WDA yanıtı döndürmelidir. Timeout olursa önce ağ yönlendirmesi, firewall, WDA veya Mercury iOS provider sorununu düzelt.
 
-Appium’u ayrı bir terminalde başlat ve çalışır durumda bırak:
+Lokal Appium'da ayrı bir terminalde başlat. Merkezi Appium'da bu komutu atla ve
+`curl http://APPIUM_HOST:4723/status` ile uzak sunucuyu doğrula:
 
 ```bash
 appium --address 127.0.0.1 --port 4723
 ```
 
-Appium Inspector’da **New Session** ekranını aç ve lokal Appium server alanlarını doldur:
+Appium Inspector’da **New Session** ekranını aç ve seçilen Appium server alanlarını doldur:
 
 | Inspector alanı | Değer |
 | --- | --- |
-| Remote Host | `127.0.0.1` |
+| Remote Host | `127.0.0.1` (lokal) veya `APPIUM_HOST` (merkezi) |
 | Remote Port | `4723` |
 | Remote Path | `/` |
 | SSL | Kapalı |
@@ -489,6 +548,7 @@ Grup silme işlemini CI tarafında mutlaka `cleanup/finally` içine koy. Yalnız
 
 - Rezervasyon sürerken koşum `Çalışıyor` görünür; yeşil cihaz chip'ine tıklayarak **cihaz ekranını canlı izleyebilirsin**.
 - Release çağrısından (veya timeout'tan) sonra koşum `Tamamlandı` olur; başlangıç/bitiş, süre ve kullanılan cihazlarla birlikte geçmişte kalır.
+- `Tamamlandı`, rezervasyonun kapandığını (açık release veya timeout) gösterir; test assertion'larının geçtiği anlamına **gelmez**. Pass/fail sonucu test process exit code'u ve assertion'lardan gelir.
 - Capture isteğine `&runUrl=https://ci.example/job/123` eklersen koşum adı CI job'ına tıklanabilir link olur.
 - Eski koşumlar 30 gün sonra otomatik temizlenir (`BUILDS_RETENTION_DAYS`); biten koşumlar UI'dan da silinebilir.
 
@@ -504,6 +564,8 @@ Detaylar için: [Automation API](./automation-api.md)
 | Inspector `404` veya unknown route döndürüyor | Remote Path `/` kullan; `/wd/hub` yalnızca uygun Appium `--base-path` ile kullanılmalıdır. |
 | `Could not find a driver for automationName` | `appium driver list --installed` çalıştır; `uiautomator2` veya `xcuitest` kur. |
 | Android listede yok veya `offline` | `adb connect` komutunu tekrarla, `adb devices -l` çıktısını kontrol et ve ilk sütundaki değeri `appium:udid` olarak kullan. |
+| `adb connect`, `failed to authenticate` veya `unauthorized` diyor | Appium hostunun `~/.android/adbkey.pub` anahtarını **Settings → Keys → ADB Keys** altında kaydet, sonra tekrar bağlan. |
+| Android test makinesinden çalışıyor ama merkezi Appium cihazı görmüyor | `adb connect` yanlış makinede çalışmıştır. Komutu merkezi Appium hostunda çalıştır (veya Ruby yardımcıda `MERCURY_ADB_SSH=user@APPIUM_HOST` kullan). |
 | iOS WDA status adresine erişilemiyor | Host iOS provider, WDA logları, firewall ve Appium makinesinden erişimi kontrol et. |
 | XCUITest yeniden WDA kurmaya çalışıyor | `appium:webDriverAgentUrl` ve `appium:useNewWDA: false` değerlerini kontrol et. |
 | Session hemen düşüyor | `appium:newCommandTimeout` değerini artır, Mercury grup süresinin dolmadığını ve Appium/provider loglarını kontrol et. |

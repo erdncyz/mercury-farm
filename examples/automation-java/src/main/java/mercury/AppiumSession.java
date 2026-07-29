@@ -64,7 +64,10 @@ public final class AppiumSession {
                 XCUITestOptions options = new XCUITestOptions()
                     .setUdid(serial)
                     .setNewCommandTimeout(Duration.ofSeconds(300));
-                options.setCapability("appium:webDriverAgentUrl", remote);
+                String wdaUrl = remote.startsWith("http://") || remote.startsWith("https://")
+                    ? remote
+                    : "http://" + remote;
+                options.setCapability("appium:webDriverAgentUrl", wdaUrl);
                 driver = new IOSDriver(appiumUrl, options);
             }
             else {

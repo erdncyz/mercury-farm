@@ -43,6 +43,7 @@ Gereksinimler / Requirements:
 
 - Cihazda **Chrome** kurulu olmalı / Chrome must be installed on the device
 - `adb` bu makinede çalışmalı (Playwright yerel adb'yi kullanır) / `adb` must work on this machine
+- Bu makinenin `~/.android/adbkey.pub` anahtarı Mercury'de **Settings → Keys → ADB Keys** altında kayıtlı olmalı / This machine's `~/.android/adbkey.pub` must be registered under Mercury **Settings → Keys → ADB Keys**
 - Android 11+ önerilir (Playwright Android desteği deneyseldir) / Android 11+ recommended
 
 ## Ortam değişkenleri / Environment variables
@@ -61,3 +62,9 @@ Diyagramlar için: [automation-ruby/README.md](../automation-ruby/README.md#akı
 Instead of Appium, Playwright's adb-based Android driver is used; the rest of the flow is
 identical: reserve → useDevice → `adb connect` → Playwright `_android.devices()` → Chrome →
 release. See the diagrams in [automation-ruby/README.md](../automation-ruby/README.md#akış--workflow).
+
+Merkezi Appium ayarları (`APPIUM_URL`, `MERCURY_ADB_SSH`) bu örnek için geçerli
+değildir; Playwright ve `adb connect` aynı test makinesinde çalışır.
+
+Central Appium settings (`APPIUM_URL`, `MERCURY_ADB_SSH`) do not apply to this
+example; Playwright and `adb connect` run on the same test machine.

@@ -39,6 +39,7 @@ run_name = ENV.fetch('MERCURY_RUN', "parallel-run-#{Time.now.strftime('%Y%m%d-%H
 reservation = client.reserve(
   run: run_name,                                  # Run name shown on Builds page / Builds sayfasında görünen isim
   run_url: ENV['CI_JOB_URL'],                     # Optional: clickable link on Builds / Opsiyonel: Builds'de tıklanabilir link
+  project: ENV['MERCURY_PROJECT'],                # Optional: groups runs on Builds / Opsiyonel: Builds'de koşumları gruplar
   timeout: Integer(ENV.fetch('MERCURY_TIMEOUT', '900')), # Seconds / Saniye
   amount: Integer(ENV.fetch('MERCURY_AMOUNT', '2')),
   type: requested_type,                           # android | ios
@@ -96,7 +97,8 @@ begin
   end
   raise "#{errors.length} devices had errors / cihazda hata oluştu" unless errors.empty?
 ensure
-  client.release(group_id) # Group released in one call → run flips to "Finished" on Builds
-  # Grup tek çağrıyla bırakılır → Builds'de "Finished"
+  # Group released in one call; $! reports PASSED/FAILED on Builds.
+  # Grup tek çağrıyla bırakılır; $! Builds'de PASSED/FAILED rozeti olur.
+  client.release(group_id, result: $! ? 'failed' : 'passed')
   puts "Released group: #{group_id} / Grup bırakıldı: #{group_id}"
 end

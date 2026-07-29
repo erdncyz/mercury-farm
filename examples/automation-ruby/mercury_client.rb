@@ -34,7 +34,7 @@ class MercuryClient
   #   1) amount + type      → boştaki cihazlardan filtreyle seç
   #   2) serials: [..]      → belirli cihazları serial ile ayır (type/amount yok sayılır)
   # Dönen değer: { group_id:, devices: [...] } — release için group_id'yi sakla!
-  def reserve(run:, timeout: 600, amount: nil, type: nil, serials: nil, run_url: nil, need_amount: true)
+  def reserve(run:, timeout: 600, amount: nil, type: nil, serials: nil, run_url: nil, project: nil, need_amount: true)
     params = { run: run, timeout: timeout }
     if serials && !Array(serials).empty?
       params[:serials] = Array(serials).join(',')
@@ -48,6 +48,11 @@ class MercuryClient
       params[:type] = type if type
     end
     params[:runUrl] = run_url if run_url && !run_url.empty?
+    # Project groups runs on the Builds page — pass the name of the project
+    # being run; its daily runs are listed under that header.
+    # Project, Builds sayfasında koşumları gruplar — koştuğun projenin adını
+    # gönder; günlük koşumları o başlık altında listelenir.
+    params[:project] = project if project && !project.to_s.empty?
 
     body = request(:get, '/api/v1/autotests', params: params)
     group = body.fetch('group')
@@ -65,14 +70,31 @@ class MercuryClient
   end
 
   # Release group and all devices inside; run flips to "Finished" on Builds.
+  # Pass result: 'passed' | 'failed' to show a PASSED/FAILED badge on Builds.
   # Always call from ensure/finally block!
   #
   # Grubu ve içindeki tüm cihazları bırakır; Builds'de koşum "Finished" olur.
+  # result: 'passed' | 'failed' verilirse Builds'de PASSED/FAILED rozeti görünür.
   # Her zaman ensure/finally içinde çağır!
-  def release(group_id)
+  def release(group_id, result: nil)
     return unless group_id
 
-    request(:delete, '/api/v1/autotests', params: { group: group_id })
+    params = { group: group_id }
+    params[:result] = result if %w[passed failed].include?(result.to_s)
+    request(:delete, '/api/v1/autotests', params: params)
+  end
+
+  # Report scenario results for the run; they appear under the run on the
+  # Builds page. Each entry: { name:, status: 'passed'|'failed'|'skipped',
+  # durationSec: (optional), error: (optional) }. Replaces the previous list.
+  #
+  # Koşumun senaryo sonuçlarını raporlar; Builds sayfasında koşumun altında
+  # görünür. Her kayıt: { name:, status: 'passed'|'failed'|'skipped',
+  # durationSec: (opsiyonel), error: (opsiyonel) }. Önceki listeyi değiştirir.
+  def report_scenarios(group_id, scenarios)
+    return unless group_id
+
+    request(:put, "/api/v1/builds/#{group_id}/scenarios", body: { scenarios: Array(scenarios) })
   end
 
   def device_type(device, requested: nil)
@@ -92,7 +114,7 @@ class MercuryClient
     uri = URI("#{@base_url}#{path}")
     uri.query = URI.encode_www_form(params) unless params.empty?
 
-    klass = { get: Net::HTTP::Get, post: Net::HTTP::Post, delete: Net::HTTP::Delete }.fetch(method)
+    klass = { get: Net::HTTP::Get, post: Net::HTTP::Post, put: Net::HTTP::Put, delete: Net::HTTP::Delete }.fetch(method)
     req = klass.new(uri)
     req['Accept'] = 'application/json'
     req['Authorization'] = "Bearer #{@token}"

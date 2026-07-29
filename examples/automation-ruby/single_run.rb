@@ -33,6 +33,7 @@ run_name = ENV.fetch('MERCURY_RUN', "single-run-#{Time.now.strftime('%Y%m%d-%H%M
 reservation = client.reserve(
   run: run_name,                                  # Run name shown on Builds page / Builds sayfasında görünen isim
   run_url: ENV['CI_JOB_URL'],                     # Optional: clickable link on Builds / Opsiyonel: Builds'de tıklanabilir link
+  project: ENV['MERCURY_PROJECT'],                # Optional: groups runs on Builds / Opsiyonel: Builds'de koşumları gruplar
   timeout: Integer(ENV.fetch('MERCURY_TIMEOUT', '600')), # Seconds; run drops if not released / Saniye — koşum en geç bu sürede düşer
   amount: 1,
   type: requested_type,                           # android | ios
@@ -72,7 +73,8 @@ begin
   sleep Integer(ENV.fetch('MERCURY_HOLD_SECONDS', '30')) # örnek amaçlı bekleme
   # --------------------------------------------------------------------------
 ensure
-  client.release(group_id) # Device always released → run flips to "Finished" on Builds
-  # Cihaz her durumda bırakılır → Builds'de "Finished"
+  # Device always released; $! reports the outcome as a PASSED/FAILED badge
+  # on Builds. / Cihaz her durumda bırakılır; $! sonucu Builds'de rozet yapar.
+  client.release(group_id, result: $! ? 'failed' : 'passed')
   puts "Released group: #{group_id} / Grup bırakıldı: #{group_id}"
 end
