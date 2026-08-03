@@ -132,7 +132,7 @@
     "@types/split": "^1.0.5",
     "@types/temp": "^0.9.4",
     "@types/tmp": "^0.2.6",
-    "@types/ws": "^3.2.1",
+    "@types/ws": "^8.18.1",
     "cli-docs-generator": "1.0.7",
     "eslint": "^9.30.1",
     "typescript": "^5.9.2",
