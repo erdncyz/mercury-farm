@@ -119,6 +119,17 @@ class MercuryClient
     'android'
   end
 
+  def device_type(device, requested: nil)
+    requested = requested.to_s.downcase
+    return requested if %w[android ios].include?(requested)
+
+    platform = device['platform'].to_s.downcase
+    return 'ios' if device['ios'] == true || %w[ios tvos].include?(platform)
+    return 'ios' if device['manufacturer'].to_s.casecmp('Apple').zero?
+
+    'android'
+  end
+
   private
 
   def request(method, path, params: {}, body: nil)
