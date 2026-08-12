@@ -57,6 +57,8 @@ Mercury Device Farm is a **device farm** platform that enables remote control of
 | **Group & Team Management** | Organize devices into groups, scheduling, user/team-based access |
 | **Multi-Auth Support** | Mock, LDAP, OAuth2, OpenID Connect, SAML2 |
 | **File System Access** | Device file explorer (push/pull) |
+| **Media Upload** | Upload photos and videos to the Android gallery (not supported on iOS) |
+| **Clipboard Access** | Read and write text on Android and iOS device clipboards |
 | **Shell Access** | Remote ADB/shell command execution |
 | **Logcat Streaming** | Real-time Android logcat output monitoring |
 | **Tizen TV Support** | Samsung Smart TV support |

@@ -200,6 +200,13 @@ message FileSystemGetMessage {
   optional string jwt = 2;
 }
 
+message FileSystemPushMessage {
+  required string href = 1;
+  required string filename = 2;
+  required string mediaType = 3;
+  optional string jwt = 4;
+}
+
 message TransactionProgressMessage {
   required string source = 1;
   required uint32 seq = 2;
