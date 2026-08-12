@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added / Eklendi
+
+**Android media upload / Android medya yükleme** — The device Upload panel can now send supported photos and videos to `Pictures/Mercury` or `Movies/Mercury` and refresh the Android gallery. The media option is not shown for iOS devices.
+
+**Android medya yükleme** — Cihazdaki Yükle paneli artık desteklenen fotoğraf ve videoları `Pictures/Mercury` veya `Movies/Mercury` klasörüne gönderebilir ve Android galerisini yeniler. Medya seçeneği iOS cihazlarda gösterilmez.
+
+**Cross-platform clipboard / Platformlar arası pano** — The Clipboard panel can now send multiline Unicode text to both Android and iOS device clipboards, read the current value, and report transfer errors. iOS writes use WebDriverAgent `setPasteboard`.
+
+**Platformlar arası pano** — Pano paneli artık çok satırlı Unicode metni Android ve iOS cihaz panosuna gönderebilir, mevcut değeri okuyabilir ve aktarım hatalarını gösterebilir. iOS yazma işlemi WebDriverAgent `setPasteboard` kullanır.
+
 ## [0.4.4] — 2026-07-28
 
 ### Fixed / Düzeltildi

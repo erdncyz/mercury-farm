@@ -34,6 +34,23 @@ mvn -q compile exec:java -Dexec.mainClass=mercury.SettingsTestPass   # ✅ PASS 
 mvn -q compile exec:java -Dexec.mainClass=mercury.SettingsTestFail   # ❌ FAIL (exit 1, cihaz yine bırakılır)
 ```
 
+Merkezi Appium kullanmak için `APPIUM_URL=http://APPIUM_HOST:4723` ver. Android
+`adb connect` komutu Appium ile aynı makinede çalışmalıdır; Java yardımcı SSH
+otomasyonu yapmaz, bu nedenle merkezi Appium hostunda bağlantıyı testten önce
+hazırla. O hostun `~/.android/adbkey.pub` anahtarını Mercury'de **Settings →
+Keys → ADB Keys** altında kaydet.
+
+For central Appium, set `APPIUM_URL=http://APPIUM_HOST:4723`. Android
+`adb connect` must run on the same machine as Appium; the Java helper does not
+automate SSH, so prepare the connection on the central Appium host before the
+test. Register that host's `~/.android/adbkey.pub` under Mercury **Settings →
+Keys → ADB Keys**.
+
+iOS'ta/On iOS, Mercury'nin döndürdüğü şemasız `HOST:PORT` WDA adresi Java
+helper tarafından otomatik olarak `http://HOST:PORT` biçimine getirilir / the
+Java helper automatically normalizes Mercury's bare `HOST:PORT` WDA endpoint
+to `http://HOST:PORT`.
+
 ## Ortam değişkenleri / Environment variables
 
 [Ruby örnekleriyle aynı / same as the Ruby examples](../automation-ruby/README.md#ortam-değişkenleri):
@@ -43,9 +60,13 @@ mvn -q compile exec:java -Dexec.mainClass=mercury.SettingsTestFail   # ❌ FAIL 
 
 ## Akış / Workflow
 
-Akış Ruby örnekleriyle birebir aynıdır (reserve → useDevice → adb connect/WDA →
-test → release). Diyagramlar için: [automation-ruby/README.md](../automation-ruby/README.md#akış--workflow)
+Temel akış Ruby örnekleriyle aynıdır (reserve → useDevice → adb connect/WDA →
+test → release), ancak Java yardımcı Ruby'deki `MERCURY_ADB_SSH` ve platform
+auto-detect kolaylıklarını içermez; `MERCURY_TYPE` değerini açıkça ver.
+Diyagramlar için: [automation-ruby/README.md](../automation-ruby/README.md#akış--workflow)
 
-The flow is identical to the Ruby examples (reserve → useDevice → adb
-connect/WDA → test → release). See the diagrams in
+The core flow matches the Ruby examples (reserve → useDevice → adb connect/WDA
+→ test → release), but the Java helper does not implement Ruby's
+`MERCURY_ADB_SSH` or platform auto-detection; set `MERCURY_TYPE` explicitly.
+See the diagrams in
 [automation-ruby/README.md](../automation-ruby/README.md#akış--workflow).

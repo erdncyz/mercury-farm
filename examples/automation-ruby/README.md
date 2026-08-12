@@ -45,6 +45,7 @@ appium --address 127.0.0.1 --port 4723 &      # Appium'u başlat (UiAutomator2/X
 export MERCURY_BASE_URL=https://YOUR_DOMAIN
 export MERCURY_TOKEN=...
 export MERCURY_TYPE=android                   # veya ios
+export APPIUM_URL=http://FARM_HOST:4723       # merkezi Appium kullanılıyorsa
 
 ruby settings_test_pass.rb   # ✅ Ayarlar → "Genel" → doğrula → PASS (exit 0)
 ruby settings_test_fail.rb   # ❌ olmayan menü → element bulunamaz → FAIL (exit 1)
@@ -53,6 +54,9 @@ ruby settings_test_fail.rb   # ❌ olmayan menü → element bulunamaz → FAIL 
 - **Pass senaryosu**: Ayarlar uygulamasını açar; iOS'ta "General/Genel" hücresine tıklayıp ekranı doğrular, Android'de Ayarlar'ın önde olduğunu doğrulayıp ilk ayar satırına tıklar.
 - **Fail senaryosu**: Ayarlar'ı açtıktan sonra kasıtlı olarak var olmayan bir menü öğesi arar; `NoSuchElementError` ile düşer, script `exit 1` ile biter (CI kırmızı), ama cihaz `ensure` bloğu sayesinde **yine de bırakılır** ve Builds'de koşum kapanır.
 - İki test de rezervasyon/bırakma işini [appium_session.rb](./appium_session.rb) yardımcısına bırakır — kendi testlerini yazarken aynı kalıbı kopyalayabilirsin.
+- Tüm örnekler release sırasında sonucu otomatik raporlar (`result=passed|failed`); Builds sayfasında durum rozetinin yanında **PASSED**/**FAILED** rozeti görünür.
+- `appium_session.rb` ayrıca koşumun senaryosunu `PUT /builds/{id}/scenarios` ile raporlar — Builds'de koşuma tıklayınca senaryo listesi açılır. Çok senaryolu projelerde (örn. Cucumber) tüm senaryoları aynı endpoint'e tek listede gönder: `client.report_scenarios(group_id, [{name:, status:, durationSec:, error:}, ...])`.
+- iOS'ta Mercury'nin döndürdüğü `remoteConnectUrl` şemasızsa (`HOST:PORT`) yardımcı bunu Appium için otomatik olarak `http://HOST:PORT` biçimine getirir; WDA adresini elle vermen gerekmez.
 
 ## Ortam değişkenleri
 
@@ -65,9 +69,16 @@ ruby settings_test_fail.rb   # ❌ olmayan menü → element bulunamaz → FAIL 
 | `MERCURY_AMOUNT` | hayır | Cihaz sayısı (parallel_run, varsayılan 2; admin olmayanlar en fazla 2) |
 | `MERCURY_TIMEOUT` | hayır | Rezervasyon süresi sn (varsayılan: tekli 600, paralel 900) |
 | `MERCURY_RUN` | hayır | Builds sayfasında görünen koşum adı (varsayılan: zaman damgalı) |
+| `MERCURY_PROJECT` | hayır | Koşumları Builds sayfasında proje başlığı altında gruplar — koştuğun projenin adını ver; farklı günlerdeki koşumlar aynı başlık altında ayrı satırlar olur |
 | `CI_JOB_URL` | hayır | Builds'de koşum adını tıklanabilir yapar |
 | `MERCURY_HOLD_SECONDS` | hayır | Örnekteki test-yeri bekleme süresi (varsayılan 30) |
-| `APPIUM_URL` | hayır | Appium server adresi (varsayılan `http://127.0.0.1:4723`; merkezi Appium'da `http://FARM_HOST:4723`) |
+| `APPIUM_URL` | hayır | `appium_session.rb` tabanlı `settings_test_*` senaryolarında Appium server adresi (varsayılan `http://127.0.0.1:4723`; merkezi Appium'da `http://FARM_HOST:4723`) |
+| `MERCURY_ADB_SSH` | hayır | `appium_session.rb` tabanlı merkezi Android Appium akışında `adb connect`'i Appium hostunda SSH ile çalıştırır, örn. `user@FARM_HOST`; verilmezse bağlantının Appium hostunda hazır olduğu varsayılır |
+
+`single_run.rb` ve `parallel_run.rb` bağlantı iskeletleridir; `APPIUM_URL` ile
+Appium session açmazlar ve Android'de lokal `adb connect` çalıştırırlar. Merkezi
+Appium ile uçtan uca test için `appium_session.rb` kullanan `settings_test_*`
+kalıbını kullan.
 
 ## Akış / Workflow
 
@@ -80,8 +91,8 @@ ruby settings_test_fail.rb   # ❌ olmayan menü → element bulunamaz → FAIL 
 │                          │
 │  1. ruby script starts   │
 │  2. calls Mercury API    │
-│  3. runs Appium locally  │  ← Topoloji A (önerilen)
-│  4. adb connect / WDA    │
+│  3. calls Appium server  │  ← lokal veya merkezi
+│  4. adb on Appium / WDA  │
 │  5. runs tests           │
 │  6. releases devices     │
 └──────┬───────────────────┘
@@ -134,7 +145,7 @@ ruby settings_test_fail.rb   # ❌ olmayan menü → element bulunamaz → FAIL 
                              │
                              ↓
     ┌────────────────────────────────────────────────────┐
-    │ Yanıt: group_id + devices[] + remoteConnectUrl    │
+   │ Yanıt: group_id + devices[]                       │
     │ (Bu bilgiler 600 sn (varsayılan) geçerli)         │
     └────────────────────────┬─────────────────────────┘
 
@@ -161,7 +172,7 @@ ruby settings_test_fail.rb   # ❌ olmayan menü → element bulunamaz → FAIL 
 
 3️⃣  CONNECT & APPIUM — Appium Başlat ve Cihaza Bağlan
     
-    ▶ TOPOLOJI A (Local Appium — ÖNERILEN)
+   ▶ TOPOLOJI A (Local Appium)
     ┌────────────────────────────────────────────────────┐
     │ bash: adb connect 172.28.1.100:5037               │
     │       (runner makinasından çalışıyor)             │
@@ -254,6 +265,11 @@ ruby settings_test_fail.rb   # ❌ olmayan menü → element bulunamaz → FAIL 
    → Paralel komutlar
    ```
 
+   Android'de bu komut Appium hostunda çalışmalıdır. `parallel_run.rb` bağlantı
+   iskeleti lokal ADB kullanır; merkezi Appium için komutu SSH ile Appium
+   hostunda çalıştır veya `appium_session.rb` kalıbındaki `MERCURY_ADB_SSH`
+   desteğini kullan.
+
 4. **Appium Session**: Her thread'de kendi session'ı
    ```
    Thread 1: driver_A = Appium::Core.for(udid: REMOTE_A).start_driver
@@ -293,8 +309,8 @@ export APPIUM_URL=http://127.0.0.1:4723  # Bu makinada Appium çalışacak
 # Appium'u arka planda başlat
 appium --address 127.0.0.1 --port 4723 &
 
-# Testini koştur
-ruby single_run.rb
+# Gerçek Appium testini koştur
+ruby settings_test_pass.rb
 
 # Log örneği:
 # Reserved device: R58M42ABCDE (Pixel 6 / 13) — group=abc-group-123
@@ -310,15 +326,16 @@ export MERCURY_BASE_URL=https://farm.example.com
 export MERCURY_TOKEN=abc123...
 export MERCURY_TYPE=android
 export APPIUM_URL=http://farm.example.com:4723  # Farm sunucusunda Appium
-export APPIUM_HOST_SSH=user@farm.example.com    # adb connect farm'da çalışacak
+export MERCURY_ADB_SSH=user@farm.example.com    # adb connect farm'da çalışacak
 
 # (Appium farm'da önceden başlatılmış — sudo systemctl start appium)
 
-# Testini koştur
-ruby single_run.rb
+# Gerçek Appium testini koştur
+ruby settings_test_pass.rb
 
 # Kodu içinden:
-#   1. adb connect komutu SSH üstünden farm'a gidiyor
+#   1. MERCURY_ADB_SSH verilirse adb connect komutu SSH üstünden farm'a gidiyor
+#      Verilmezse cihazın Appium hostunda önceden bağlı olması gerekiyor.
 #   2. Appium URL'si farm'daki Appium'a işaret ediyor
 #   3. Geri kalan flow aynı
 ```
@@ -329,6 +346,10 @@ ruby single_run.rb
 2. `use_device(serial)` → `remoteConnectUrl` (Android: `adb connect`, iOS: `appium:webDriverAgentUrl`)
 3. Testlerini Appium ile koştur (`adb connect` **Appium'un çalıştığı makinede** yapılmalı)
 4. `release(group_id)` → her zaman `ensure` içinde; koşum `Finished` olur
+
+`Finished`, rezervasyonun kapandığını gösterir; testin geçtiği anlamına gelmez.
+Pass/fail sonucu script'in exit code'u ve assertion'lardan gelir. Başarısız test
+cihazı doğru bıraktığında Builds kaydı yine `Finished` olabilir.
 
 ---
 

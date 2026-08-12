@@ -82,6 +82,17 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
   "https://YOUR_DOMAIN/api/v1/autotests?amount=4&timeout=900&run=ci-parallel-001&type=android&need_amount=true"
 ```
 
+`amount=4` requires an admin token; regular users are limited to 2 devices per
+run. `timeout` must be between `60` and `10800` seconds.
+
+To pin exact devices, use `serials`. It takes precedence over `amount`, `type`,
+and the other filters, and all listed devices must be free:
+
+```bash
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  "https://YOUR_DOMAIN/api/v1/autotests?timeout=900&run=ci-parallel-001&serials=SERIAL_A,SERIAL_B"
+```
+
 Response returns:
 
 - `group.id`
@@ -98,6 +109,11 @@ a chip; while it is `Running` you can click any chip to watch that device live.
 Use a unique name per pipeline execution (for example `ci-parallel-${BUILD_NUMBER}`)
 and add `runUrl` to link back to the CI job.
 
+Connection rules per worker:
+
+- **Android:** run `adb connect <remoteConnectUrl>` on the same machine as the Appium server. Register that host's ADB public key in **Settings → Keys → ADB Keys**. With central Appium, use SSH (the Ruby helper supports `MERCURY_ADB_SSH=user@APPIUM_HOST`) or prepare the connection on that host before the session.
+- **iOS:** if `remoteConnectUrl` is bare `HOST:PORT`, convert it to `http://HOST:PORT` before assigning `appium:webDriverAgentUrl`. The Ruby helper does this automatically.
+
 Reference:
 
 - [automation-api.md](./automation-api.md)
@@ -110,6 +126,7 @@ Reference:
 2. Split returned device serials across CI workers.
 3. Each worker:
    - `useDevice` for its serial
+  - prepares Android ADB on the Appium host, or the normalized iOS WDA URL
    - runs Appium test session
 4. Always release group in `finally`:
 
@@ -117,6 +134,10 @@ Reference:
 curl -X DELETE -H "Authorization: Bearer YOUR_TOKEN" \
   "https://YOUR_DOMAIN/api/v1/autotests?group=GROUP_ID"
 ```
+
+The Builds record becoming `Finished` means the reservation closed (explicit
+release or timeout); it does not mean every worker passed. Use worker/test exit
+codes and assertions as the pass/fail source of truth.
 
 ---
 
@@ -207,8 +228,11 @@ jobs:
         run: |
           echo "Worker ${{ matrix.worker }} using serial=$SERIAL remote=$REMOTE_URL"
           # Put your Appium test command here
-          # Example Android:
+          # Android + local Appium (Topology A):
           # adb connect "$REMOTE_URL"
+          # Android + central Appium (Topology B):
+          # ssh "$MERCURY_ADB_SSH" "adb connect '$REMOTE_URL'"
+          # Register the selected Appium host's adbkey.pub in Mercury first.
           # npm run test:e2e -- --worker="${{ matrix.worker }}" --serial="$SERIAL"
 
       - name: Release group (always)
@@ -228,6 +252,7 @@ Notes:
 
 - This example uses `jq` for JSON parsing.
 - Use repo secrets for `MERCURY_BASE_URL` and `MERCURY_TOKEN`.
+- For central Android Appium, store the SSH target as `MERCURY_ADB_SSH`; the shown SSH automation is not built into the Java or Playwright examples.
 - You can split by platform (`android` / `ios`) with separate jobs.
 
 ---
@@ -309,6 +334,17 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
   "https://YOUR_DOMAIN/api/v1/autotests?amount=4&timeout=900&run=ci-parallel-001&type=android&need_amount=true"
 ```
 
+`amount=4` için admin token gerekir; normal kullanıcılar koşum başına en fazla 2
+cihaz alabilir. `timeout`, `60..10800` saniye aralığında olmalıdır.
+
+Tam belirli cihazları ayırmak için `serials` kullan. Bu parametre `amount`,
+`type` ve diğer filtrelerden önceliklidir; listedeki tüm cihazlar boşta olmalıdır:
+
+```bash
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  "https://YOUR_DOMAIN/api/v1/autotests?timeout=900&run=ci-parallel-001&serials=SERIAL_A,SERIAL_B"
+```
+
 Yanıt:
 
 - `group.id`
@@ -326,6 +362,11 @@ tıklayarak o cihazı canlı izleyebilirsin. Her pipeline koşusu için benzersi
 bir isim kullan (örn. `ci-parallel-${BUILD_NUMBER}`) ve CI job'ına dönmek için
 `runUrl` ekle.
 
+Worker başına bağlantı kuralları:
+
+- **Android:** `adb connect <remoteConnectUrl>` komutunu Appium sunucusuyla aynı makinede çalıştır. O hostun ADB public key'ini **Settings → Keys → ADB Keys** altında kaydet. Merkezi Appium'da SSH kullan (Ruby yardımcı `MERCURY_ADB_SSH=user@APPIUM_HOST` destekler) veya session öncesi bağlantıyı o hostta hazırla.
+- **iOS:** `remoteConnectUrl` çıplak `HOST:PORT` ise `appium:webDriverAgentUrl` vermeden önce `http://HOST:PORT` biçimine getir. Ruby yardımcı bunu otomatik yapar.
+
 Referans:
 
 - [automation-api.md](./automation-api.md)
@@ -338,6 +379,7 @@ Referans:
 2. Dönen serial listesini worker’lara dağıt.
 3. Her worker:
    - `useDevice` çağırır
+  - Android ADB bağlantısını Appium hostunda veya normalize edilmiş iOS WDA URL'sini hazırlar
    - Appium testini çalıştırır
 4. Her zaman `finally` içinde group release yap:
 
@@ -345,6 +387,10 @@ Referans:
 curl -X DELETE -H "Authorization: Bearer YOUR_TOKEN" \
   "https://YOUR_DOMAIN/api/v1/autotests?group=GROUP_ID"
 ```
+
+Builds kaydının `Tamamlandı` olması rezervasyonun kapandığını (açık release veya
+timeout) gösterir; tüm worker testlerinin geçtiği anlamına gelmez. Pass/fail
+için worker/test exit code'larını ve assertion sonuçlarını esas al.
 
 ---
 
@@ -369,6 +415,7 @@ GitHub Actions'ta 2-4 worker arası paralel koşum için örnek:
 - `workers` input değeri kadar worker aktif edilir.
 - Her aktif worker kendi cihazını `amount=1` ile ayırır.
 - `useDevice` ile `remoteConnectUrl` alır.
+- Android'de `adb connect` Appium hostunda çalışır; merkezi Appium'da gerekirse SSH kullanılır. iOS'ta WDA adresine şema yoksa `http://` eklenir.
 - Testi çalıştırır.
 - `always()` cleanup adımında `group` mutlaka bırakılır.
 

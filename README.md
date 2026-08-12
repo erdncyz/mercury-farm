@@ -123,7 +123,7 @@ If it is empty, restore it manually:
 ```bash
 mkdir -p ~/.mercury-farm/current/WebDriverAgent
 cd ~/.mercury-farm/current/WebDriverAgent
-git clone --depth 1 --branch v16.0.3 https://github.com/appium/WebDriverAgent.git .
+git clone --depth 1 --branch v16.1.7 https://github.com/appium/WebDriverAgent.git .
 ```
 
 Then repeat the signing step above and re-run
@@ -492,7 +492,7 @@ Klasor bossa elle doldurun:
 ```bash
 mkdir -p ~/.mercury-farm/current/WebDriverAgent
 cd ~/.mercury-farm/current/WebDriverAgent
-git clone --depth 1 --branch v16.0.3 https://github.com/appium/WebDriverAgent.git .
+git clone --depth 1 --branch v16.1.7 https://github.com/appium/WebDriverAgent.git .
 ```
 
 Ardindan yukaridaki imzalama adimini tekrarlayin ve
