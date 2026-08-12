@@ -57,6 +57,8 @@ Mercury Device Farm, gerçek Android ve iOS cihazları tarayıcı üzerinden uza
 | **Grup & Takım Yönetimi** | Cihazları gruplara ayırma, zamanlama, kullanıcı/takım bazlı erişim |
 | **Çoklu Auth Desteği** | Mock, LDAP, OAuth2, OpenID Connect, SAML2 |
 | **Dosya Sistemi Erişimi** | Cihaz dosya gezgini (push/pull) |
+| **Medya Yükleme** | Fotoğraf ve videoları Android galerisine yükleme (iOS desteklenmez) |
+| **Pano Erişimi** | Android ve iOS cihaz panosundaki metni okuma ve güncelleme |
 | **Shell Erişimi** | Uzaktan ADB/shell komut çalıştırma |
 | **Logcat Streaming** | Android logcat çıktısını gerçek zamanlı izleme |
 | **Tizen TV Desteği** | Samsung Smart TV desteği |
