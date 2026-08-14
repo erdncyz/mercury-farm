@@ -20,9 +20,11 @@
  *                        native binding load failures and import-time crashes.
  *   2. STFService wire – exercises the protobufjs v5 Builder API exactly the
  *                        way lib/units/device/resources/service.js does.
- *   3. Express 5 scan  – static scan for route patterns that Express 5
+ *   3. Mercury wire    – verifies shell commands and transaction progress
+ *                        messages preserve their payloads through protobuf.
+ *   4. Express 5 scan  – static scan for route patterns that Express 5
  *                        rejects (unnamed '*' wildcards, res.send(number)).
- *   4. auth-mock boot  – boots the auth-mock unit and performs a real login
+ *   5. auth-mock boot  – boots the auth-mock unit and performs a real login
  *                        round-trip over HTTP.
  */
 import {spawn} from 'node:child_process'
@@ -104,7 +106,35 @@ await step('STFService protobuf wire (protobufjs v5 API)', async() => {
 })
 
 // ---------------------------------------------------------------------------
-// 3. Express 5 static scan: unnamed '*' wildcards and res.send(number) crash
+// 3. Mercury transactions: shell commands must preserve command/timeout fields,
+//    and shell output does not have a meaningful progress percentage.
+// ---------------------------------------------------------------------------
+await step('Mercury shell transaction wire', async() => {
+    const {default: wireutil} = await import('../lib/wire/util.js')
+    const {Envelope, ShellCommandMessage, TransactionProgressMessage} = await import('../lib/wire/wire.js')
+    const {Any} = await import('../lib/wire/google/protobuf/any.js')
+
+    const shellPayload = {command: 'echo shell-output', timeout: 10000}
+    const shellEnvelope = Envelope.fromBinary(wireutil.tr('tx-smoke', ShellCommandMessage, shellPayload))
+    const shellMessage = Any.unpack(shellEnvelope.message, ShellCommandMessage)
+    if (shellMessage?.command !== shellPayload.command || shellMessage.timeout !== shellPayload.timeout) {
+        throw new Error(`Shell command round-trip failed: ${JSON.stringify(shellMessage)}`)
+    }
+
+    const progressEnvelope = Envelope.fromBinary(wireutil.reply('smoke-device').progress('shell-output'))
+    const progressMessage = Any.unpack(progressEnvelope.message, TransactionProgressMessage)
+    if (progressMessage?.data !== 'shell-output' || progressMessage.progress !== 0) {
+        throw new Error(`Transaction progress round-trip failed: ${JSON.stringify(progressMessage)}`)
+    }
+
+    const websocketSource = readFileSync(path.join(ROOT, 'lib', 'units', 'websocket', 'index.js'), 'utf8')
+    if (/new wire\.ShellCommandMessage\(/.test(websocketSource)) {
+        throw new Error('Websocket shell routes still use the legacy positional constructor')
+    }
+})
+
+// ---------------------------------------------------------------------------
+// 4. Express 5 static scan: unnamed '*' wildcards and res.send(number) crash
 //    or misbehave on Express 5. Catch regressions before they boot.
 // ---------------------------------------------------------------------------
 await step('Express 5 route pattern scan (lib/)', async() => {
@@ -140,7 +170,7 @@ await step('Express 5 route pattern scan (lib/)', async() => {
 })
 
 // ---------------------------------------------------------------------------
-// 4. auth-mock boot + login round-trip: boots a real unit (Express route
+// 5. auth-mock boot + login round-trip: boots a real unit (Express route
 //    registration happens at startup) and exchanges credentials for a JWT.
 // ---------------------------------------------------------------------------
 await step('auth-mock unit boot + JWT round-trip', async() => {

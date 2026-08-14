@@ -1,0 +1,472 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Push release to GitHub",
+			"type": "shell",
+			"command": "git",
+			"args": [
+				"push",
+				"origin",
+				"HEAD:main"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Push release branch",
+			"type": "shell",
+			"command": "git",
+			"args": [
+				"push",
+				"-u",
+				"origin",
+				"HEAD:release/v0.5.15"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Create release pull request",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"pr",
+				"create",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--base",
+				"main",
+				"--head",
+				"release/v0.5.15",
+				"--title",
+				"chore: release v0.5.15",
+				"--body",
+				"Release verified locally with Ruby contract tests and backend smoke test. Includes the latest main merge plus WDA v16.1.7 and UI submodule updates."
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Wait for release checks",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"pr",
+				"checks",
+				"41",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--watch"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Merge release pull request",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"pr",
+				"merge",
+				"41",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--squash",
+				"--delete-branch"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Check release automation",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"run",
+				"list",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--workflow",
+				"auto-version-bump.yml",
+				"--limit",
+				"3"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Inspect release PR",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"pr",
+				"list",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--state",
+				"all",
+				"--limit",
+				"10",
+				"--json",
+				"number,title,state,headRefName,mergedAt"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Validate version bump PR",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"pr",
+				"checks",
+				"42",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--watch"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Inspect version bump checks",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"pr",
+				"view",
+				"42",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--json",
+				"number,title,state,mergeStateStatus,statusCheckRollup,headRefName,baseRefName"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Check CI for version bump",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"run",
+				"list",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--workflow",
+				"ci.yml",
+				"--branch",
+				"chore/release-v0.5.15",
+				"--limit",
+				"5",
+				"--json",
+				"databaseId,status,conclusion,headBranch,displayTitle"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Inspect blocked CI run",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"run",
+				"view",
+				"31589887794",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--json",
+				"status,conclusion,jobs,url"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Approve version bump CI",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"run",
+				"approve",
+				"31589887794",
+				"--repo",
+				"erdncyz/mercury-farm"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Approve blocked workflow run",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"api",
+				"--method",
+				"POST",
+				"repos/erdncyz/mercury-farm/actions/runs/31589887794/approve"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Rerun version bump CI",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"run",
+				"rerun",
+				"31589887794",
+				"--repo",
+				"erdncyz/mercury-farm"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Watch version bump CI",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"run",
+				"watch",
+				"31589887794",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--exit-status"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Merge version bump PR",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"pr",
+				"merge",
+				"42",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--squash",
+				"--delete-branch"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Watch release workflow",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"run",
+				"list",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--workflow",
+				"auto-tag-release.yml",
+				"--limit",
+				"3",
+				"--json",
+				"databaseId,status,conclusion,headBranch,displayTitle,url"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Check release trigger",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"run",
+				"list",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--workflow",
+				"auto-version-bump.yml",
+				"--limit",
+				"3",
+				"--json",
+				"databaseId,status,conclusion,headBranch,displayTitle,url"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Dispatch Mercury release",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"workflow",
+				"run",
+				"auto-tag-release.yml",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--ref",
+				"main"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Complete Mercury release",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"run",
+				"watch",
+				"31590679699",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--exit-status"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Verify release result",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"run",
+				"view",
+				"31590679699",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--json",
+				"status,conclusion,jobs,url"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Wait for Mercury release",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"run",
+				"watch",
+				"31590679699",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--interval",
+				"15",
+				"--exit-status"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Read release workflow status",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"run",
+				"view",
+				"31590679699",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--json",
+				"status,conclusion,jobs,url"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Finish automatic release",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"run",
+				"watch",
+				"31590315028",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--interval",
+				"20",
+				"--exit-status"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Verify automatic release",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"run",
+				"view",
+				"31590315028",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--json",
+				"status,conclusion,jobs,url"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Await release completion",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"run",
+				"watch",
+				"31590315028",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--interval",
+				"30",
+				"--exit-status"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Verify v0.5.15 release",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"release",
+				"view",
+				"v0.5.15",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--json",
+				"tagName,name,isLatest,publishedAt,assets,url"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Confirm v0.5.15 assets",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"release",
+				"view",
+				"v0.5.15",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--json",
+				"tagName,name,isDraft,isPrerelease,publishedAt,assets,url"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Confirm published release",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"release",
+				"view",
+				"v0.5.15",
+				"--repo",
+				"erdncyz/mercury-farm"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		}
+	]
+}
