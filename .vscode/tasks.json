@@ -467,6 +467,93 @@
 			],
 			"isBackground": false,
 			"problemMatcher": []
+		},
+		{
+			"label": "Push ios lease fix branch",
+			"type": "shell",
+			"command": "git",
+			"args": [
+				"push",
+				"-u",
+				"origin",
+				"HEAD:fix/ios-group-lease-keepalive"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "Restore main upstream",
+			"type": "shell",
+			"command": "git",
+			"args": [
+				"branch",
+				"--set-upstream-to=origin/main",
+				"main"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "Create ios keepalive PR",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"pr",
+				"create",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--base",
+				"main",
+				"--head",
+				"fix/ios-group-lease-keepalive",
+				"--title",
+				"fix(ios-provider): keep group lease alive during WDA automation",
+				"--body",
+				"## Summary\n- pass group timeout to ios-provider process startup\n- send lease timeout in `useDevice` when positive\n- keep group lease alive on WDA proxy requests to avoid mid-run release\n\n## Notes\n- excludes accidental submodule rewinds (WebDriverAgent/ui)\n- conventional `fix` commit to trigger next patch release"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "Inspect PR50 checks",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"pr",
+				"view",
+				"50",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--json",
+				"number,title,state,mergeStateStatus,statusCheckRollup,url"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "Watch PR50 checks",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"pr",
+				"checks",
+				"50",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--watch"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "Merge PR50",
+			"type": "shell",
+			"command": "gh",
+			"args": [
+				"pr",
+				"merge",
+				"50",
+				"--repo",
+				"erdncyz/mercury-farm",
+				"--squash",
+				"--delete-branch"
+			],
+			"isBackground": false
 		}
 	]
 }
