@@ -44,6 +44,7 @@ export default syrup.serial()
 
         const plugin = new class GroupManager extends EventEmitter<GroupEvents> {
             private currentGroup: GroupState | null = null
+            private currentUsage: string | null = null
 
             keepalive = () => {
                 if (this.currentGroup) {
@@ -60,6 +61,8 @@ export default syrup.serial()
                 return this.currentGroup
             }
 
+            isAutomation = () => this.currentUsage === 'automation'
+
             join = async(newGroup: GroupState, timeout: number, usage: string, keys: string[]) => {
                 try {
                     if (!newGroup?.group) {
@@ -70,6 +73,10 @@ export default syrup.serial()
                         if (this.currentGroup.group !== newGroup.group) { // and is not same
                             log.error(`Cannot join group ${JSON.stringify(newGroup)} since this device is in group ${JSON.stringify(this.currentGroup)}`)
                             throw new grouputil.AlreadyGroupedError()
+                        }
+
+                        if (usage) {
+                            this.currentUsage = usage
                         }
 
                         log.info('Update timeout for %s', apiutil.QUARTER_MINUTES)
@@ -88,6 +95,7 @@ export default syrup.serial()
                     }
 
                     this.currentGroup = newGroup
+                    this.currentUsage = usage || null
 
                     log.important('Now owned by "%s"', this.currentGroup.email)
                     log.important('Device now in group "%s"', this.currentGroup.name)
@@ -141,6 +149,7 @@ export default syrup.serial()
                 sub.unsubscribe(this.currentGroup.group)
 
                 this.currentGroup = null
+                this.currentUsage = null
                 plugin.emit('leave', this.currentGroup)
                 return this.currentGroup
             }
