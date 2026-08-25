@@ -10,6 +10,7 @@ import srv from '../../util/srv.js'
 import * as zmqutil from '../../util/zmqutil.js'
 import UserModel from '../../db/models/user/index.js'
 import DeviceModel from '../../db/models/device/index.js'
+import BuildModel from '../../db/models/build/index.js'
 import {
     UserChangeMessage,
     GroupChangeMessage,
@@ -223,13 +224,14 @@ export default db.ensureConnectivity(async(options: Options) => {
             appDealer.send([channel, data])
         })
         .on(LeaveGroupMessage, async (channel, message, data) => {
+            await dbapi.setDeviceState(message.serial, {owner: null, usage: null, timeout: 0})
             await Promise.all([
-                dbapi.setDeviceState(message.serial, {owner: null, usage: null, timeout: 0}),
                 dbapi.sendEvent('device_leave'
                     , {}
                     , {deviceSerial: message.serial, userEmail: message.owner!.email, groupId: message.owner!.group}
                     , Date.now()
-                )
+                ),
+                BuildModel.finishBuildIfInactive(message.owner!.group)
             ])
             appDealer.send([channel, data])
         })
