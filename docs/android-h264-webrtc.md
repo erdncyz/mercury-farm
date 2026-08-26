@@ -7,8 +7,10 @@ or browser playback fails. iOS, Tizen, and VNC streaming are unchanged.
 ## Network configuration
 
 The Android provider exposes UDP ports `13000-13100`. Allow and forward this
-range on the host firewall/NAT. For access from another network, set the public
-IPv4 address advertised by the provider:
+range on the host firewall/NAT. By default WebRTC advertises the provider's
+`--public-ip` address in addition to its local interface addresses, which makes
+Docker-based providers reachable from browsers on the same LAN. For access
+through a different public/NAT address, override the advertised IPv4 address:
 
 ```env
 SCREEN_WEBRTC_PUBLIC_IP=203.0.113.10
