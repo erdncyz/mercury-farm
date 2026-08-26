@@ -1,6 +1,6 @@
 # H.264/WebRTC Screen Streaming — Feature Plan
 
-**Status:** Planning | **Priority:** Conditional (test-driven) | **Target:** Q3 2026+
+**Status:** Android Phase 1 — Done (physical-device acceptance pending) | **Priority:** Conditional (test-driven) | **Target:** Q3 2026+
 
 ---
 
@@ -60,7 +60,7 @@ Migrate to **WebRTC with H.264 encoding**, maintaining backward compatibility wh
 
 ### 4.1 Android
 
-**Scope:** Medium | **Effort:** 2–3 weeks | **Risk:** Moderate
+**Status:** Done (code, fallback, and automated verification) | **Scope:** Medium | **Effort:** 2–3 weeks | **Risk:** Moderate
 
 Scrcpy already outputs H.264. Main work is transport layer:
 
@@ -97,16 +97,19 @@ WDA only provides MJPEG. Options:
 
 ## 5. Implementation Phases
 
-### Phase 1: Android H.264/WebRTC (2–3 weeks)
+### Phase 1: Android H.264/WebRTC — Done (2–3 weeks)
 
 **Goal:** Prove WebRTC works, gather performance metrics.
 
-**Deliverables:**
-- H.264 capture + WebRTC transport in Android device worker
-- Backend signaling server (SDP negotiation)
-- Browser UI updated to use `<video>` + WebRTC client
-- Performance baselines (latency, bandwidth, CPU)
-- Backward compatibility with MJPEG (dual-mode)
+**Completed deliverables:**
+- [x] H.264 capture + WebRTC transport in Android device worker
+- [x] Authenticated WebSocket signaling (SDP/ICE negotiation)
+- [x] Browser UI updated to use `<video>` + WebRTC client
+- [x] Backward compatibility with automatic MJPEG fallback (dual-mode)
+- [x] Automated parser, RTP, signaling, fallback-coordinate, type, and production-build verification
+
+**Remaining acceptance check:**
+- [ ] Record latency, bandwidth, and CPU baselines with 5 physical Android devices over the target remote network. No Android device was connected during implementation, so this is an environment validation rather than an incomplete code deliverable.
 
 **Success Criteria:**
 - 5 Android devices stream simultaneously over remote internet
