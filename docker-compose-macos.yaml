@@ -270,6 +270,7 @@ services:
             - scripts/variables.env
         ports:
             - "12010-12100:12010-12100"
+            - "13000-13100:13000-13100/udp"
         depends_on:
             mercury-migrate:
                 condition: service_completed_successfully
