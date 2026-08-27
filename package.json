@@ -74,7 +74,7 @@
     "express-validator": "4.3.0",
     "fast-printf": "^1.6.10",
     "form-data": "^4.0.6",
-    "formidable": "1.2.6",
+    "formidable": "3.5.4",
     "gm": "1.25.1",
     "http-proxy": "1.18.1",
     "jpeg-js": "^0.4.4",
