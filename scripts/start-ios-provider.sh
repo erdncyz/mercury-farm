@@ -27,6 +27,14 @@ if [ -f "$PROJECT_DIR/scripts/variables.env" ]; then
   set +a
 fi
 
+# Host-local WDA signing settings. This file is intentionally gitignored.
+if [ -f "$PROJECT_DIR/.ios-provider.env" ]; then
+  set -a
+  # shellcheck disable=SC1091
+  . "$PROJECT_DIR/.ios-provider.env"
+  set +a
+fi
+
 export MERCURY_SECRET="${MERCURY_SECRET:-nosecret}"
 export MERCURY_DOMAIN="${MERCURY_DOMAIN:-localhost}"
 export MERCURY_PORT="${MERCURY_PORT:-443}"
@@ -37,6 +45,8 @@ export IOS_WDA_SESSION_TIMEOUT_MS="${IOS_WDA_SESSION_TIMEOUT_MS:-20000}"
 export IOS_TYPE_KEY_DELAY_MS="${IOS_TYPE_KEY_DELAY_MS:-80}"
 export IOS_WDA_MJPEG_QUALITY="${IOS_WDA_MJPEG_QUALITY:-5}"
 export IOS_WDA_MJPEG_SCALING="${IOS_WDA_MJPEG_SCALING:-50}"
+export IOS_WDA_DEVELOPMENT_TEAM="${IOS_WDA_DEVELOPMENT_TEAM:-}"
+export IOS_WDA_BUNDLE_ID="${IOS_WDA_BUNDLE_ID:-}"
 export IOS_WDA_LEAN_MODE="${IOS_WDA_LEAN_MODE:-1}"
 export IOS_WDA_TREE_CACHE_MS="${IOS_WDA_TREE_CACHE_MS:-500}"
 export IOS_WDA_WAIT_FOR_IDLE_TIMEOUT="${IOS_WDA_WAIT_FOR_IDLE_TIMEOUT:-0}"
@@ -118,6 +128,8 @@ echo "  WDA session timeout: ${IOS_WDA_SESSION_TIMEOUT_MS}ms"
 echo "  Type key delay: ${IOS_TYPE_KEY_DELAY_MS}ms"
 echo "  WDA MJPEG quality: ${IOS_WDA_MJPEG_QUALITY}"
 echo "  WDA MJPEG scaling: ${IOS_WDA_MJPEG_SCALING}%"
+echo "  WDA signing team: ${IOS_WDA_DEVELOPMENT_TEAM:-auto/not configured}"
+echo "  H.264/WebRTC: ${SCREEN_WEBRTC_ENABLED:-true} (${SCREEN_WEBRTC_BITRATE:-1500000} bps, max ${SCREEN_WEBRTC_MAX_SIZE:-1280}px)"
 echo "  WDA lean mode: ${IOS_WDA_LEAN_MODE}"
 echo "  WDA tree cache: ${IOS_WDA_TREE_CACHE_MS}ms"
 echo "  WDA waitForIdleTimeout: ${IOS_WDA_WAIT_FOR_IDLE_TIMEOUT}s"
@@ -145,6 +157,14 @@ ios_provider_args=(
   --storage-url http://localhost:7100/
   --screen-jpeg-quality "${SCREEN_JPEG_QUALITY:-15}"
   --screen-frame-rate "${SCREEN_FRAME_RATE:-15}"
+  --screen-webrtc "${SCREEN_WEBRTC_ENABLED:-true}"
+  --screen-webrtc-bitrate "${SCREEN_WEBRTC_BITRATE:-1500000}"
+  --screen-webrtc-max-size "${SCREEN_WEBRTC_MAX_SIZE:-1280}"
+  --screen-webrtc-ice-servers "${SCREEN_WEBRTC_ICE_SERVERS:-[]}"
+  --screen-webrtc-public-ip "${SCREEN_WEBRTC_PUBLIC_IP:-}"
+  --screen-webrtc-port-min "${IOS_SCREEN_WEBRTC_PORT_MIN:-13101}"
+  --screen-webrtc-port-max "${IOS_SCREEN_WEBRTC_PORT_MAX:-13200}"
+  --screen-webrtc-timeout "${SCREEN_WEBRTC_TIMEOUT:-8000}"
   --screen-ping-interval 60000
   --screen-ws-url-pattern "wss://${MERCURY_DOMAIN}:${MERCURY_PORT}/d/${IOS_PROVIDER_NAME}/<%= publicPort %>/"
   --host 0.0.0.0

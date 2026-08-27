@@ -554,6 +554,62 @@
 				"--delete-branch"
 			],
 			"isBackground": false
+		},
+		{
+			"label": "Validate iOS H264 config fix",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"test:h264-webrtc"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Validate iOS H264 config packets",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"--test",
+				"test/ios-h264-capture.test.js"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Rebuild iOS H264 fix",
+			"type": "shell",
+			"command": "/bin/zsh",
+			"args": [
+				"-lc",
+				"node --test test/ios-h264-capture.test.js > /tmp/mercury-ios-h264-test.log 2>&1 && ./scripts/deploy-ios-provider-runtime.sh > /tmp/mercury-ios-deploy.log 2>&1 && echo IOS_REBUILD_OK || { code=$?; echo IOS_REBUILD_FAILED:$code; tail -30 /tmp/mercury-ios-h264-test.log; tail -30 /tmp/mercury-ios-deploy.log; exit $code; }"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Validate and deploy iOS H264 UI fix",
+			"type": "shell",
+			"command": "node --test test/ios-h264-capture.test.js > /tmp/ios-h264-test.log 2>&1 && echo IOS_H264_TEST_OK && ./scripts/deploy-ios-provider-runtime.sh > /tmp/ios-h264-deploy.log 2>&1 && echo IOS_DEPLOY_OK",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "iOS H264 focused test isolated",
+			"type": "shell",
+			"command": "/bin/zsh",
+			"args": [
+				"-lc",
+				"cd /Users/erdincyilmaz/Desktop/Desktop/mercury-farm && /opt/homebrew/bin/node --test test/ios-h264-capture.test.js > /tmp/ios-h264-test.log 2>&1; ret=$?; if [[ $ret -eq 0 ]]; then print IOS_H264_TEST_OK; else tail -20 /tmp/ios-h264-test.log; fi; exit $ret"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
 		}
 	]
 }

@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.7.0] — 2026-08-27
+
+### Added / Eklendi
+
+**H.264 screen transport / H.264 ekran taşıması** — Added authenticated H.264 screen streaming for Android and iOS, including WebCodecs codec bootstrap, cached GOP recovery, and a VideoToolbox-based iOS encoder.
+
+**H.264 ekran taşıması** — Android ve iOS için kimlik doğrulamalı H.264 ekran akışı, WebCodecs codec başlangıcı, GOP kurtarma ve VideoToolbox tabanlı iOS encoder eklendi.
+
+### Fixed / Düzeltildi
+
+**iOS interaction latency / iOS etkileşim gecikmesi** — Preserved live capture during pointer gestures, shortened swipe replay, routed large axis-aligned scrolls through WDA's faster directional endpoint, and initialized WDA before H.264 authentication so the first input is not dropped.
+
+**iOS etkileşim gecikmesi** — Pointer hareketlerinde canlı görüntü korunuyor, swipe yeniden oynatma süresi kısaltılıyor, büyük eksenli scroll'lar hızlı WDA endpoint'ine yönlendiriliyor ve ilk input'un kaybolmaması için H.264 kimlik doğrulamasından önce WDA başlatılıyor.
+
+---
+
 ## [Unreleased]
 
 ### Added / Eklendi

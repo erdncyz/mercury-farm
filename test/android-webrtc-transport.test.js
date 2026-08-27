@@ -52,6 +52,71 @@ test('bootstraps a newly connected peer with codec config and the current GOP', 
     assert.equal(peer.packets, 3)
 })
 
+test('rotates the ICE port window between sessions to dodge stale UDP NAT flows', () => {
+    const transport = new AndroidWebRtcTransport({
+        serial: 'android-test',
+        screenWebrtc: true,
+        screenWebrtcIceServers: '[]',
+        screenWebrtcPortMin: 13000,
+        screenWebrtcPortMax: 13100
+    }, {H264Capture: FakeCapture})
+
+    const first = transport.allocateIcePortRange()
+    const second = transport.allocateIcePortRange()
+
+    assert.notEqual(first[0], second[0])
+    for (const [start, end] of [first, second]) {
+        assert.ok(start >= 13000 && start < 13100)
+        assert.equal(end, 13100)
+    }
+})
+
+test('keeps the full ICE port range when it is too small to rotate', () => {
+    const transport = new AndroidWebRtcTransport({
+        serial: 'android-test',
+        screenWebrtc: true,
+        screenWebrtcIceServers: '[]',
+        screenWebrtcPortMin: 15000,
+        screenWebrtcPortMax: 15010
+    }, {H264Capture: FakeCapture})
+
+    assert.deepEqual(transport.allocateIcePortRange(), [15000, 15010])
+    assert.deepEqual(transport.allocateIcePortRange(), [15000, 15010])
+})
+
+test('streams codec config and H.264 frames over the authenticated WebSocket', async () => {
+    const sent = []
+    const ws = {
+        readyState: 1,
+        bufferedAmount: 0,
+        send(value, options, callback) {
+            sent.push({value, options})
+            callback?.()
+        }
+    }
+    const transport = new AndroidWebRtcTransport({
+        serial: 'android-test',
+        screenWebrtc: true,
+        screenWebrtcIceServers: '[]'
+    }, {H264Capture: FakeCapture})
+
+    await transport.handleMessage('client-1', ws, 'h264_on')
+    transport.onPacket({config: true, data: Buffer.from([0, 0, 0, 1, 0x67]), pts: 0})
+    transport.onPacket({keyframe: true, data: Buffer.from([0, 0, 0, 1, 0x65]), pts: 123456})
+
+    const codec = JSON.parse(sent[0].value)
+    assert.deepEqual(codec, {type: 'codec', codec: 'h264', width: 1080, height: 2400})
+    assert.equal(sent[1].options.binary, true)
+    assert.equal(sent[1].value.readUInt8(0), 1)
+    assert.equal(sent[2].value.readUInt8(0), 2)
+    assert.equal(sent[2].value.readBigUInt64BE(1), 123456n)
+    assert.deepEqual(sent[2].value.subarray(9), Buffer.from([0, 0, 0, 1, 0x65]))
+
+    transport.removeWebSocketClient('client-1')
+    assert.ok(transport.capture)
+    await transport.close()
+})
+
 test('answers an H.264 WebRTC offer over the authenticated screen signaling channel', async () => {
     const sent = []
     const ws = {

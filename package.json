@@ -1,6 +1,6 @@
 {
   "name": "mercury-device-farm",
-  "version": "0.6.6",
+  "version": "0.7.0",
   "description": "Mercury Device Farm - Remote Device Management Platform",
   "type": "module",
   "keywords": [
@@ -22,7 +22,7 @@
     "doc": "cli-docs-generator --cli=mercury --pretty_cli_name=mercury -o ./units.md",
     "lint": "eslint ./lib",
     "typecheck": "tsc -p tsconfig.typecheck.json",
-    "test:h264-webrtc": "node --test test/scrcpy-video-stream-parser.test.js test/android-webrtc-transport.test.js",
+    "test:h264-webrtc": "node --test test/scrcpy-video-stream-parser.test.js test/android-webrtc-transport.test.js test/ios-h264-capture.test.js",
     "build:swagger:ui": "cd ./ui && npm run generate-api",
     "build:swagger:routes": "cd ./lib/units/api && python3 ./gen_routes.py",
     "build:swagger": "npm run build:swagger:routes && npm run build:swagger:ui",
