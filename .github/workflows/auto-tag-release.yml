@@ -2,6 +2,9 @@ name: Release Mercury
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 concurrency:
   group: mercury-release
@@ -10,9 +13,11 @@ concurrency:
 permissions:
   contents: write
   packages: write
+  actions: write
 
 jobs:
   release:
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && startsWith(github.event.head_commit.message, 'chore(release):'))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
