@@ -117,10 +117,10 @@ jobs:
           branch="${{ steps.pr.outputs.branch }}"
 
           # Poll until the PR is merged (auto-merge fires after CI passes).
-          # Timeout after ~10 minutes.
-          for i in $(seq 1 40); do
+          # Timeout after ~30 minutes.
+          for i in $(seq 1 120); do
             state=$(gh pr view "$branch" --json state --jq '.state' 2>/dev/null || echo "UNKNOWN")
-            echo "[$i/40] PR state: $state"
+            echo "[$i/120] PR state: $state"
             if [[ "$state" == "MERGED" ]]; then
               echo "PR merged — dispatching release workflow."
               # workflow_dispatch is exempt from the GITHUB_TOKEN push-event
