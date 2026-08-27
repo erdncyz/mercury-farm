@@ -50,12 +50,12 @@ trap 'exit 130' HUP INT TERM
 wait_for_launchagent() {
   stable_checks=0
 
-  for _ in 1 2 3 4 5 6 7 8 9 10; do
+  for _ in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20; do
     launch_state="$(launchctl print "gui/${USER_UID}/${LABEL}" 2>/dev/null || true)"
 
     if grep -q 'state = running' <<< "$launch_state"; then
       stable_checks=$((stable_checks + 1))
-      if [ "$stable_checks" -ge 3 ]; then
+      if [ "$stable_checks" -ge 10 ]; then
         return 0
       fi
     else
@@ -81,35 +81,38 @@ rsync -a --delete \
   --no-owner \
   --no-group \
   --exclude ".git" \
+  --exclude "WebDriverAgent" \
   --exclude "node_modules" \
   --exclude "ios-provider.log" \
   --exclude "ios-provider.launchd.out.log" \
   --exclude "ios-provider.launchd.err.log" \
   "$PROJECT_DIR/" "$STAGING_DIR/"
 
-# Never deploy a runtime without WebDriverAgent sources: release bundles
-# v0.4.1-v0.4.2 shipped an empty WebDriverAgent folder, and mirroring it
-# would delete a manually restored (and signed) copy in the runtime.
+# Copy WDA separately with source timestamps intact. Re-stamping every source
+# file makes Xcode invalidate DerivedData and fully rebuild WDA on each deploy.
 WDA_PBXPROJ="WebDriverAgent/WebDriverAgent.xcodeproj/project.pbxproj"
-if [ ! -f "$STAGING_DIR/$WDA_PBXPROJ" ]; then
-  if [ -f "$RUNTIME_DIR/$WDA_PBXPROJ" ]; then
-    echo "WARNING: WebDriverAgent sources are missing in $PROJECT_DIR." >&2
-    echo "Preserving the existing WebDriverAgent from $RUNTIME_DIR." >&2
-    rsync -a \
-      --no-times \
-      --omit-dir-times \
-      --no-perms \
-      --no-owner \
-      --no-group \
-      --exclude ".git" \
-      "$RUNTIME_DIR/WebDriverAgent/" "$STAGING_DIR/WebDriverAgent/"
-  else
-    echo "ERROR: WebDriverAgent sources not found in $PROJECT_DIR/WebDriverAgent." >&2
-    echo "Update Mercury to restore them: ~/.mercury-farm/mercury update" >&2
-    echo "Or restore manually:" >&2
-    echo "  git clone --depth 1 --branch v16.9.0 https://github.com/appium/WebDriverAgent.git \"$PROJECT_DIR/WebDriverAgent\"" >&2
-    exit 1
-  fi
+if [ -f "$PROJECT_DIR/$WDA_PBXPROJ" ]; then
+  rsync -a --delete \
+    --no-perms \
+    --no-owner \
+    --no-group \
+    --exclude ".git" \
+    "$PROJECT_DIR/WebDriverAgent/" "$STAGING_DIR/WebDriverAgent/"
+elif [ -f "$RUNTIME_DIR/$WDA_PBXPROJ" ]; then
+  echo "WARNING: WebDriverAgent sources are missing in $PROJECT_DIR." >&2
+  echo "Preserving the existing WebDriverAgent from $RUNTIME_DIR." >&2
+  rsync -a \
+    --no-perms \
+    --no-owner \
+    --no-group \
+    --exclude ".git" \
+    "$RUNTIME_DIR/WebDriverAgent/" "$STAGING_DIR/WebDriverAgent/"
+else
+  echo "ERROR: WebDriverAgent sources not found in $PROJECT_DIR/WebDriverAgent." >&2
+  echo "Update Mercury to restore them: ~/.mercury-farm/mercury update" >&2
+  echo "Or restore manually:" >&2
+  echo "  git clone --depth 1 --branch v16.9.0 https://github.com/appium/WebDriverAgent.git \"$PROJECT_DIR/WebDriverAgent\"" >&2
+  exit 1
 fi
 
 echo "Installing iOS provider runtime dependencies..."

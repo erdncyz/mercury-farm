@@ -1,6 +1,6 @@
 # H.264/WebRTC Screen Streaming — Feature Plan
 
-**Status:** Android Phase 1 — Done (physical-device acceptance pending) | **Priority:** Conditional (test-driven) | **Target:** Q3 2026+
+**Status:** Android + iOS implementation done; single-iPhone WebRTC smoke accepted (orientation/scale acceptance pending) | **Priority:** Conditional (test-driven) | **Target:** Q3 2026+
 
 ---
 
@@ -74,7 +74,7 @@ Scrcpy already outputs H.264. Main work is transport layer:
 
 ### 4.2 iOS
 
-**Scope:** Large | **Effort:** 4–5 weeks | **Risk:** High
+**Status:** Implemented (single-iPhone WebRTC smoke accepted; orientation/scale acceptance pending) | **Scope:** Large | **Risk:** High
 
 WDA only provides MJPEG. Options:
 
@@ -121,15 +121,25 @@ WDA only provides MJPEG. Options:
 
 ---
 
-### Phase 2: iOS H.264/WebRTC (4–5 weeks)
+### Phase 2: iOS H.264/WebRTC — Code Complete
 
 **Goal:** Achieve same metrics as Android, validate at 20+ device scale.
 
-**Deliverables:**
-- H.264 re-encoding pipeline on Mac host (VideoToolbox)
-- WebRTC integration in iOS device worker (reuse Phase 1 signaling)
-- Comprehensive testing (5, 10, 20, 30 devices)
-- Performance monitoring and tuning
+**Completed deliverables:**
+- [x] Native macOS VideoToolbox MJPEG → H.264 Baseline encoder with bitrate, frame-rate, maximum-size, keyframe, and backpressure controls
+- [x] iOS device worker WebRTC integration reusing authenticated Phase 1 SDP/ICE signaling and RFC 6184 RTP packetization
+- [x] Browser support for Android and iOS with native `<video>`, inactive-stream pause, negotiation timeout, one retry, and automatic MJPEG fallback
+- [x] On-demand encoder lifecycle: capture starts for the first peer and stops after the last peer disconnects
+- [x] Mutually exclusive WebRTC/MJPEG lifecycle: the fallback broadcaster opens only after an explicit `on`, preventing duplicate WDA screenshot clients and intermittent 20-second screenshot stalls
+- [x] Swift compiler cache and host-native launcher configuration for production deployment
+- [x] Automated JPEG parsing, real VideoToolbox SPS/PPS/IDR output, RTP/signaling, UI type, and production-build verification
+- [x] Physical iPhone 15 Pro Max / iOS 26.6 smoke: signed WDA install, authenticated WebRTC, VideoToolbox H.264 RTP with SPS + IDR, touch command, MJPEG fallback, and WebRTC reconnect
+- [x] Dedicated host iOS ICE range (`13101–13200`) to avoid the Docker Android provider range (`13000–13100`); physical negotiation completed in 216–306 ms during smoke runs
+
+**Remaining acceptance checks:**
+- [ ] Verify the live orientation event on a rotation-enabled/unlocked physical-device screen (WDA rejected software rotation on the attached device)
+- [ ] Record latency, bandwidth, encoder CPU, and recovery behavior with 5, 10, and 20 devices
+- [ ] Run the 20-device target workload (5 active, 15 standby) and a one-week soak test
 
 **Success Criteria:**
 - 20 concurrent iOS devices (5 active, 15 standby)
@@ -252,7 +262,7 @@ encoder.onEncodedFrame = { h264Data in
 |---|---|---|---|---|
 | **Gate 1: MJPEG baseline** | 2 weeks | TBD | TBD | Pending |
 | **Phase 1: Android H.264/WebRTC** | 2–3 weeks | TBD+2w | TBD+5w | Conditional |
-| **Phase 2: iOS H.264/WebRTC** | 4–5 weeks | TBD+5w | TBD+10w | Conditional |
+| **Phase 2: iOS H.264/WebRTC** | 4–5 weeks | — | — | Code complete; single-iPhone WebRTC smoke passed, orientation/scale acceptance pending |
 | **Testing & tuning at scale** | 1–2 weeks | TBD+10w | TBD+12w | Conditional |
 | **Total (if all go)** | **~12 weeks** | — | — | — |
 
@@ -282,15 +292,10 @@ encoder.onEncodedFrame = { h264Data in
 
 ## 12. Approval & Next Steps
 
-**Decision Point:** Do you want to proceed with Gate 1 (2-week MJPEG baseline test)?
-
-If yes:
-1. Deploy current Mercury with 5–10 iPhones in your production setup (remote location)
-2. Collect latency, bandwidth, and stability metrics for 1–2 weeks
-3. Report findings; decide Go/No-Go on H.264 development
-
-If no:
-- Continue with MJPEG for now; revisit feature if latency becomes an issue
+**Next steps:**
+1. Complete the remaining physical-iPhone orientation-event acceptance with rotation lock disabled; WebRTC, touch, disconnect recovery, and forced MJPEG fallback have passed.
+2. Record WebRTC and MJPEG latency/bandwidth/CPU baselines on the same remote link.
+3. Expand acceptance in stages: 5 → 10 → 20 devices, then run the one-week soak test.
 
 **Contact:** [support@mercury-farm.local] for questions or to kick off Gate 1.
 
@@ -298,7 +303,7 @@ If no:
 
 # H.264/WebRTC Ekran Akışı — Özellik Planı (Türkçe)
 
-**Durum:** Planlama | **Öncelik:** Şartlı (test-güdümlü) | **Hedef:** Q3 2026+
+**Durum:** Android + iOS uygulaması tamamlandı; tek iPhone WebRTC smoke kabulü geçti (yön/ölçek kabulü bekleniyor) | **Öncelik:** Şartlı (test-güdümlü) | **Hedef:** Q3 2026+
 
 ---
 
@@ -358,7 +363,7 @@ Bu plan, **H.264/WebRTC**'ye geçişin aşamalarını açıklıyor — bant geni
 
 ### 4.1 Android
 
-**Kapsam:** Orta | **Efor:** 2–3 hafta | **Risk:** Orta
+**Durum:** Tamamlandı (fiziksel cihaz kabulü bekleniyor) | **Kapsam:** Orta | **Risk:** Orta
 
 Scrcpy zaten H.264 çıktısı verir. Ana iş transport katmanı:
 
@@ -372,7 +377,7 @@ Scrcpy zaten H.264 çıktısı verir. Ana iş transport katmanı:
 
 ### 4.2 iOS
 
-**Kapsam:** Büyük | **Efor:** 4–5 hafta | **Risk:** Yüksek
+**Durum:** Uygulandı (tek iPhone WebRTC smoke kabulü geçti; yön/ölçek kabulü bekleniyor) | **Kapsam:** Büyük | **Risk:** Yüksek
 
 WDA sadece MJPEG sağlıyor. Seçenekler:
 
@@ -416,15 +421,25 @@ WDA sadece MJPEG sağlıyor. Seçenekler:
 
 ---
 
-### Faz 2: iOS H.264/WebRTC (4–5 hafta)
+### Faz 2: iOS H.264/WebRTC — Kod Tamamlandı
 
 **Amaç:** Android ile aynı metrikleri elde et, 20+ cihaz ölçeğinde doğrula.
 
-**Teslimatlar:**
-- Mac host'ta H.264 kodlama pipeline'ı (VideoToolbox)
-- iOS device worker'da WebRTC entegrasyonu (Faz 1 signaling'ini yeniden kullan)
-- Kapsamlı test (5, 10, 20, 30 cihaz)
-- Performans izleme ve tuning
+**Tamamlanan teslimatlar:**
+- [x] Bitrate, frame-rate, maksimum boyut, keyframe ve backpressure kontrollü native macOS VideoToolbox MJPEG → H.264 Baseline encoder
+- [x] Kimliği doğrulanmış SDP/ICE signaling ve RFC 6184 RTP paketlemeyi yeniden kullanan iOS device worker WebRTC entegrasyonu
+- [x] Android ve iOS için native `<video>`, görünmezken duraklatma, negotiation timeout, tek retry ve otomatik MJPEG fallback desteği
+- [x] Talebe bağlı encoder yaşam döngüsü: ilk peer ile başlar, son peer ayrıldığında durur
+- [x] Birbirini dışlayan WebRTC/MJPEG yaşam döngüsü: fallback broadcaster yalnızca açık `on` mesajından sonra açılır; çift WDA screenshot client ve aralıklı 20 saniyelik screenshot takılmaları engellenir
+- [x] Production dağıtımı için Swift derleyici cache'i ve host-native launcher ayarları
+- [x] JPEG parse, gerçek VideoToolbox SPS/PPS/IDR çıktısı, RTP/signaling, UI type ve production build doğrulamaları
+- [x] Fiziksel iPhone 15 Pro Max / iOS 26.6 smoke: imzalı WDA kurulumu, kimlik doğrulamalı WebRTC, SPS + IDR içeren VideoToolbox H.264 RTP, dokunma komutu, MJPEG fallback ve WebRTC yeniden bağlantı
+- [x] Docker Android provider aralığıyla (`13000–13100`) çakışmayan ayrı host iOS ICE aralığı (`13101–13200`); fiziksel smoke koşularında negotiation 216–306 ms'de tamamlandı
+
+**Kalan kabul kontrolleri:**
+- [ ] Dönüş kilidi kapalı ve dönüşü destekleyen bir fiziksel cihaz ekranında canlı orientation event doğrulaması (bağlı cihazda WDA yazılımsal dönüşü reddetti)
+- [ ] 5, 10 ve 20 cihazla gecikme, bant genişliği, encoder CPU ve recovery ölçümü
+- [ ] 20 cihaz hedef yükü (5 aktif, 15 standby) ve bir haftalık soak testi
 
 **Başarı Kriterleri:**
 - 20 eş zamanlı iOS cihazı (5 aktif, 15 standby)
@@ -547,7 +562,7 @@ encoder.onEncodedFrame = { h264Data in
 |---|---|---|---|---|
 | **Kapı 1: MJPEG ana çizgisi** | 2 hafta | TBD | TBD | Bekleniyor |
 | **Faz 1: Android H.264/WebRTC** | 2–3 hafta | TBD+2h | TBD+5h | Şartlı |
-| **Faz 2: iOS H.264/WebRTC** | 4–5 hafta | TBD+5h | TBD+10h | Şartlı |
+| **Faz 2: iOS H.264/WebRTC** | 4–5 hafta | — | — | Kod tamamlandı; tek iPhone WebRTC smoke geçti, yön/ölçek kabulü bekleniyor |
 | **Test & tuning ölçekte** | 1–2 hafta | TBD+10h | TBD+12h | Şartlı |
 | **Toplam (hepsi evet ise)** | **~12 hafta** | — | — | — |
 
@@ -577,14 +592,9 @@ encoder.onEncodedFrame = { h264Data in
 
 ## 12. Onay & Sonraki Adımlar
 
-**Karar Noktası:** Kapı 1 (2 haftalık MJPEG ana çizgisi testi) ile devam etmek istiyor musunuz?
-
-Evet ise:
-1. Mevcut Mercury'yi üretim kurulumunuzda 5–10 iPhone ile dağıt (uzak konum)
-2. 1–2 hafta boyunca gecikme, bant genişliği ve kararlılık metriklerini topla
-3. Bulguları raporla; H.264 geliştirmesine Devam/Dur karar ver
-
-Hayır ise:
-- Şimdilik MJPEG'de kalın; gecikme sorun olursa özelliği yeniden değerlendir
+**Sonraki adımlar:**
+1. Dönüş kilidi kapalıyken kalan fiziksel iPhone orientation-event kabulünü tamamla; WebRTC, dokunma, bağlantı recovery ve zorunlu MJPEG fallback geçti.
+2. Aynı uzak bağlantıda WebRTC ve MJPEG gecikme/bant genişliği/CPU ana çizgilerini kaydet.
+3. Kabulü 5 → 10 → 20 cihaz olarak büyüt ve ardından bir haftalık soak testi çalıştır.
 
 **İletişim:** [support@mercury-farm.local] sorular için veya Kapı 1'i başlatmak için.
