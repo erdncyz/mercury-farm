@@ -12,6 +12,7 @@ const timeoutMs = Number(process.env.IOS_WEBRTC_TEST_TIMEOUT_MS || 30000)
 const minDurationMs = Number(process.env.IOS_WEBRTC_TEST_MIN_DURATION_MS || 0)
 const verbose = process.env.IOS_WEBRTC_TEST_VERBOSE === '1'
 const token = jwtutil.encode({payload: {email, name}, secret})
+const launchedAt = Date.now()
 
 const ws = new WebSocket(screenUrl, `access_token.${token}`, {
     rejectUnauthorized: false
@@ -23,6 +24,8 @@ const pc = new RTCPeerConnection({
 
 let answerApplied = false
 let startedAt = 0
+let authenticatedAt = 0
+let firstPacketAt = 0
 let packetCount = 0
 let byteCount = 0
 let sawSps = false
@@ -64,6 +67,9 @@ const finish = async(error) => {
         bytes: byteCount,
         sawSps,
         sawIdr,
+        authenticationMs: authenticatedAt ? authenticatedAt - launchedAt : null,
+        firstPacketMs: firstPacketAt ? firstPacketAt - launchedAt : null,
+        negotiationToFirstPacketMs: firstPacketAt && startedAt ? firstPacketAt - startedAt : null,
         durationMs: Date.now() - startedAt
     }, null, 2))
 }
@@ -95,6 +101,7 @@ pc.onTrack.subscribe(track => {
         }
 
         packetCount += 1
+        firstPacketAt ||= Date.now()
         byteCount += payload.length
         const nalType = payload[0] & 0x1f
         sawSps ||= nalType === 7
@@ -122,6 +129,7 @@ ws.on('message', async(data, isBinary) => {
     }
 
     if (message.type === 'auth_success') {
+        authenticatedAt = Date.now()
         if (!message.webrtc) {
             await finish(new Error('Server authenticated the client but did not advertise WebRTC'))
             return
