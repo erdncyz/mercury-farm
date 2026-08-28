@@ -26,27 +26,40 @@ read_mode() {
 
 get_lan_ip() {
   local ip=""
-  local iface
+  local iface=""
 
-  for iface in en0 en1 en2; do
-    ip="$(ipconfig getifaddr "$iface" 2>/dev/null || true)"
-    if [[ -n "$ip" ]]; then
-      echo "$ip"
-      return 0
-    fi
-  done
+  is_usable_ipv4() {
+    case "$1" in
+      ""|0.*|127.*|169.254.*)
+        return 1
+        ;;
+      *)
+        return 0
+        ;;
+    esac
+  }
 
+  # Prefer the interface that actually owns the default route. Interface names
+  # are not stable across Macs, and en0 can be an unplugged/link-local adapter.
   iface="$(route -n get default 2>/dev/null | awk '/interface:/{print $2; exit}')"
   if [[ -n "$iface" ]]; then
     ip="$(ipconfig getifaddr "$iface" 2>/dev/null || true)"
-    if [[ -n "$ip" ]]; then
+    if is_usable_ipv4 "$ip"; then
       echo "$ip"
       return 0
     fi
   fi
 
-  ip="$(ifconfig | awk '/inet / && $2!="127.0.0.1" {print $2; exit}')"
-  if [[ -n "$ip" ]]; then
+  for iface in en0 en1 en2 en3 en4 en5; do
+    ip="$(ipconfig getifaddr "$iface" 2>/dev/null || true)"
+    if is_usable_ipv4 "$ip"; then
+      echo "$ip"
+      return 0
+    fi
+  done
+
+  ip="$(ifconfig | awk '/inet / && $2 !~ /^127\./ && $2 !~ /^169\.254\./ && $2 !~ /^0\./ {print $2; exit}')"
+  if is_usable_ipv4 "$ip"; then
     echo "$ip"
     return 0
   fi

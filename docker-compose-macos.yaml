@@ -268,6 +268,11 @@ services:
         container_name: mercury-provider
         env_file:
             - scripts/variables.env
+        environment:
+            # Device workers occasionally invoke the adb CLI while recovering
+            # the STF agent. Keep those calls on the host USB ADB server rather
+            # than starting an empty server inside the container.
+            ADB_SERVER_SOCKET: tcp:host.docker.internal:5037
         ports:
             - "12010-12100:12010-12100"
             - "13000-13100:13000-13100/udp"

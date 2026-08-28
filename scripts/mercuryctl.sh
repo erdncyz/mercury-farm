@@ -205,6 +205,30 @@ compose() {
   docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" "$@"
 }
 
+prepare_host_adb() {
+  [[ "$(uname -s)" == "Darwin" ]] || return 0
+
+  if [[ "$(read_env MERCURY_ADB_DOCKER_ACCESS)" != "true" ]]; then
+    return 0
+  fi
+
+  if ! command -v adb >/dev/null 2>&1; then
+    echo "Warning: adb is not installed; Android USB devices will be unavailable." >&2
+    return 0
+  fi
+
+  # Docker Desktop reaches the macOS host over host.docker.internal, so an ADB
+  # server bound only to 127.0.0.1 is not sufficient. Avoid disrupting healthy
+  # workers when the server is already listening on all host interfaces.
+  if lsof -nP -iTCP:5037 -sTCP:LISTEN 2>/dev/null | grep -Eq 'TCP (\*|0\.0\.0\.0|\[::\]):5037'; then
+    return 0
+  fi
+
+  echo "Starting the host ADB server for Docker access on TCP port 5037..."
+  adb kill-server >/dev/null 2>&1 || true
+  adb -a start-server
+}
+
 read_env() {
   local key="$1"
   awk -F= -v key="$key" '$1 == key { print substr($0, index($0, "=") + 1); exit }' "$ENV_FILE"
@@ -306,6 +330,7 @@ wait_for_stack() {
 command_up() {
   require_docker
   /bin/bash "$PROJECT_DIR/scripts/auto-configure-network.sh"
+  prepare_host_adb
   compose pull
   compose up -d --no-build --remove-orphans
   compose restart nginx
