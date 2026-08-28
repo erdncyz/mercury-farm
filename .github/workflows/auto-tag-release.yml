@@ -136,6 +136,17 @@ jobs:
             echo "release_exists=$release_exists"
           } >> "$GITHUB_OUTPUT"
 
+      - name: Set up Node.js for release validation
+        if: steps.version.outputs.should_release == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.18.0
+          cache: npm
+
+      - name: Install dependencies for release validation
+        if: steps.version.outputs.should_release == 'true'
+        run: npm_config_python=/usr/bin/python3 npm ci
+
       - name: Validate release inputs
         if: steps.version.outputs.should_release == 'true'
         shell: bash
