@@ -60,15 +60,14 @@ test('rotates the ICE port window between sessions to dodge stale UDP NAT flows'
         screenWebrtcPortMin: 13000,
         screenWebrtcPortMax: 13100
     }, {H264Capture: FakeCapture})
+    transport.portRotation = 0
 
     const first = transport.allocateIcePortRange()
     const second = transport.allocateIcePortRange()
 
-    assert.notEqual(first[0], second[0])
-    for (const [start, end] of [first, second]) {
-        assert.ok(start >= 13000 && start < 13100)
-        assert.equal(end, 13100)
-    }
+    assert.deepEqual(first, [13000, 13015])
+    assert.deepEqual(second, [13016, 13031])
+    assert.ok(first[1] < second[0])
 })
 
 test('keeps the full ICE port range when it is too small to rotate', () => {
