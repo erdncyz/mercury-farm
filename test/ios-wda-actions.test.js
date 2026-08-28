@@ -1,6 +1,65 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import {getDirectionalSwipe, isPointerAction} from '../lib/units/ios-device/plugins/wda/client.js'
+import {
+    createWdaSessionWithRecovery,
+    getDirectionalSwipe,
+    isPointerAction
+} from '../lib/units/ios-device/plugins/wda/client.js'
+
+test('restarts WDA once when session bootstrap times out', async() => {
+    let createCalls = 0
+    let restartCalls = 0
+    const result = await createWdaSessionWithRecovery({
+        createSession: async() => {
+            createCalls += 1
+            if (createCalls === 1) {
+                throw new Error('ESOCKETTIMEDOUT')
+            }
+            return {sessionId: 'recovered-session'}
+        },
+        restartWda: async() => {
+            restartCalls += 1
+        }
+    })
+
+    assert.equal(result.sessionId, 'recovered-session')
+    assert.equal(createCalls, 2)
+    assert.equal(restartCalls, 1)
+})
+
+test('recovers a missing session id and accepts nested WDA responses', async() => {
+    let createCalls = 0
+    let restartCalls = 0
+    const result = await createWdaSessionWithRecovery({
+        createSession: async() => {
+            createCalls += 1
+            return createCalls === 1 ? {value: {}} : {value: {sessionId: 'nested-session'}}
+        },
+        restartWda: async() => {
+            restartCalls += 1
+        }
+    })
+
+    assert.equal(result.sessionId, 'nested-session')
+    assert.equal(restartCalls, 1)
+})
+
+test('does not loop indefinitely when WDA session recovery fails', async() => {
+    let createCalls = 0
+    let restartCalls = 0
+    await assert.rejects(() => createWdaSessionWithRecovery({
+        createSession: async() => {
+            createCalls += 1
+            throw new Error(`failure-${createCalls}`)
+        },
+        restartWda: async() => {
+            restartCalls += 1
+        }
+    }), /failure-2/)
+
+    assert.equal(createCalls, 2)
+    assert.equal(restartCalls, 1)
+})
 
 test('uses directional swipes for large axis-aligned scroll gestures', () => {
     assert.equal(getDirectionalSwipe({fromX: 200, fromY: 700, toX: 205, toY: 250}), 'up')
