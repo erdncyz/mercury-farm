@@ -137,6 +137,8 @@ services:
         depends_on:
             mercury-migrate:
                 condition: service_completed_successfully
+            mercury-processor:
+                condition: service_started
         restart: unless-stopped
         networks:
             mercury:

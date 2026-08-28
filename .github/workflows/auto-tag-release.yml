@@ -150,7 +150,9 @@ jobs:
             scripts/install-ios-provider-launchagent.sh
           sh -n scripts/generate-ssl.sh
 
-          node --test test/network-auto-config.test.js
+          node --test \
+            test/network-auto-config.test.js \
+            test/reaper-initial-state.test.js
 
           node -e "
             const packageVersion = require('./package.json').version
