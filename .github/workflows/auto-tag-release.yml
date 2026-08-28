@@ -150,6 +150,8 @@ jobs:
             scripts/install-ios-provider-launchagent.sh
           sh -n scripts/generate-ssl.sh
 
+          node --test test/network-auto-config.test.js
+
           node -e "
             const packageVersion = require('./package.json').version
             const lockVersion = require('./package-lock.json').version
@@ -257,6 +259,8 @@ jobs:
           image="ghcr.io/${GITHUB_REPOSITORY}:${{ steps.version.outputs.tag }}"
           docker run --rm --platform linux/amd64 --entrypoint node \
             "$image" scripts/smoke-test.mjs
+          docker run --rm --platform linux/amd64 --entrypoint adb \
+            "$image" version
 
       - name: Finalize macOS release bundle
         if: steps.version.outputs.should_release == 'true'

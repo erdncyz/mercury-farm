@@ -43,6 +43,7 @@ EXPOSE 3000
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
+    adb \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
