@@ -38,6 +38,10 @@ fi
 export MERCURY_SECRET="${MERCURY_SECRET:-nosecret}"
 export MERCURY_DOMAIN="${MERCURY_DOMAIN:-localhost}"
 export MERCURY_PORT="${MERCURY_PORT:-443}"
+# WebRTC ICE candidates must advertise an address reachable by the browser.
+# Default to the same auto-configured host used by Mercury's public URLs while
+# still allowing NAT deployments to override it with a dedicated address.
+export SCREEN_WEBRTC_PUBLIC_IP="${SCREEN_WEBRTC_PUBLIC_IP:-$MERCURY_DOMAIN}"
 export IOS_DISABLE_ESP32="${IOS_DISABLE_ESP32:-1}"
 export IOS_TOUCH_ACTION_TIMEOUT_MS="${IOS_TOUCH_ACTION_TIMEOUT_MS:-20000}"
 export IOS_WDA_REQUEST_TIMEOUT_MS="${IOS_WDA_REQUEST_TIMEOUT_MS:-12000}"
@@ -130,6 +134,7 @@ echo "  WDA MJPEG quality: ${IOS_WDA_MJPEG_QUALITY}"
 echo "  WDA MJPEG scaling: ${IOS_WDA_MJPEG_SCALING}%"
 echo "  WDA signing team: ${IOS_WDA_DEVELOPMENT_TEAM:-auto/not configured}"
 echo "  H.264/WebRTC: ${SCREEN_WEBRTC_ENABLED:-true} (${SCREEN_WEBRTC_BITRATE:-1500000} bps, max ${SCREEN_WEBRTC_MAX_SIZE:-1280}px)"
+echo "  WebRTC advertised IP: ${SCREEN_WEBRTC_PUBLIC_IP}"
 echo "  WDA lean mode: ${IOS_WDA_LEAN_MODE}"
 echo "  WDA tree cache: ${IOS_WDA_TREE_CACHE_MS}ms"
 echo "  WDA waitForIdleTimeout: ${IOS_WDA_WAIT_FOR_IDLE_TIMEOUT}s"
@@ -161,7 +166,7 @@ ios_provider_args=(
   --screen-webrtc-bitrate "${SCREEN_WEBRTC_BITRATE:-1500000}"
   --screen-webrtc-max-size "${SCREEN_WEBRTC_MAX_SIZE:-1280}"
   --screen-webrtc-ice-servers "${SCREEN_WEBRTC_ICE_SERVERS:-[]}"
-  --screen-webrtc-public-ip "${SCREEN_WEBRTC_PUBLIC_IP:-}"
+  --screen-webrtc-public-ip "${SCREEN_WEBRTC_PUBLIC_IP}"
   --screen-webrtc-port-min "${IOS_SCREEN_WEBRTC_PORT_MIN:-13101}"
   --screen-webrtc-port-max "${IOS_SCREEN_WEBRTC_PORT_MAX:-13200}"
   --screen-webrtc-timeout "${SCREEN_WEBRTC_TIMEOUT:-8000}"
