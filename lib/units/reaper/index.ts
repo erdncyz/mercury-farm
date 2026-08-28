@@ -26,6 +26,26 @@ interface Options {
     }
 }
 
+export const retryOnTransactionTimeout = async<T>(
+    operation: () => Promise<T>,
+    onRetry: () => void,
+    retryDelay = 2000
+): Promise<T> => {
+    for (;;) {
+        try {
+            return await operation()
+        }
+        catch (err: any) {
+            if (err?.message !== 'Timeout when running transaction') {
+                throw err
+            }
+
+            onRetry()
+            await new Promise(resolve => setTimeout(resolve, retryDelay))
+        }
+    }
+}
+
 export default (async(options: Options) => {
     const ttlset = new TTLSet(options.heartbeatTimeout)
 
@@ -144,15 +164,20 @@ export default (async(options: Options) => {
         deviceCleanerLoop()
     }
 
+    // Register the shared router exactly once. Re-registering it after an
+    // initial-state timeout makes every subsequent wire message run through
+    // duplicate handlers and can leave stale devices marked as present.
+    sub.on('message', router.handler())
+
     const init = async() => {
         try {
             log.info('Reaping devices with no heartbeat')
 
-            // Listen to changes
-            sub.on('message', router.handler())
-
             // Load initial state
-            const {devices} = await runTransactionDev(wireutil.global, GetPresentDevices, {}, {sub, push, router})
+            const {devices} = await retryOnTransactionTimeout(
+                () => runTransactionDev(wireutil.global, GetPresentDevices, {}, {sub, push, router}),
+                () => log.error('Load initial state error: Timeout when running transaction, retry')
+            )
 
             const now = Date.now()
             devices?.forEach((serial: string) => {
@@ -160,15 +185,10 @@ export default (async(options: Options) => {
             })
         }
         catch (err: any) {
-            if (err?.message === 'Timeout when running transaction') {
-                log.error('Load initial state error: Timeout when running transaction, retry')
-                setTimeout(init, 2000)
-                return
-            }
             log.fatal('Unable to load initial state: %s', err?.message)
             lifecycle.fatal()
         }
     }
 
-    init()
+    void init()
 })
