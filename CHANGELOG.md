@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+## [0.8.0] — 2026-08-30
+
+### Added / Eklendi
+
+**Device display names / Cihaz görünen adları** — Device card titles can now be assigned a persistent custom name from the UI and reset to the automatically detected model name. The alias is also used in device tables, settings, shell selection, and the active device header.
+
+**Cihaz görünen adları** — Cihaz kartı başlıklarına artık UI üzerinden kalıcı özel ad verilebilir ve ad otomatik algılanan model adına sıfırlanabilir. Alias; cihaz tablolarında, ayarlarda, shell seçiminde ve aktif cihaz başlığında da kullanılır.
+
+**Android media upload / Android medya yükleme** — The device Upload panel can now send supported photos and videos to `Pictures/Mercury` or `Movies/Mercury` and refresh the Android gallery. The media option is not shown for iOS devices.
+
+**Android medya yükleme** — Cihazdaki Yükle paneli artık desteklenen fotoğraf ve videoları `Pictures/Mercury` veya `Movies/Mercury` klasörüne gönderebilir ve Android galerisini yeniler. Medya seçeneği iOS cihazlarda gösterilmez.
+
+**Cross-platform clipboard / Platformlar arası pano** — The Clipboard panel can now send multiline Unicode text to both Android and iOS device clipboards, read the current value, and report transfer errors. iOS writes use WebDriverAgent `setPasteboard`.
+
+**Platformlar arası pano** — Pano paneli artık çok satırlı Unicode metni Android ve iOS cihaz panosuna gönderebilir, mevcut değeri okuyabilir ve aktarım hatalarını gösterebilir. iOS yazma işlemi WebDriverAgent `setPasteboard` kullanır.
+
+### Changed / Değiştirildi
+
+**Low-latency iOS screen streaming / Düşük gecikmeli iOS ekran akışı** — iOS now opens directly over authenticated H.264 WebSocket when WebCodecs is available, retains WebRTC as a compatibility path, bounds VideoToolbox and browser render queues, reuses pixel buffers, and drops stale frames under backpressure instead of accumulating control latency.
+
+**Düşük gecikmeli iOS ekran akışı** — iOS, WebCodecs kullanılabildiğinde doğrudan kimlik doğrulamalı H.264 WebSocket ile açılır; WebRTC uyumluluk yolu olarak korunur. VideoToolbox ve tarayıcı render kuyrukları sınırlandırılır, pixel buffer'lar yeniden kullanılır ve ağ baskısında kontrol gecikmesi biriktirmek yerine eski kareler atılır.
+
+**WebDriverAgent 16.11.4** — Updated the bundled iOS control service to WebDriverAgent 16.11.4.
+
+**WebDriverAgent 16.11.4** — Paketlenen iOS kontrol servisi WebDriverAgent 16.11.4 sürümüne güncellendi.
+
+### Fixed / Düzeltildi
+
+**Current iPhone model names / Güncel iPhone model adları** — Added mappings for the iPhone 17 family (`iPhone18,1`–`iPhone18,5`), corrected duplicate iPhone 16 Plus identifiers, and made unknown future identifiers fall back to the device-reported name instead of exposing the raw product code.
+
+**Güncel iPhone model adları** — iPhone 17 ailesi (`iPhone18,1`–`iPhone18,5`) eşlemeleri eklendi, yinelenen iPhone 16 Plus kimlikleri düzeltildi ve gelecekteki bilinmeyen kimliklerin ham ürün kodu yerine cihazın bildirdiği ada düşmesi sağlandı.
+
+**Automatic network configuration / Otomatik ağ yapılandırması** — Fresh installations default to automatic LAN address detection instead of shipping a machine-specific address. Manual domains remain supported with `MERCURY_DOMAIN_MODE=manual`.
+
+**Otomatik ağ yapılandırması** — Yeni kurulumlar makineye özel sabit adres yerine otomatik LAN adresi algılamayı kullanır. Manuel domain kullanımı `MERCURY_DOMAIN_MODE=manual` ile desteklenmeye devam eder.
+
+---
+
 ## [0.7.0] — 2026-08-27
 
 ### Added / Eklendi
@@ -20,20 +60,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 **iOS interaction latency / iOS etkileşim gecikmesi** — Preserved live capture during pointer gestures, shortened swipe replay, routed large axis-aligned scrolls through WDA's faster directional endpoint, and initialized WDA before H.264 authentication so the first input is not dropped.
 
 **iOS etkileşim gecikmesi** — Pointer hareketlerinde canlı görüntü korunuyor, swipe yeniden oynatma süresi kısaltılıyor, büyük eksenli scroll'lar hızlı WDA endpoint'ine yönlendiriliyor ve ilk input'un kaybolmaması için H.264 kimlik doğrulamasından önce WDA başlatılıyor.
-
----
-
-## [Unreleased]
-
-### Added / Eklendi
-
-**Android media upload / Android medya yükleme** — The device Upload panel can now send supported photos and videos to `Pictures/Mercury` or `Movies/Mercury` and refresh the Android gallery. The media option is not shown for iOS devices.
-
-**Android medya yükleme** — Cihazdaki Yükle paneli artık desteklenen fotoğraf ve videoları `Pictures/Mercury` veya `Movies/Mercury` klasörüne gönderebilir ve Android galerisini yeniler. Medya seçeneği iOS cihazlarda gösterilmez.
-
-**Cross-platform clipboard / Platformlar arası pano** — The Clipboard panel can now send multiline Unicode text to both Android and iOS device clipboards, read the current value, and report transfer errors. iOS writes use WebDriverAgent `setPasteboard`.
-
-**Platformlar arası pano** — Pano paneli artık çok satırlı Unicode metni Android ve iOS cihaz panosuna gönderebilir, mevcut değeri okuyabilir ve aktarım hatalarını gösterebilir. iOS yazma işlemi WebDriverAgent `setPasteboard` kullanır.
 
 ## [0.4.4] — 2026-07-28
 

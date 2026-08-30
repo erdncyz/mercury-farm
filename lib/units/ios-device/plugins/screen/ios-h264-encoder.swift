@@ -35,6 +35,7 @@ final class Encoder {
     private let frameRate: Int
     private let maxSize: Int
     private var session: VTCompressionSession?
+    private var pixelBufferPool: CVPixelBufferPool?
     private var width = 0
     private var height = 0
     private var frameIndex: Int64 = 0
@@ -54,6 +55,7 @@ final class Encoder {
         VTCompressionSessionCompleteFrames(session, untilPresentationTimeStamp: .invalid)
         VTCompressionSessionInvalidate(session)
         self.session = nil
+        self.pixelBufferPool = nil
     }
 
     func encode(jpeg: Data) {
@@ -110,6 +112,14 @@ final class Encoder {
                 Unmanaged<Encoder>.fromOpaque(refcon).takeUnretainedValue().write(sampleBuffer)
             }
         let refcon = Unmanaged.passUnretained(self).toOpaque()
+        let pixelBufferAttributes: CFDictionary = [
+            kCVPixelBufferPixelFormatTypeKey: kCVPixelFormatType_32BGRA,
+            kCVPixelBufferWidthKey: width,
+            kCVPixelBufferHeightKey: height,
+            kCVPixelBufferCGImageCompatibilityKey: true,
+            kCVPixelBufferCGBitmapContextCompatibilityKey: true,
+            kCVPixelBufferIOSurfacePropertiesKey: [:]
+        ] as CFDictionary
         func makeSession(specification: CFDictionary) -> (OSStatus, VTCompressionSession?) {
             var candidate: VTCompressionSession?
             let status = VTCompressionSessionCreate(
@@ -118,7 +128,7 @@ final class Encoder {
                 height: Int32(height),
                 codecType: kCMVideoCodecType_H264,
                 encoderSpecification: specification,
-                imageBufferAttributes: nil,
+                imageBufferAttributes: pixelBufferAttributes,
                 compressedDataAllocator: nil,
                 outputCallback: outputCallback,
                 refcon: refcon,
@@ -148,6 +158,10 @@ final class Encoder {
         session = created
         VTSessionSetProperty(created, key: kVTCompressionPropertyKey_RealTime, value: kCFBooleanTrue)
         VTSessionSetProperty(created, key: kVTCompressionPropertyKey_AllowFrameReordering, value: kCFBooleanFalse)
+        // Bound VideoToolbox's internal queue. Screen control values freshness
+        // over throughput; an unbounded encoder queue makes interaction appear
+        // progressively slower even when the source frame rate is healthy.
+        VTSessionSetProperty(created, key: kVTCompressionPropertyKey_MaxFrameDelayCount, value: 1 as CFNumber)
         VTSessionSetProperty(created, key: kVTCompressionPropertyKey_ProfileLevel, value: kVTProfileLevel_H264_Baseline_AutoLevel)
         VTSessionSetProperty(created, key: kVTCompressionPropertyKey_AverageBitRate, value: bitrate as CFNumber)
         VTSessionSetProperty(created, key: kVTCompressionPropertyKey_ExpectedFrameRate, value: frameRate as CFNumber)
@@ -164,24 +178,46 @@ final class Encoder {
             finish()
             return false
         }
+        pixelBufferPool = VTCompressionSessionGetPixelBufferPool(created)
         return true
     }
 
     private func makePixelBuffer(image: CGImage, width: Int, height: Int) -> CVPixelBuffer? {
         var pixelBuffer: CVPixelBuffer?
-        let attributes: CFDictionary = [
-            kCVPixelBufferCGImageCompatibilityKey: true,
-            kCVPixelBufferCGBitmapContextCompatibilityKey: true,
-            kCVPixelBufferIOSurfacePropertiesKey: [:]
-        ] as CFDictionary
-        guard CVPixelBufferCreate(
-            kCFAllocatorDefault,
-            width,
-            height,
-            kCVPixelFormatType_32BGRA,
-            attributes,
-            &pixelBuffer
-        ) == kCVReturnSuccess, let pixelBuffer else {
+
+        if let pixelBufferPool {
+            let status = CVPixelBufferPoolCreatePixelBuffer(
+                kCFAllocatorDefault,
+                pixelBufferPool,
+                &pixelBuffer
+            )
+            if status != kCVReturnSuccess {
+                pixelBuffer = nil
+            }
+        }
+
+        // Older VideoToolbox implementations may not expose a pool for every
+        // encoder configuration. Preserve the previous allocation path as a
+        // compatibility fallback instead of failing screen capture.
+        if pixelBuffer == nil {
+            let attributes: CFDictionary = [
+                kCVPixelBufferCGImageCompatibilityKey: true,
+                kCVPixelBufferCGBitmapContextCompatibilityKey: true,
+                kCVPixelBufferIOSurfacePropertiesKey: [:]
+            ] as CFDictionary
+            guard CVPixelBufferCreate(
+                kCFAllocatorDefault,
+                width,
+                height,
+                kCVPixelFormatType_32BGRA,
+                attributes,
+                &pixelBuffer
+            ) == kCVReturnSuccess else {
+                return nil
+            }
+        }
+
+        guard let pixelBuffer else {
             return nil
         }
 

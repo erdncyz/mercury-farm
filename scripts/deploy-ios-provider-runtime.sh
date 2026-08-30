@@ -111,7 +111,7 @@ else
   echo "ERROR: WebDriverAgent sources not found in $PROJECT_DIR/WebDriverAgent." >&2
   echo "Update Mercury to restore them: ~/.mercury-farm/mercury update" >&2
   echo "Or restore manually:" >&2
-  echo "  git clone --depth 1 --branch v16.9.0 https://github.com/appium/WebDriverAgent.git \"$PROJECT_DIR/WebDriverAgent\"" >&2
+  echo "  git clone --depth 1 --branch v16.11.4 https://github.com/appium/WebDriverAgent.git \"$PROJECT_DIR/WebDriverAgent\"" >&2
   exit 1
 fi
 

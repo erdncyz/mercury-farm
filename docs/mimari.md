@@ -137,7 +137,7 @@ Mercury Device Farm, gerçek Android ve iOS cihazları tarayıcı üzerinden uza
 | **Kimlik Doğrulama** | Passport.js | 0.6.0 | Çoklu auth stratejileri |
 | **JWT** | jws | 3.2.2 | Token tabanlı yetkilendirme |
 | **Cihaz İletişimi** | @u4/adbkit | 5.1.7 | Android ADB protokolü |
-| **iOS Otomasyon** | WebDriverAgent (Appium) | 11.4.0 | iOS cihaz kontrolü |
+| **iOS Otomasyon** | WebDriverAgent (Appium) | 16.11.4 | iOS cihaz kontrolü |
 | **Tizen** | appium-sdb | 1.0.1-beta | Samsung Tizen desteği |
 | **USB (iOS)** | @irdk/usbmux | 0.2.2 | iOS USB multiplexing |
 | **Ekran Yakalama** | minicap-prebuilt | 1.1.2 | Android ekran yakalama |

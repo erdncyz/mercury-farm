@@ -2542,7 +2542,7 @@ paths:
             type: string
       requestBody:
         description: |
-          Information to add for device. Supports only notes-field and status change(Disconnected).
+          Information to add for device. Supports display name, notes and status change (Disconnected).
         content:
           application/json:
             schema:
@@ -4574,6 +4574,9 @@ components:
           format: date-time
         notes:
           type: string
+        displayName:
+          type: string
+          description: User-defined device display name
         place:
           type: string
         storageId:
@@ -5236,6 +5239,10 @@ components:
     DevicePayload:
       type: object
       properties:
+        displayName:
+          type: string
+          maxLength: 100
+          description: User-defined device display name. Send an empty string to restore the automatic model name.
         note:
           type: string
           description: Device Note

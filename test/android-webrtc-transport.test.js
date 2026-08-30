@@ -116,6 +116,40 @@ test('streams codec config and H.264 frames over the authenticated WebSocket', a
     await transport.close()
 })
 
+test('drops stale WebSocket deltas until the next keyframe after backpressure', async () => {
+    const sent = []
+    const ws = {
+        readyState: 1,
+        bufferedAmount: 0,
+        send(value, options, callback) {
+            sent.push({value, options})
+            callback?.()
+        }
+    }
+    const transport = new AndroidWebRtcTransport({
+        serial: 'ios-latency-test',
+        screenWebrtc: true,
+        screenWebrtcIceServers: '[]'
+    }, {H264Capture: FakeCapture})
+
+    await transport.handleMessage('client-1', ws, 'h264_on')
+    const messagesBeforeFrames = sent.length
+    ws.bufferedAmount = 600 * 1024
+    transport.onPacket({keyframe: false, data: Buffer.from([0, 0, 0, 1, 0x41, 1]), pts: 1})
+    ws.bufferedAmount = 0
+    transport.onPacket({keyframe: false, data: Buffer.from([0, 0, 0, 1, 0x41, 2]), pts: 2})
+    transport.onPacket({keyframe: true, data: Buffer.from([0, 0, 0, 1, 0x65, 3]), pts: 3})
+    transport.onPacket({keyframe: false, data: Buffer.from([0, 0, 0, 1, 0x41, 4]), pts: 4})
+
+    const frameMessages = sent.slice(messagesBeforeFrames)
+    assert.equal(frameMessages.length, 2)
+    assert.equal(frameMessages[0].value.readUInt8(0), 2)
+    assert.deepEqual(frameMessages[0].value.subarray(9), Buffer.from([0, 0, 0, 1, 0x65, 3]))
+    assert.deepEqual(frameMessages[1].value.subarray(9), Buffer.from([0, 0, 0, 1, 0x41, 4]))
+
+    await transport.close()
+})
+
 test('answers an H.264 WebRTC offer over the authenticated screen signaling channel', async () => {
     const sent = []
     const ws = {
