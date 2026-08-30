@@ -1,16 +1,23 @@
 # Android H.264/WebRTC Screen Streaming
 
-Android screen sessions now prefer scrcpy H.264 over the authenticated screen
-WebSocket. This avoids UDP/ICE negotiation delays and Docker Desktop UDP flow
-instability while retaining low-overhead browser decoding through WebCodecs.
-Browsers without WebCodecs use WebRTC, with MJPEG as the final compatibility
-fallback. iOS, Tizen, and VNC streaming are unchanged.
+Android screen sessions use scrcpy H.264 over the authenticated screen
+WebSocket. iOS sessions use WDA MJPEG as their capture source, re-encode the
+freshest available frame with VideoToolbox, and prefer the same authenticated
+H.264 WebSocket transport in browsers with WebCodecs. This avoids UDP/ICE
+negotiation delays while retaining low-overhead browser decoding. Browsers
+without WebCodecs use WebRTC, with MJPEG as the final compatibility fallback.
+Tizen and VNC streaming are unchanged.
+
+The iOS encoder keeps at most one pending JPEG and reuses VideoToolbox pixel
+buffers. When encoding or rendering falls behind, stale frames are discarded
+in favor of the newest frame so control latency does not grow over time.
 
 ## Network configuration
 
 The primary H.264 WebSocket transport uses the existing device screen WebSocket
-and needs no additional UDP ports. The Android provider also exposes UDP ports
-`13000-13100` for the WebRTC compatibility path. By default WebRTC advertises the provider's
+and needs no additional UDP ports. Android exposes UDP ports `13000-13100` and
+the host-native iOS provider exposes `13101-13200` for the WebRTC compatibility
+path. By default WebRTC advertises the provider's
 `--public-ip` address in addition to its local interface addresses, which makes
 Docker-based providers reachable from browsers on the same LAN. For access
 through a different public/NAT address, override the advertised IPv4 address:

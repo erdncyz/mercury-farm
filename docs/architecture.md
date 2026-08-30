@@ -137,7 +137,7 @@ Mercury Device Farm is a **device farm** platform that enables remote control of
 | **Authentication** | Passport.js | 0.6.0 | Multi-auth strategies |
 | **JWT** | jws | 3.2.2 | Token-based authorization |
 | **Device Communication** | @u4/adbkit | 5.1.7 | Android ADB protocol |
-| **iOS Automation** | WebDriverAgent (Appium) | 11.4.0 | iOS device control |
+| **iOS Automation** | WebDriverAgent (Appium) | 16.11.4 | iOS device control |
 | **Tizen** | appium-sdb | 1.0.1-beta | Samsung Tizen support |
 | **USB (iOS)** | @irdk/usbmux | 0.2.2 | iOS USB multiplexing |
 | **Screen Capture** | minicap-prebuilt | 1.1.2 | Android screen capture |

@@ -160,6 +160,42 @@ test('pauses the MJPEG source during WDA actions without stopping the encoder', 
     assert.equal(openCalls, 1)
 })
 
+test('keeps only the newest JPEG while an encoder frame is in flight', () => {
+    const writes = []
+    const capture = new IosH264Capture()
+    capture.process = {
+        stdin: {
+            writable: true,
+            write(data) {
+                writes.push(Buffer.from(data))
+                return true
+            }
+        }
+    }
+    const first = Buffer.from('first-frame')
+    const stale = Buffer.from('stale-frame')
+    const newest = Buffer.from('newest-frame')
+
+    capture.enqueueJpegFrame(first)
+    capture.enqueueJpegFrame(stale)
+    capture.enqueueJpegFrame(newest)
+
+    assert.equal(writes.length, 1)
+    assert.deepEqual(writes[0].subarray(4), first)
+    assert.deepEqual(capture.pendingJpegFrame, newest)
+
+    const encoded = Buffer.from([0, 0, 0, 1, 0x65, 0x01])
+    const output = Buffer.alloc(5 + encoded.length)
+    output[0] = 1
+    output.writeUInt32BE(encoded.length, 1)
+    encoded.copy(output, 5)
+    capture.onEncoderData(output)
+
+    assert.equal(writes.length, 2)
+    assert.deepEqual(writes[1].subarray(4), newest)
+    assert.equal(capture.pendingJpegFrame, null)
+})
+
 test('re-encodes a WDA JPEG frame as Annex-B H.264 with VideoToolbox', {timeout: 45000}, async() => {
     const frame = makeJpeg()
     const binary = await encoderBinary()
