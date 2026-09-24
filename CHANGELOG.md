@@ -35,6 +35,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **iOS cihazlar izleyici açınca artık kopmuyor** — USB ekran yansıtma varsayılan yakalama yoluydu, ancak başlatıldığında iPhone/iPad USB'de yeniden tanıtılıyor. Bu, WebDriverAgent'a giden usbmux tünellerini koparıyor, WDA MJPEG sağlık soketi kapanıyor ve cihaz worker'ı izleyici bağlandıktan yaklaşık yarım saniye sonra sonlanıyordu; bu yüzden tüm iOS cihazlar `502` verip hiç açılmıyordu. `IOS_SCREEN_CAPTURE_MODE` artık varsayılan olarak `mjpeg` (v0.8.0 davranışı); USB yansıtma `IOS_SCREEN_CAPTURE_MODE=auto` ile deneysel olarak açılabilir.
 
+**A single WDA MJPEG drop no longer kicks users off an iOS device / Tek bir WDA MJPEG kopması kullanıcıyı artık iOS cihazdan atmıyor** — The MJPEG liveness socket was meant to retry four times, but it marked the device absent (which exits the worker) on the very first close, so any brief usbmux blip ended the active session and made the device unavailable for ~15 s. The socket also had no `error` listener, so a refused reconnect would have crashed the worker. Drops are now retried, the retry budget resets after 30 s of stable connection, and the device is reported lost only when WDA cannot be reached again.
+
+**Tek bir WDA MJPEG kopması kullanıcıyı artık iOS cihazdan atmıyor** — MJPEG canlılık soketi dört kez yeniden denemek üzere tasarlanmıştı, ancak daha ilk kopmada cihazı yok olarak işaretliyordu (bu worker'ı sonlandırır). Bu yüzden kısa bir usbmux aksaması bile aktif oturumu bitiriyor ve cihazı ~15 sn kullanılamaz hale getiriyordu. Sokette `error` dinleyicisi de yoktu; reddedilen bir yeniden bağlanma worker'ı çökertirdi. Artık kopmalar yeniden deneniyor, 30 sn kararlı bağlantıdan sonra deneme hakkı sıfırlanıyor ve cihaz yalnızca WDA'ya tekrar ulaşılamadığında kayıp olarak bildiriliyor.
+
 ## [0.8.0] — 2026-08-30
 
 ### Added / Eklendi
