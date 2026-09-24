@@ -31,6 +31,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **WDA imzalaması güncellemede artık bozulmuyor** — Paketlenen WebDriverAgent'ın güncellenmesi Xcode projesini değiştirdiği için `WebDriverAgent.xcodeproj` içine yazılmış `DEVELOPMENT_TEAM` ayarı sessizce siliniyordu. Bu durumda tüm iOS worker'ları `xcodebuild` adımında başarısız olup sonlanıyor, provider `502` hatalarıyla ve yardımcı olmayan "iOS control service is recovering" mesajıyla çöküyordu. Artık runtime deploy'u makineye özel `.ios-provider.env` dosyasını koruyor, derleme hatası eksik geliştirici takımını ve nasıl ayarlanacağını bildiriyor ve README `.ios-provider.env` dosyasını güncellemeden etkilenmeyen imzalama yöntemi olarak belgeliyor.
 
+**iOS devices no longer disconnect when a viewer opens them / iOS cihazlar izleyici açınca artık kopmuyor** — USB screen mirroring was the default capture path, but starting it makes the iPhone/iPad re-enumerate on USB. That drops the usbmux tunnels to WebDriverAgent, the WDA MJPEG health socket closes, and the device worker exits about half a second after the viewer connects — so every iOS device showed a `502` and never opened. `IOS_SCREEN_CAPTURE_MODE` now defaults to `mjpeg` (the v0.8.0 behaviour); USB mirroring stays available as an experimental opt-in via `IOS_SCREEN_CAPTURE_MODE=auto`.
+
+**iOS cihazlar izleyici açınca artık kopmuyor** — USB ekran yansıtma varsayılan yakalama yoluydu, ancak başlatıldığında iPhone/iPad USB'de yeniden tanıtılıyor. Bu, WebDriverAgent'a giden usbmux tünellerini koparıyor, WDA MJPEG sağlık soketi kapanıyor ve cihaz worker'ı izleyici bağlandıktan yaklaşık yarım saniye sonra sonlanıyordu; bu yüzden tüm iOS cihazlar `502` verip hiç açılmıyordu. `IOS_SCREEN_CAPTURE_MODE` artık varsayılan olarak `mjpeg` (v0.8.0 davranışı); USB yansıtma `IOS_SCREEN_CAPTURE_MODE=auto` ile deneysel olarak açılabilir.
+
 ## [0.8.0] — 2026-08-30
 
 ### Added / Eklendi

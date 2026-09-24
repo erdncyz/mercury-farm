@@ -100,11 +100,11 @@ function encoded(keyframe, ...nals) {
     return output
 }
 
-test('normalizes iOS capture mode with auto as the default', () => {
-    assert.equal(normalizeCaptureMode(undefined), 'auto')
+test('normalizes iOS capture mode with mjpeg as the default', () => {
+    assert.equal(normalizeCaptureMode(undefined), 'mjpeg')
     assert.equal(normalizeCaptureMode(' AVCapture '), 'avcapture')
-    assert.equal(normalizeCaptureMode('mjpeg'), 'mjpeg')
-    assert.equal(normalizeCaptureMode('bogus'), 'auto')
+    assert.equal(normalizeCaptureMode('auto'), 'auto')
+    assert.equal(normalizeCaptureMode('bogus'), 'mjpeg')
 })
 
 test('auto mode prefers USB mirroring and forwards its packets', async() => {
