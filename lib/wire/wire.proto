@@ -535,6 +535,8 @@ message ApplyIosRuntimeSettingsMessage {
   required uint32 wdaMjpegScaling = 8;
   required uint32 wdaTreeCacheMs = 9;
   required uint32 typeKeyDelayMs = 10;
+  // "" keeps the provider default; otherwise mjpeg, auto or avcapture.
+  optional string screenCaptureMode = 11;
 }
 
 message GestureStartMessage {

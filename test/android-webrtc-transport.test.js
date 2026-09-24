@@ -200,3 +200,51 @@ test('answers an H.264 WebRTC offer over the authenticated screen signaling chan
         await transport.close()
     }
 })
+
+class RecordingCapture extends FakeCapture {
+    static instances = []
+
+    constructor(options) {
+        super()
+        this.options = options
+        this.stopped = false
+        RecordingCapture.instances.push(this)
+    }
+
+    stop() {
+        this.stopped = true
+    }
+}
+
+function transportWithCaptureMode(captureMode) {
+    RecordingCapture.instances = []
+    return new AndroidWebRtcTransport({
+        serial: 'ios-test',
+        screenWebrtc: true,
+        screenWebrtcIceServers: '[]'
+    }, {H264Capture: RecordingCapture}, {captureOptions: {captureMode}})
+}
+
+test('applies an updated capture mode on the next capture start', async() => {
+    const transport = transportWithCaptureMode('mjpeg')
+    await transport.ensureCapture()
+    transport.webSocketClients.set('viewer', {})
+
+    transport.updateCaptureOptions({captureMode: 'auto'})
+    assert.equal(RecordingCapture.instances[0].stopped, false, 'active viewers keep their capture')
+
+    transport.webSocketClients.clear()
+    transport.stopCapture()
+    await transport.ensureCapture()
+    assert.equal(RecordingCapture.instances[1].options.captureMode, 'auto')
+    transport.stopCapture()
+})
+
+test('drops an idle capture so a new capture mode is not masked by it', async() => {
+    const transport = transportWithCaptureMode('mjpeg')
+    await transport.ensureCapture()
+
+    transport.updateCaptureOptions({captureMode: 'auto'})
+    assert.equal(RecordingCapture.instances[0].stopped, true)
+    assert.equal(transport.capture, null)
+})
