@@ -324,8 +324,8 @@ Avoid generic or passive hubs — they are the #1 cause of device drops with lar
 | Platform | Technology | Notes |
 |---|---|---|
 | **Android** | Minicap / Scrcpy over WebSocket | Works out of the box, low latency |
-| **iOS** | USB screen mirroring (CoreMediaIO/AVFoundation) → VideoToolbox H.264 | Default when the device is on USB; same path QuickTime uses, ~30 fps with low latency. Requires **Camera** permission for the provider process (System Settings → Privacy & Security → Camera) |
-| **iOS (fallback)** | WebDriverAgent MJPEG → VideoToolbox H.264 | Used automatically for Wi-Fi-only devices, missing camera permission, or `IOS_SCREEN_CAPTURE_MODE=mjpeg`; limited to ~10-15 fps by XCTest screenshots |
+| **iOS** | WebDriverAgent MJPEG → VideoToolbox H.264 | Default; limited to ~10-15 fps by XCTest screenshots |
+| **iOS (experimental)** | USB screen mirroring (CoreMediaIO/AVFoundation) → VideoToolbox H.264 | Opt-in with `IOS_SCREEN_CAPTURE_MODE=auto`; ~30 fps. **Not production-ready:** starting mirroring re-enumerates the device on USB, which drops the WDA tunnels and restarts the device worker. Also requires **Camera** permission for the provider process |
 
 **Bandwidth tuning** — defaults are optimized for ~1-2 Mbps per device (15 fps), matching commercial device farms. Streams automatically pause when the browser tab is hidden, and iOS frame resolution adapts to the viewer window size. Override via environment variables:
 
@@ -333,7 +333,7 @@ Avoid generic or passive hubs — they are the #1 cause of device drops with lar
 |---|---|---|
 | `SCREEN_FRAME_RATE` | `15` | Frames per second (Android and iOS MJPEG fallback). Raise to 24-30 for smoother motion at 2-4x bandwidth |
 | `SCREEN_JPEG_QUALITY` | `25` (Android) / `15` (iOS) | JPEG compression quality (1-100) |
-| `IOS_SCREEN_CAPTURE_MODE` | `auto` | iOS screen source: `auto` (USB mirroring, MJPEG fallback), `avcapture` (mirroring only, fail loudly), `mjpeg` (WDA screenshots only) |
+| `IOS_SCREEN_CAPTURE_MODE` | `mjpeg` | iOS screen source: `mjpeg` (WDA screenshots), experimental `auto` (USB mirroring, MJPEG fallback) or `avcapture` (mirroring only, fail loudly) |
 | `IOS_SCREEN_MIRROR_FRAME_RATE` | `30` | Frame rate for the USB mirroring path (1-60) |
 | `SCREEN_WEBRTC_BITRATE` | `1500000` | iOS H.264 bitrate in bits/s; raise to 3-4 Mbps for crisper text at 30 fps |
 | `IOS_WDA_MJPEG_QUALITY` | `10` | WDA-side JPEG quality for the iOS MJPEG fallback |
@@ -645,8 +645,8 @@ Ucuz veya pasif hub kullanmayın — büyük filolarda hem Android hem iOS cihaz
 | Platform | Teknoloji | Notlar |
 |---|---|---|
 | **Android** | Minicap / Scrcpy over WebSocket | Kutudan çıkar, düşük gecikme |
-| **iOS** | USB ekran yansıtma (CoreMediaIO/AVFoundation) → VideoToolbox H.264 | Cihaz USB'deyken varsayılan; QuickTime'ın kullandığı yol, ~30 fps ve düşük gecikme. Provider sürecine **Kamera** izni gerekir (Sistem Ayarları → Gizlilik ve Güvenlik → Kamera) |
-| **iOS (yedek)** | WebDriverAgent MJPEG → VideoToolbox H.264 | Yalnızca Wi-Fi'daki cihazlar, kamera izni yoksa veya `IOS_SCREEN_CAPTURE_MODE=mjpeg` ile otomatik kullanılır; XCTest ekran görüntüleri nedeniyle ~10-15 fps ile sınırlıdır |
+| **iOS** | WebDriverAgent MJPEG → VideoToolbox H.264 | Varsayılan; XCTest ekran görüntüleri nedeniyle ~10-15 fps ile sınırlıdır |
+| **iOS (deneysel)** | USB ekran yansıtma (CoreMediaIO/AVFoundation) → VideoToolbox H.264 | `IOS_SCREEN_CAPTURE_MODE=auto` ile açılır; ~30 fps. **Üretime hazır değil:** yansıtma başlayınca cihaz USB'de yeniden tanıtılır, WDA tünelleri kopar ve cihaz worker'ı yeniden başlar. Ayrıca provider sürecine **Kamera** izni gerekir |
 
 **Bant genişliği ayarı** — varsayılanlar cihaz başına ~1-2 Mbps (15 fps) için optimize edilmiştir; ticari cihaz çiftlikleriyle aynı seviyededir. Tarayıcı sekmesi gizlendiğinde akış otomatik duraklar, iOS kare çözünürlüğü izleyici pencere boyutuna uyum sağlar. Ortam değişkenleriyle değiştirilebilir:
 
@@ -654,7 +654,7 @@ Ucuz veya pasif hub kullanmayın — büyük filolarda hem Android hem iOS cihaz
 |---|---|---|
 | `SCREEN_FRAME_RATE` | `15` | Saniyedeki kare sayısı (Android ve iOS MJPEG yedeği). Daha akıcı görüntü için 24-30 yapın (2-4 kat bant genişliği) |
 | `SCREEN_JPEG_QUALITY` | `25` (Android) / `15` (iOS) | JPEG sıkıştırma kalitesi (1-100) |
-| `IOS_SCREEN_CAPTURE_MODE` | `auto` | iOS ekran kaynağı: `auto` (USB yansıtma, MJPEG yedeği), `avcapture` (yalnızca yansıtma, hata verir), `mjpeg` (yalnızca WDA ekran görüntüsü) |
+| `IOS_SCREEN_CAPTURE_MODE` | `mjpeg` | iOS ekran kaynağı: `mjpeg` (WDA ekran görüntüsü), deneysel `auto` (USB yansıtma, MJPEG yedeği) veya `avcapture` (yalnızca yansıtma, hata verir) |
 | `IOS_SCREEN_MIRROR_FRAME_RATE` | `30` | USB yansıtma yolunun kare hızı (1-60) |
 | `SCREEN_WEBRTC_BITRATE` | `1500000` | iOS H.264 bit hızı (bit/s); 30 fps'de daha net metin için 3-4 Mbps yapın |
 | `IOS_WDA_MJPEG_QUALITY` | `10` | iOS MJPEG yedeğinde WDA JPEG kalitesi |

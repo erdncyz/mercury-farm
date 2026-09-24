@@ -163,7 +163,8 @@ jobs:
 
           node --test \
             test/network-auto-config.test.js \
-            test/reaper-initial-state.test.js
+            test/reaper-initial-state.test.js \
+            test/ios-wda-actions.test.js
 
           node -e "
             const packageVersion = require('./package.json').version

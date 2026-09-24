@@ -1,9 +1,11 @@
 import assert from 'node:assert/strict'
+import net from 'node:net'
 import test from 'node:test'
 import {
     createWdaSessionWithRecovery,
     getDirectionalSwipe,
-    isPointerAction
+    isPointerAction,
+    watchWdaMjpeg
 } from '../lib/units/ios-device/plugins/wda/client.js'
 
 test('restarts WDA once when session bootstrap times out', async() => {
@@ -103,4 +105,85 @@ test('does not classify keyboard actions as pointer gestures', () => {
     assert.equal(isPointerAction({
         actions: [{type: 'key', actions: [{type: 'keyDown', value: 'a'}]}]
     }), false)
+})
+
+const quietLog = {info() {}, warn() {}}
+const delay = (ms) => new Promise(r => setTimeout(r, ms))
+
+function listen(onConnection) {
+    return new Promise((resolve) => {
+        const server = net.createServer(onConnection)
+        server.listen(0, '127.0.0.1', () => resolve(server))
+    })
+}
+
+test('reconnects to WDA MJPEG after a brief drop instead of reporting it lost', async() => {
+    let connections = 0
+    const server = await listen((conn) => {
+        connections += 1
+        if (connections === 1) {
+            conn.destroy()
+        }
+    })
+    let lost = 0
+    const watcher = watchWdaMjpeg({
+        socket: new net.Socket(),
+        port: server.address().port,
+        host: '127.0.0.1',
+        log: quietLog,
+        onLost: () => { lost += 1 },
+        retryDelayMs: 10
+    })
+    await delay(200)
+    watcher.stop()
+    server.close()
+
+    assert.equal(connections, 2)
+    assert.equal(lost, 0)
+})
+
+test('reports WDA MJPEG lost once reconnects are exhausted without crashing on refusal', async() => {
+    const server = await listen(() => {})
+    const {port} = server.address()
+    await new Promise(r => server.close(r))
+
+    let lost = 0
+    watchWdaMjpeg({
+        socket: new net.Socket(),
+        port,
+        host: '127.0.0.1',
+        log: quietLog,
+        onLost: () => { lost += 1 },
+        attempts: 2,
+        retryDelayMs: 10
+    })
+    await delay(300)
+
+    assert.equal(lost, 1)
+})
+
+test('resets the WDA MJPEG reconnect budget after a stable connection', async() => {
+    const sockets = []
+    const server = await listen((conn) => sockets.push(conn))
+    let lost = 0
+    const watcher = watchWdaMjpeg({
+        socket: new net.Socket(),
+        port: server.address().port,
+        host: '127.0.0.1',
+        log: quietLog,
+        onLost: () => { lost += 1 },
+        attempts: 1,
+        retryDelayMs: 10,
+        stableMs: 30
+    })
+    for (let i = 0; i < 3; i++) {
+        await delay(80)
+        sockets.at(-1).destroy()
+    }
+    await delay(80)
+    watcher.stop()
+    server.close()
+
+    assert.equal(sockets.length, 4)
+    assert.equal(lost, 0)
 })
