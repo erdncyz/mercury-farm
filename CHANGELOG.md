@@ -25,6 +25,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **WebDriverAgent 16.12.10** — Paketlenen iOS kontrol servisi WebDriverAgent 16.12.10 sürümüne güncellendi. Uyumluluk modu pencerelerinde jest koordinatlarının yeniden ölçeklenmesi, kaydırma jesti referans noktası, klavye girişi tuş adı çözümleme düzeltmeleri ve yeni ekran listeleme uç noktası içerir.
 
+### Fixed / Düzeltildi
+
+**WDA signing no longer breaks on upgrade / WDA imzalaması güncellemede artık bozulmuyor** — Upgrading the bundled WebDriverAgent replaces the Xcode project, which silently discarded a `DEVELOPMENT_TEAM` configured inside `WebDriverAgent.xcodeproj`. Every iOS worker then failed its `xcodebuild` step and exited, taking the provider down with `502` errors and an unhelpful "iOS control service is recovering" message. The runtime deploy now preserves the host-local `.ios-provider.env`, the build failure reports the missing development team and how to set it, and the README documents `.ios-provider.env` as the upgrade-safe way to configure signing.
+
+**WDA imzalaması güncellemede artık bozulmuyor** — Paketlenen WebDriverAgent'ın güncellenmesi Xcode projesini değiştirdiği için `WebDriverAgent.xcodeproj` içine yazılmış `DEVELOPMENT_TEAM` ayarı sessizce siliniyordu. Bu durumda tüm iOS worker'ları `xcodebuild` adımında başarısız olup sonlanıyor, provider `502` hatalarıyla ve yardımcı olmayan "iOS control service is recovering" mesajıyla çöküyordu. Artık runtime deploy'u makineye özel `.ios-provider.env` dosyasını koruyor, derleme hatası eksik geliştirici takımını ve nasıl ayarlanacağını bildiriyor ve README `.ios-provider.env` dosyasını güncellemeden etkilenmeyen imzalama yöntemi olarak belgeliyor.
+
 ## [0.8.0] — 2026-08-30
 
 ### Added / Eklendi

@@ -198,6 +198,19 @@ git add WebDriverAgent
 git commit -m "chore(deps): bump WebDriverAgent to vX.Y.Z"
 ```
 
+> **Signing survives upgrades only via `.ios-provider.env`.** Bumping the
+> submodule replaces the Xcode project, so a `DEVELOPMENT_TEAM` set inside
+> `WebDriverAgent.xcodeproj` is lost and every iOS worker then dies with
+> `Signing for "WebDriverAgentRunner" requires a development team`. Put the
+> team in `.ios-provider.env` (gitignored, preserved across deploys) instead:
+>
+> ```bash
+> cat > ~/.mercury-farm/.ios-provider.env <<'EOF'
+> IOS_WDA_DEVELOPMENT_TEAM=XXXXXXXXXX
+> IOS_WDA_BUNDLE_ID=com.facebook.WebDriverAgentRunner
+> EOF
+> ```
+
 ### Publish a stable release
 
 `package.json` is the release version source, but maintainers do not bump it
@@ -481,6 +494,31 @@ Not: Duzenlemeyi her zaman `~/.mercury-farm/current/` altindaki projede yapin.
 olusturulan calisma kopyasidir; oradaki elle yapilan degisiklikler kaybolur.
 `mercury update` yeni surum indirdiginde `current` degistigi icin Team ayari
 sifirlanir ve bu imzalama adimini tekrarlamaniz gerekir.
+
+**Onerilen (kalici) yontem — `.ios-provider.env`:** Xcode projesine yazilan
+Team ayari, WebDriverAgent surumu her yukseldiginde kaynaklar degistigi icin
+silinir ve tum iOS cihazlar calismayi birakir (xcodebuild "Signing for
+WebDriverAgentRunner requires a development team" hatasi verir). Bunun yerine
+ayari surum guncellemelerinden etkilenmeyen bir dosyaya yazin:
+
+```bash
+cat > ~/.mercury-farm/.ios-provider.env <<'EOF'
+IOS_WDA_DEVELOPMENT_TEAM=XXXXXXXXXX
+IOS_WDA_BUNDLE_ID=com.facebook.WebDriverAgentRunner
+EOF
+chmod 600 ~/.mercury-farm/.ios-provider.env
+```
+
+`XXXXXXXXXX` yerine 10 karakterlik Apple Team ID'nizi yazin. Team ID'yi
+su komutla bulabilirsiniz (ciktidaki `OU=` alani):
+
+```bash
+security find-certificate -c "$(security find-identity -v -p codesigning \
+  | head -1 | sed 's/.*"\(.*\)".*/\1/')" -p | openssl x509 -noout -subject
+```
+
+Bu dosya gitignore'dadir, deploy sirasinda korunur ve Xcode'u hic acmadan
+imzalamayi kalici olarak cozer.
 
 **Sorun giderme — bos WebDriverAgent klasoru:** iOS cihazlar surekli
 **Preparing** durumunda kaliyorsa veya `WebDriverAgent.xcodeproj` acilmiyorsa

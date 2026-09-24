@@ -143,6 +143,15 @@ for log_name in ios-provider.log ios-provider.launchd.out.log ios-provider.launc
   fi
 done
 
+# The runtime is replaced wholesale on every deploy, so host-local WDA signing
+# settings must be carried over. Without them xcodebuild fails with "Signing
+# for WebDriverAgentRunner requires a development team" and every iOS worker
+# exits, which takes the whole provider down.
+if [ ! -f "$RUNTIME_DIR/.ios-provider.env" ] && [ -f "$BACKUP_DIR/.ios-provider.env" ]; then
+  echo "Preserving host-local WDA signing settings (.ios-provider.env)."
+  cp "$BACKUP_DIR/.ios-provider.env" "$RUNTIME_DIR/.ios-provider.env"
+fi
+
 echo "Installing LaunchAgent (runtime-only source)..."
 if ! /bin/bash "$RUNTIME_DIR/scripts/install-ios-provider-launchagent.sh"; then
   echo "ERROR: New iOS provider failed to start." >&2
