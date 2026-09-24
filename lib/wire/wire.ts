@@ -1484,6 +1484,12 @@ export interface ApplyIosRuntimeSettingsMessage {
      * @generated from protobuf field: required uint32 typeKeyDelayMs = 10
      */
     typeKeyDelayMs: number;
+    /**
+     * "" keeps the provider default; otherwise mjpeg, auto or avcapture.
+     *
+     * @generated from protobuf field: optional string screenCaptureMode = 11
+     */
+    screenCaptureMode?: string;
 }
 /**
  * @generated from protobuf message GestureStartMessage
@@ -7561,7 +7567,8 @@ class ApplyIosRuntimeSettingsMessage$Type extends MessageType<ApplyIosRuntimeSet
             { no: 7, name: "wdaMjpegQuality", kind: "scalar", T: 13 /*ScalarType.UINT32*/ },
             { no: 8, name: "wdaMjpegScaling", kind: "scalar", T: 13 /*ScalarType.UINT32*/ },
             { no: 9, name: "wdaTreeCacheMs", kind: "scalar", T: 13 /*ScalarType.UINT32*/ },
-            { no: 10, name: "typeKeyDelayMs", kind: "scalar", T: 13 /*ScalarType.UINT32*/ }
+            { no: 10, name: "typeKeyDelayMs", kind: "scalar", T: 13 /*ScalarType.UINT32*/ },
+            { no: 11, name: "screenCaptureMode", kind: "scalar", opt: true, T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<ApplyIosRuntimeSettingsMessage>): ApplyIosRuntimeSettingsMessage {
@@ -7615,6 +7622,9 @@ class ApplyIosRuntimeSettingsMessage$Type extends MessageType<ApplyIosRuntimeSet
                 case /* required uint32 typeKeyDelayMs */ 10:
                     message.typeKeyDelayMs = reader.uint32();
                     break;
+                case /* optional string screenCaptureMode */ 11:
+                    message.screenCaptureMode = reader.string();
+                    break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
@@ -7657,6 +7667,9 @@ class ApplyIosRuntimeSettingsMessage$Type extends MessageType<ApplyIosRuntimeSet
         /* required uint32 typeKeyDelayMs = 10; */
         if (message.typeKeyDelayMs !== 0)
             writer.tag(10, WireType.Varint).uint32(message.typeKeyDelayMs);
+        /* optional string screenCaptureMode = 11; */
+        if (message.screenCaptureMode !== undefined)
+            writer.tag(11, WireType.LengthDelimited).string(message.screenCaptureMode);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

@@ -187,3 +187,14 @@ test('resets the WDA MJPEG reconnect budget after a stable connection', async() 
     assert.equal(sockets.length, 4)
     assert.equal(lost, 0)
 })
+
+test('carries the per-user iOS screen capture mode over the wire', async() => {
+    const {ApplyIosRuntimeSettingsMessage} = await import('../lib/wire/wire.js')
+    const encode = (screenCaptureMode) => ApplyIosRuntimeSettingsMessage.fromBinary(
+        ApplyIosRuntimeSettingsMessage.toBinary(ApplyIosRuntimeSettingsMessage.create({typeKeyDelayMs: 80, screenCaptureMode}))
+    )
+
+    assert.equal(encode('auto').screenCaptureMode, 'auto')
+    assert.equal(encode('').screenCaptureMode, '')
+    assert.equal(encode(undefined).screenCaptureMode, undefined)
+})
