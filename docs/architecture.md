@@ -51,7 +51,7 @@ Mercury Device Farm is a **device farm** platform that enables remote control of
 
 | Capability | Description |
 |------------|-------------|
-| **Real-Time Screen Streaming** | Live screen transmission via Android (Minicap/Scrcpy) and iOS (WebDriverAgent MJPEG) |
+| **Real-Time Screen Streaming** | Live screen transmission via Android (Minicap/Scrcpy) and iOS (USB screen mirroring with WebDriverAgent MJPEG fallback) |
 | **Remote Touch Control** | Touch, swipe, and type inputs from the browser |
 | **Application Management** | APK/IPA install, uninstall, app listing |
 | **Group & Team Management** | Organize devices into groups, scheduling, user/team-based access |
@@ -137,7 +137,7 @@ Mercury Device Farm is a **device farm** platform that enables remote control of
 | **Authentication** | Passport.js | 0.6.0 | Multi-auth strategies |
 | **JWT** | jws | 3.2.2 | Token-based authorization |
 | **Device Communication** | @u4/adbkit | 5.1.7 | Android ADB protocol |
-| **iOS Automation** | WebDriverAgent (Appium) | 16.11.4 | iOS device control |
+| **iOS Automation** | WebDriverAgent (Appium) | 16.12.10 | iOS device control |
 | **Tizen** | appium-sdb | 1.0.1-beta | Samsung Tizen support |
 | **USB (iOS)** | @irdk/usbmux | 0.2.2 | iOS USB multiplexing |
 | **Screen Capture** | minicap-prebuilt | 1.1.2 | Android screen capture |
@@ -654,7 +654,7 @@ USB Connection (usbmuxd)
 │                  │
 │  • wda/client    │  - WebDriverAgent startup and management
 │  • wda/connect   │  - WDA HTTP proxy
-│  • screen/stream │  - MJPEG streaming (via WDA)
+│  • screen/stream │  - H.264 streaming (USB mirroring, WDA MJPEG fallback)
 │  • info          │  - Device information
 │  • heartbeat     │  - Heartbeat mechanism
 │  • group         │  - Ownership management
@@ -671,10 +671,12 @@ USB Connection (usbmuxd)
 ┌─────────────────┐                ┌─────────────────┐
 │  Android Device  │                │   iOS Device     │
 │                  │                │                  │
-│  Minicap/Scrcpy  │                │  WebDriverAgent  │
-│  (Screen Capture)│                │  (MJPEG Stream)  │
+│  Minicap/Scrcpy  │                │  USB mirroring   │
+│  (Screen Capture)│                │  (CoreMediaIO)   │
+│                  │                │  ↳ WDA MJPEG     │
+│                  │                │    fallback      │
 └────────┬────────┘                └────────┬────────┘
-         │ Raw frame (Binary)               │ MJPEG
+         │ Raw frame (Binary)               │ VideoToolbox H.264
          ▼                                  ▼
 ┌──────────────────────────────────────────────────┐
 │              Device Worker Process                │

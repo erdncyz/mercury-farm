@@ -123,7 +123,7 @@ If it is empty, restore it manually:
 ```bash
 mkdir -p ~/.mercury-farm/current/WebDriverAgent
 cd ~/.mercury-farm/current/WebDriverAgent
-git clone --depth 1 --branch v16.11.4 https://github.com/appium/WebDriverAgent.git .
+git clone --depth 1 --branch v16.12.10 https://github.com/appium/WebDriverAgent.git .
 ```
 
 Then repeat the signing step above and re-run
@@ -311,16 +311,20 @@ Avoid generic or passive hubs — they are the #1 cause of device drops with lar
 | Platform | Technology | Notes |
 |---|---|---|
 | **Android** | Minicap / Scrcpy over WebSocket | Works out of the box, low latency |
-| **iOS** | WebDriverAgent MJPEG over WebSocket | Works out of the box; native H.264/WebRTC would require additional development |
+| **iOS** | USB screen mirroring (CoreMediaIO/AVFoundation) → VideoToolbox H.264 | Default when the device is on USB; same path QuickTime uses, ~30 fps with low latency. Requires **Camera** permission for the provider process (System Settings → Privacy & Security → Camera) |
+| **iOS (fallback)** | WebDriverAgent MJPEG → VideoToolbox H.264 | Used automatically for Wi-Fi-only devices, missing camera permission, or `IOS_SCREEN_CAPTURE_MODE=mjpeg`; limited to ~10-15 fps by XCTest screenshots |
 
 **Bandwidth tuning** — defaults are optimized for ~1-2 Mbps per device (15 fps), matching commercial device farms. Streams automatically pause when the browser tab is hidden, and iOS frame resolution adapts to the viewer window size. Override via environment variables:
 
 | Variable | Default | Effect |
 |---|---|---|
-| `SCREEN_FRAME_RATE` | `15` | Frames per second (both platforms). Raise to 24-30 for smoother motion at 2-4x bandwidth |
+| `SCREEN_FRAME_RATE` | `15` | Frames per second (Android and iOS MJPEG fallback). Raise to 24-30 for smoother motion at 2-4x bandwidth |
 | `SCREEN_JPEG_QUALITY` | `25` (Android) / `15` (iOS) | JPEG compression quality (1-100) |
-| `IOS_WDA_MJPEG_QUALITY` | `10` | WDA-side JPEG quality for iOS capture |
-| `IOS_WDA_MJPEG_SCALING` | `50` | iOS frame resolution scaling cap (percent); actual scaling adapts to viewer window |
+| `IOS_SCREEN_CAPTURE_MODE` | `auto` | iOS screen source: `auto` (USB mirroring, MJPEG fallback), `avcapture` (mirroring only, fail loudly), `mjpeg` (WDA screenshots only) |
+| `IOS_SCREEN_MIRROR_FRAME_RATE` | `30` | Frame rate for the USB mirroring path (1-60) |
+| `SCREEN_WEBRTC_BITRATE` | `1500000` | iOS H.264 bitrate in bits/s; raise to 3-4 Mbps for crisper text at 30 fps |
+| `IOS_WDA_MJPEG_QUALITY` | `10` | WDA-side JPEG quality for the iOS MJPEG fallback |
+| `IOS_WDA_MJPEG_SCALING` | `50` | iOS MJPEG fallback resolution scaling cap (percent); actual scaling adapts to viewer window |
 | `IOS_WDA_WAIT_FOR_IDLE_TIMEOUT` | `0` | Seconds WDA waits for UI idle before taps; `0` gives snappiest touch response |
 
 Example — higher quality on a fast LAN:
@@ -492,7 +496,7 @@ Klasor bossa elle doldurun:
 ```bash
 mkdir -p ~/.mercury-farm/current/WebDriverAgent
 cd ~/.mercury-farm/current/WebDriverAgent
-git clone --depth 1 --branch v16.11.4 https://github.com/appium/WebDriverAgent.git .
+git clone --depth 1 --branch v16.12.10 https://github.com/appium/WebDriverAgent.git .
 ```
 
 Ardindan yukaridaki imzalama adimini tekrarlayin ve
@@ -603,16 +607,20 @@ Ucuz veya pasif hub kullanmayın — büyük filolarda hem Android hem iOS cihaz
 | Platform | Teknoloji | Notlar |
 |---|---|---|
 | **Android** | Minicap / Scrcpy over WebSocket | Kutudan çıkar, düşük gecikme |
-| **iOS** | WebDriverAgent MJPEG over WebSocket | Kutudan çıkar; native H.264/WebRTC ek geliştirme gerektirir |
+| **iOS** | USB ekran yansıtma (CoreMediaIO/AVFoundation) → VideoToolbox H.264 | Cihaz USB'deyken varsayılan; QuickTime'ın kullandığı yol, ~30 fps ve düşük gecikme. Provider sürecine **Kamera** izni gerekir (Sistem Ayarları → Gizlilik ve Güvenlik → Kamera) |
+| **iOS (yedek)** | WebDriverAgent MJPEG → VideoToolbox H.264 | Yalnızca Wi-Fi'daki cihazlar, kamera izni yoksa veya `IOS_SCREEN_CAPTURE_MODE=mjpeg` ile otomatik kullanılır; XCTest ekran görüntüleri nedeniyle ~10-15 fps ile sınırlıdır |
 
 **Bant genişliği ayarı** — varsayılanlar cihaz başına ~1-2 Mbps (15 fps) için optimize edilmiştir; ticari cihaz çiftlikleriyle aynı seviyededir. Tarayıcı sekmesi gizlendiğinde akış otomatik duraklar, iOS kare çözünürlüğü izleyici pencere boyutuna uyum sağlar. Ortam değişkenleriyle değiştirilebilir:
 
 | Değişken | Varsayılan | Etkisi |
 |---|---|---|
-| `SCREEN_FRAME_RATE` | `15` | Saniyedeki kare sayısı (her iki platform). Daha akıcı görüntü için 24-30 yapın (2-4 kat bant genişliği) |
+| `SCREEN_FRAME_RATE` | `15` | Saniyedeki kare sayısı (Android ve iOS MJPEG yedeği). Daha akıcı görüntü için 24-30 yapın (2-4 kat bant genişliği) |
 | `SCREEN_JPEG_QUALITY` | `25` (Android) / `15` (iOS) | JPEG sıkıştırma kalitesi (1-100) |
-| `IOS_WDA_MJPEG_QUALITY` | `10` | iOS yakalama tarafında WDA JPEG kalitesi |
-| `IOS_WDA_MJPEG_SCALING` | `50` | iOS kare çözünürlük ölçekleme tavanı (yüzde); gerçek ölçek izleyici pencereye uyum sağlar |
+| `IOS_SCREEN_CAPTURE_MODE` | `auto` | iOS ekran kaynağı: `auto` (USB yansıtma, MJPEG yedeği), `avcapture` (yalnızca yansıtma, hata verir), `mjpeg` (yalnızca WDA ekran görüntüsü) |
+| `IOS_SCREEN_MIRROR_FRAME_RATE` | `30` | USB yansıtma yolunun kare hızı (1-60) |
+| `SCREEN_WEBRTC_BITRATE` | `1500000` | iOS H.264 bit hızı (bit/s); 30 fps'de daha net metin için 3-4 Mbps yapın |
+| `IOS_WDA_MJPEG_QUALITY` | `10` | iOS MJPEG yedeğinde WDA JPEG kalitesi |
+| `IOS_WDA_MJPEG_SCALING` | `50` | iOS MJPEG yedeği çözünürlük ölçekleme tavanı (yüzde); gerçek ölçek izleyici pencereye uyum sağlar |
 | `IOS_WDA_WAIT_FOR_IDLE_TIMEOUT` | `0` | WDA'nın tap öncesi UI idle bekleme süresi (saniye); `0` en hızlı dokunma tepkisi |
 
 ---

@@ -9,6 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added / Eklendi
+
+**USB screen mirroring for iOS / iOS için USB ekran yansıtma** — iOS screens are now captured through the same CoreMediaIO/AVFoundation mirroring path QuickTime Player uses and encoded with VideoToolbox, instead of re-encoding WebDriverAgent XCTest screenshots. This lifts the ~10-15 fps screenshot ceiling to ~30 fps with much lower latency and stops screen capture from competing with WDA for touch actions. The WDA MJPEG path remains as an automatic fallback for Wi-Fi-only devices or providers without camera permission. Configure with `IOS_SCREEN_CAPTURE_MODE` (`auto`/`avcapture`/`mjpeg`) and `IOS_SCREEN_MIRROR_FRAME_RATE`.
+
+**iOS için USB ekran yansıtma** — iOS ekranı artık WebDriverAgent XCTest ekran görüntülerini yeniden kodlamak yerine QuickTime Player'ın kullandığı CoreMediaIO/AVFoundation yansıtma yolu üzerinden yakalanıp VideoToolbox ile kodlanır. Bu, ~10-15 fps ekran görüntüsü tavanını çok daha düşük gecikmeyle ~30 fps'e çıkarır ve ekran yakalamanın dokunma eylemleri için WDA ile yarışmasını önler. Yalnızca Wi-Fi'daki cihazlar veya kamera izni olmayan provider'lar için WDA MJPEG yolu otomatik yedek olarak korunur. `IOS_SCREEN_CAPTURE_MODE` (`auto`/`avcapture`/`mjpeg`) ve `IOS_SCREEN_MIRROR_FRAME_RATE` ile yapılandırılır.
+
+### Changed / Değiştirildi
+
+**Admin-only device recovery actions / Yalnızca yöneticiye özel cihaz kurtarma eylemleri** — The Restart and Repair Touch buttons on the device control panel are now only shown to admin accounts. Both reboot the device or rewrite its stored display geometry, which disrupts other users' sessions.
+
+**Yalnızca yöneticiye özel cihaz kurtarma eylemleri** — Cihaz kontrol panelindeki Yeniden Başlat ve Dokunmayı Onar düğmeleri artık yalnızca yönetici hesaplarına gösterilir. Her ikisi de cihazı yeniden başlattığı veya kayıtlı ekran geometrisini yeniden yazdığı için diğer kullanıcıların oturumlarını kesintiye uğratır.
+
+**WebDriverAgent 16.12.10** — Updated the bundled iOS control service to WebDriverAgent 16.12.10. Includes upstream fixes for gesture coordinate rescaling in compatibility-mode windows, scroll gesture anchoring, keyboard input key lookup, and a new get-screens endpoint.
+
+**WebDriverAgent 16.12.10** — Paketlenen iOS kontrol servisi WebDriverAgent 16.12.10 sürümüne güncellendi. Uyumluluk modu pencerelerinde jest koordinatlarının yeniden ölçeklenmesi, kaydırma jesti referans noktası, klavye girişi tuş adı çözümleme düzeltmeleri ve yeni ekran listeleme uç noktası içerir.
+
 ## [0.8.0] — 2026-08-30
 
 ### Added / Eklendi

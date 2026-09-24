@@ -51,7 +51,7 @@ Mercury Device Farm, gerçek Android ve iOS cihazları tarayıcı üzerinden uza
 
 | Yetenek | Açıklama |
 |---------|----------|
-| **Gerçek Zamanlı Ekran Streaming** | Android (Minicap/Scrcpy) ve iOS (WebDriverAgent MJPEG) ile canlı ekran aktarımı |
+| **Gerçek Zamanlı Ekran Streaming** | Android (Minicap/Scrcpy) ve iOS (USB ekran yansıtma, WebDriverAgent MJPEG yedeği) ile canlı ekran aktarımı |
 | **Uzaktan Dokunmatik Kontrol** | Tarayıcıdan dokunma, kaydırma, yazma gibi girdiler |
 | **Uygulama Yönetimi** | APK/IPA yükleme, kaldırma, uygulama listeleme |
 | **Grup & Takım Yönetimi** | Cihazları gruplara ayırma, zamanlama, kullanıcı/takım bazlı erişim |
@@ -137,7 +137,7 @@ Mercury Device Farm, gerçek Android ve iOS cihazları tarayıcı üzerinden uza
 | **Kimlik Doğrulama** | Passport.js | 0.6.0 | Çoklu auth stratejileri |
 | **JWT** | jws | 3.2.2 | Token tabanlı yetkilendirme |
 | **Cihaz İletişimi** | @u4/adbkit | 5.1.7 | Android ADB protokolü |
-| **iOS Otomasyon** | WebDriverAgent (Appium) | 16.11.4 | iOS cihaz kontrolü |
+| **iOS Otomasyon** | WebDriverAgent (Appium) | 16.12.10 | iOS cihaz kontrolü |
 | **Tizen** | appium-sdb | 1.0.1-beta | Samsung Tizen desteği |
 | **USB (iOS)** | @irdk/usbmux | 0.2.2 | iOS USB multiplexing |
 | **Ekran Yakalama** | minicap-prebuilt | 1.1.2 | Android ekran yakalama |
@@ -654,7 +654,7 @@ USB Bağlantısı (usbmuxd)
 │                  │
 │  • wda/client    │  - WebDriverAgent başlatma ve yönetim
 │  • wda/connect   │  - WDA HTTP proxy
-│  • screen/stream │  - MJPEG streaming (WDA üzerinden)
+│  • screen/stream │  - H.264 streaming (USB yansıtma, WDA MJPEG yedeği)
 │  • info          │  - Cihaz bilgileri
 │  • heartbeat     │  - Heartbeat mekanizması
 │  • group         │  - Sahiplik yönetimi
@@ -671,10 +671,12 @@ USB Bağlantısı (usbmuxd)
 ┌─────────────────┐                ┌─────────────────┐
 │  Android Cihaz   │                │   iOS Cihaz      │
 │                  │                │                  │
-│  Minicap/Scrcpy  │                │  WebDriverAgent  │
-│  (Ekran Yakalama)│                │  (MJPEG Stream)  │
+│  Minicap/Scrcpy  │                │  USB yansıtma    │
+│  (Ekran Yakalama)│                │  (CoreMediaIO)   │
+│                  │                │  ↳ WDA MJPEG     │
+│                  │                │    yedeği        │
 └────────┬────────┘                └────────┬────────┘
-         │ Ham frame (Binary)               │ MJPEG
+         │ Ham frame (Binary)               │ VideoToolbox H.264
          ▼                                  ▼
 ┌──────────────────────────────────────────────────┐
 │              Device Worker Process                │
