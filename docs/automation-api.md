@@ -113,7 +113,7 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
 Common query params:
 
 - `amount` required (unless `serials` is provided)
-- `timeout` required, `60..10800` seconds
+- `timeout` required, `60..10800` seconds — an inactivity lease, not a hard stop: while a device taken with `useDevice` stays in the run (ADB/WDA traffic keeps its lease alive), the run stays `Running` past this time until you release it. A run is closed automatically only when its devices stop reporting for ~90 s or, if no device was ever taken, at the timeout
 - `run` required (run id/name) — **this is the name shown on the Builds page**, so pick something readable like `nightly-regression-2026-07-19` or your CI build number
 - `project` optional — groups runs under a project header on the Builds page; pass the name of the project you are running (e.g. `project=MY_PROJECT`). Every execution (today's run, tomorrow's run) stays a separate row under it
 - `runUrl` optional — link to your CI pipeline/job; the run name on the Builds page becomes a clickable link to it
@@ -486,7 +486,7 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
 Sık kullanılan parametreler:
 
 - `amount` zorunlu (`serials` verilmediyse)
-- `timeout` zorunlu, `60..10800` saniye
+- `timeout` zorunlu, `60..10800` saniye — kesin bitiş değil, hareketsizlik süresidir: `useDevice` ile alınan cihaz koşumda kaldığı sürece (ADB/WDA trafiği lease'i canlı tutar) koşum bu süreden sonra da release edilene kadar `Çalışıyor` kalır. Koşum ancak cihazları ~90 sn boyunca sinyal göndermeyi bırakınca ya da hiç cihaz alınmadıysa timeout dolunca otomatik kapanır
 - `run` zorunlu (koşu adı/id) — **Builds sayfasında görünecek isim budur**; `nightly-regression-2026-07-19` veya CI build numarası gibi okunaklı bir değer seç
 - `project` opsiyonel — koşumları Builds sayfasında proje başlığı altında gruplar; koştuğun projenin adını gönder (örn. `project=PROJE_ADIN`). Her koşum (bugünkü, yarınki) o başlık altında ayrı satır kalır
 - `runUrl` opsiyonel — CI pipeline/job linki; Builds sayfasındaki koşum adı bu linke tıklanabilir olur

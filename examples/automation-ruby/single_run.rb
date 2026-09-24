@@ -34,7 +34,7 @@ reservation = client.reserve(
   run: run_name,                                  # Run name shown on Builds page / Builds sayfasında görünen isim
   run_url: ENV['CI_JOB_URL'],                     # Optional: clickable link on Builds / Opsiyonel: Builds'de tıklanabilir link
   project: ENV['MERCURY_PROJECT'],                # Optional: groups runs on Builds / Opsiyonel: Builds'de koşumları gruplar
-  timeout: Integer(ENV.fetch('MERCURY_TIMEOUT', '600')), # Seconds; run drops if not released / Saniye — koşum en geç bu sürede düşer
+  timeout: Integer(ENV.fetch('MERCURY_TIMEOUT', '600')), # Idle seconds before an unused run closes / Kullanılmayan koşumun kapanması için hareketsizlik süresi (sn)
   amount: 1,
   type: requested_type,                           # android | ios
   serials: serials.first(1)                       # If given use that device; else filter by type / Veriliyse o cihaz; boşsa type'a göre seç

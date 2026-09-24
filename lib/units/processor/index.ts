@@ -53,7 +53,8 @@ import {
     DeviceTypeMessage,
     DeleteDevice,
     GetServicesAvailabilityMessage,
-    DeviceRegisteredMessage, GetPresentDevices, DeviceGetIsInOrigin, GetDeadDevices, DeviceIosIntroductionMessage
+    DeviceRegisteredMessage, GetPresentDevices, DeviceGetIsInOrigin, GetDeadDevices, DeviceIosIntroductionMessage,
+    AutomationAliveMessage
 } from '../../wire/wire.js'
 
 interface Options {
@@ -233,6 +234,7 @@ export default db.ensureConnectivity(async(options: Options) => {
                 buildIds.add(device.group.id)
             }
             await dbapi.setDeviceState(message.serial, {owner: null, usage: null, timeout: 0})
+            await BuildModel.clearDeviceAutomationAlive(message.serial)
             await dbapi.sendEvent('device_leave'
                 , {}
                 , {deviceSerial: message.serial, userEmail: message.owner!.email, groupId: message.owner!.group}
@@ -309,6 +311,13 @@ export default db.ensureConnectivity(async(options: Options) => {
                 channel,
                 reply.okay('success', {devices})
             ])
+        })
+        .on(AutomationAliveMessage, async (channel, message) => {
+            try {
+                await BuildModel.markDeviceAutomationAlive(message.serial, message.group)
+            } catch (err: any) {
+                log.error('Failed to record automation alive for %s: %s', message.serial, err?.message)
+            }
         })
         .on(DeviceHeartbeatMessage, (channel, message, data) => {
             devDealer.send([ channel, data ])

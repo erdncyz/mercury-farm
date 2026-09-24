@@ -2469,6 +2469,22 @@ export interface DeviceStatusChange {
     timeout: number;
 }
 /**
+ * Sent periodically by a device while it is in an automation group, so the
+ * run stays active even if the device owner stored in the DB gets lost.
+ *
+ * @generated from protobuf message AutomationAliveMessage
+ */
+export interface AutomationAliveMessage {
+    /**
+     * @generated from protobuf field: required string serial = 1
+     */
+    serial: string;
+    /**
+     * @generated from protobuf field: required string group = 2
+     */
+    group: string;
+}
+/**
  * @generated from protobuf message DeviceGetIsInOrigin
  */
 export interface DeviceGetIsInOrigin {
@@ -12004,6 +12020,61 @@ class DeviceStatusChange$Type extends MessageType<DeviceStatusChange> {
  * @generated MessageType for protobuf message DeviceStatusChange
  */
 export const DeviceStatusChange = new DeviceStatusChange$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class AutomationAliveMessage$Type extends MessageType<AutomationAliveMessage> {
+    constructor() {
+        super("AutomationAliveMessage", [
+            { no: 1, name: "serial", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "group", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<AutomationAliveMessage>): AutomationAliveMessage {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.serial = "";
+        message.group = "";
+        if (value !== undefined)
+            reflectionMergePartial<AutomationAliveMessage>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: AutomationAliveMessage): AutomationAliveMessage {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* required string serial */ 1:
+                    message.serial = reader.string();
+                    break;
+                case /* required string group */ 2:
+                    message.group = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: AutomationAliveMessage, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* required string serial = 1; */
+        if (message.serial !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.serial);
+        /* required string group = 2; */
+        if (message.group !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.group);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message AutomationAliveMessage
+ */
+export const AutomationAliveMessage = new AutomationAliveMessage$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class DeviceGetIsInOrigin$Type extends MessageType<DeviceGetIsInOrigin> {
     constructor() {
