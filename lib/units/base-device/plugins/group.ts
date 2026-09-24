@@ -1,6 +1,7 @@
 import syrup from '@devicefarmer/stf-syrup'
 import logger from '../../../util/logger.js'
 import {
+    AutomationAliveMessage,
     AutoGroupMessage,
     DeviceStatusChange,
     GroupMessage,
@@ -17,6 +18,9 @@ import push from '../support/push.js'
 import sub from '../support/sub.js'
 import channels from '../support/channels.js'
 import EventEmitter from 'events'
+
+// Keep in sync with AUTOMATION_ALIVE_INTERVAL in db/models/build/model.js.
+const AUTOMATION_ALIVE_INTERVAL = 30 * 1000
 
 interface GroupState {
     email: string
@@ -45,6 +49,45 @@ export default syrup.serial()
         const plugin = new class GroupManager extends EventEmitter<GroupEvents> {
             private currentGroup: GroupState | null = null
             private currentUsage: string | null = null
+            private aliveTimer: ReturnType<typeof setInterval> | null = null
+
+            // Lets the server keep the automation run active for as long as this
+            // device is actually in the run's group, independent of the owner
+            // stored in the DB.
+            private syncAutomationAlive = () => {
+                if (!this.currentGroup || !this.isAutomation()) {
+                    if (this.aliveTimer) {
+                        clearInterval(this.aliveTimer)
+                        this.aliveTimer = null
+                    }
+                    return
+                }
+
+                if (this.aliveTimer) {
+                    return
+                }
+
+                const sendAlive = () => {
+                    if (this.currentGroup) {
+                        push.send([
+                            wireutil.global,
+                            wireutil.pack(AutomationAliveMessage, {
+                                serial: options.serial,
+                                group: this.currentGroup.group
+                            })
+                        ])
+                    }
+                }
+                sendAlive()
+                this.aliveTimer = setInterval(sendAlive, AUTOMATION_ALIVE_INTERVAL)
+            }
+
+            stopAutomationAlive = () => {
+                if (this.aliveTimer) {
+                    clearInterval(this.aliveTimer)
+                    this.aliveTimer = null
+                }
+            }
 
             keepalive = () => {
                 if (this.currentGroup) {
@@ -77,6 +120,7 @@ export default syrup.serial()
 
                         if (usage) {
                             this.currentUsage = usage
+                            this.syncAutomationAlive()
                         }
 
                         log.info('Update timeout for %s', apiutil.QUARTER_MINUTES)
@@ -119,6 +163,7 @@ export default syrup.serial()
                             timeout
                         })
                     ])
+                    this.syncAutomationAlive()
 
                     return this.currentGroup
                 }
@@ -145,6 +190,7 @@ export default syrup.serial()
                     })
                 ])
 
+                this.stopAutomationAlive()
                 channels.unregister(this.currentGroup.group)
                 sub.unsubscribe(this.currentGroup.group)
 

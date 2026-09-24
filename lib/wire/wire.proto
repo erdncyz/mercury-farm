@@ -930,6 +930,13 @@ message DeviceStatusChange {
   required uint32 timeout = 2;
 }
 
+// Sent periodically by a device while it is in an automation group, so the
+// run stays active even if the device owner stored in the DB gets lost.
+message AutomationAliveMessage {
+  required string serial = 1;
+  required string group = 2;
+}
+
 message DeviceGetIsInOrigin {
     required string serial = 1;
 }

@@ -325,7 +325,7 @@ Avoid generic or passive hubs — they are the #1 cause of device drops with lar
 |---|---|---|
 | **Android** | Minicap / Scrcpy over WebSocket | Works out of the box, low latency |
 | **iOS** | WebDriverAgent MJPEG → VideoToolbox H.264 | Default; limited to ~10-15 fps by XCTest screenshots |
-| **iOS (experimental)** | USB screen mirroring (CoreMediaIO/AVFoundation) → VideoToolbox H.264 | Opt-in per user under **Settings → General → iOS Screen Mode → Smooth**, or for the whole provider with `IOS_SCREEN_CAPTURE_MODE=auto`; ~30 fps. **Experimental:** starting mirroring makes the device re-enumerate on USB, so its WDA tunnels drop for ~2 s and are reconnected; long sessions are not yet validated. Also requires **Camera** permission for the provider process |
+| **iOS (experimental)** | USB screen mirroring (CoreMediaIO/AVFoundation) → VideoToolbox H.264 | Opt-in for all users by an admin under **Settings → General → iOS Screen Mode → Smooth**, or for the whole provider with `IOS_SCREEN_CAPTURE_MODE=auto`; ~30 fps. **Experimental:** starting mirroring makes the device re-enumerate on USB, so its WDA tunnels drop for ~2 s and are reconnected; long sessions are not yet validated. Also requires **Camera** permission for the provider process |
 
 **Bandwidth tuning** — defaults are optimized for ~1-2 Mbps per device (15 fps), matching commercial device farms. Streams automatically pause when the browser tab is hidden, and iOS frame resolution adapts to the viewer window size. Override via environment variables:
 
@@ -333,7 +333,7 @@ Avoid generic or passive hubs — they are the #1 cause of device drops with lar
 |---|---|---|
 | `SCREEN_FRAME_RATE` | `15` | Frames per second (Android and iOS MJPEG fallback). Raise to 24-30 for smoother motion at 2-4x bandwidth |
 | `SCREEN_JPEG_QUALITY` | `25` (Android) / `15` (iOS) | JPEG compression quality (1-100) |
-| `IOS_SCREEN_CAPTURE_MODE` | `mjpeg` | Provider-wide iOS screen source: `mjpeg` (WDA screenshots), experimental `auto` (USB mirroring, MJPEG fallback) or `avcapture` (mirroring only, fail loudly). Users can override it for the devices they use in **Settings → General → iOS Screen Mode**; *Server default* keeps this value |
+| `IOS_SCREEN_CAPTURE_MODE` | `mjpeg` | Provider-wide iOS screen source: `mjpeg` (WDA screenshots), experimental `auto` (USB mirroring, MJPEG fallback) or `avcapture` (mirroring only, fail loudly). Admins can override it for every user in **Settings → General → iOS Screen Mode**; *Server default* keeps this value |
 | `IOS_SCREEN_MIRROR_FRAME_RATE` | `30` | Frame rate for the USB mirroring path (1-60) |
 | `SCREEN_WEBRTC_BITRATE` | `1500000` | iOS H.264 bitrate in bits/s; raise to 3-4 Mbps for crisper text at 30 fps |
 | `IOS_WDA_MJPEG_QUALITY` | `10` | WDA-side JPEG quality for the iOS MJPEG fallback |
