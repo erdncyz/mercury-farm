@@ -39,6 +39,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Tek bir WDA MJPEG kopması kullanıcıyı artık iOS cihazdan atmıyor** — MJPEG canlılık soketi dört kez yeniden denemek üzere tasarlanmıştı, ancak daha ilk kopmada cihazı yok olarak işaretliyordu (bu worker'ı sonlandırır). Bu yüzden kısa bir usbmux aksaması bile aktif oturumu bitiriyor ve cihazı ~15 sn kullanılamaz hale getiriyordu. Sokette `error` dinleyicisi de yoktu; reddedilen bir yeniden bağlanma worker'ı çökertirdi. Artık kopmalar yeniden deneniyor, 30 sn kararlı bağlantıdan sonra deneme hakkı sıfırlanıyor ve cihaz yalnızca WDA'ya tekrar ulaşılamadığında kayıp olarak bildiriliyor.
 
+**A failed usbmux tunnel no longer takes down every iOS device / Başarısız bir usbmux tüneli artık tüm iOS cihazları düşürmüyor** — Once a port relay was ready, `openPort()` removed its only `error` listener, but the relay keeps emitting `error` for each connection it cannot tunnel — for example while WDA is restarting, or while a device briefly disappears during USB re-enumeration. The unhandled `UsbmuxdError: Tunnel failed, Err #3: Port isn't available or open` then crashed the whole iOS provider and disconnected every attached device at once. Those per-connection failures are now logged and the provider keeps running.
+
+**Başarısız bir usbmux tüneli artık tüm iOS cihazları düşürmüyor** — Port relay'i hazır olduktan sonra `openPort()` tek `error` dinleyicisini kaldırıyordu; oysa relay tünel açamadığı her bağlantı için `error` yaymaya devam ediyor (örneğin WDA yeniden başlarken veya cihaz USB'de yeniden tanıtılırken bir anlığına kaybolduğunda). İşlenmeyen `UsbmuxdError: Tunnel failed, Err #3: Port isn't available or open` hatası tüm iOS provider'ı çökertiyor ve bağlı bütün cihazları aynı anda koparıyordu. Bu bağlantı hataları artık loglanıyor ve provider çalışmaya devam ediyor.
+
 ## [0.8.0] — 2026-08-30
 
 ### Added / Eklendi
