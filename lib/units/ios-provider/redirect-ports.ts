@@ -27,6 +27,14 @@ export async function openPort(
         relay.on('error', reject)
     })
 
+    // After 'ready' the relay reports per-connection failures (WDA restarting,
+    // device briefly gone during USB re-enumeration) as 'error' and has already
+    // closed that connection. Without a listener the EventEmitter throws and the
+    // whole provider, with every attached device, goes down.
+    relay.on('error', (err: any) => {
+        log.warn('usbmux relay %s -> device port %s for %s failed: %s', listenPort, devicePort, udid, err?.message || err)
+    })
+
     return () =>
         new Promise<void>((resolve, reject) => {
             relay.on('close', () => {
