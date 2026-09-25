@@ -2,8 +2,10 @@ import assert from 'node:assert/strict'
 import net from 'node:net'
 import test from 'node:test'
 import {
+    buildAppSwitcherGesture,
     createWdaSessionWithRecovery,
     getDirectionalSwipe,
+    hasPhysicalHomeButton,
     isPointerAction,
     watchWdaMjpeg
 } from '../lib/units/ios-device/plugins/wda/client.js'
@@ -105,6 +107,26 @@ test('does not classify keyboard actions as pointer gestures', () => {
     assert.equal(isPointerAction({
         actions: [{type: 'key', actions: [{type: 'keyDown', value: 'a'}]}]
     }), false)
+})
+
+test('detects home-button iPhones from their point size', () => {
+    assert.equal(hasPhysicalHomeButton({width: 375, height: 667}), true)
+    assert.equal(hasPhysicalHomeButton({width: 736, height: 414}), true)
+    assert.equal(hasPhysicalHomeButton({width: 402, height: 874}), false)
+    assert.equal(hasPhysicalHomeButton({width: 820, height: 1180}), false)
+    assert.equal(hasPhysicalHomeButton(null), false)
+})
+
+test('opens the app switcher with a bottom-edge drag that holds mid-screen', () => {
+    assert.deepEqual(buildAppSwitcherGesture({width: 402, height: 874}), {
+        fromX: 201,
+        fromY: 872,
+        toX: 201,
+        toY: 437,
+        pressDuration: 0.05,
+        velocity: 1000,
+        holdDuration: 0.8
+    })
 })
 
 const quietLog = {info() {}, warn() {}}
