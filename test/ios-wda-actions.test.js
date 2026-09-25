@@ -3,10 +3,13 @@ import net from 'node:net'
 import test from 'node:test'
 import {
     buildAppSwitcherGesture,
+    buildTapActions,
     createWdaSessionWithRecovery,
     getDirectionalSwipe,
     hasPhysicalHomeButton,
     isPointerAction,
+    nextQueuedGesture,
+    QUEUED_TAP_MAX_AGE_MS,
     watchWdaMjpeg
 } from '../lib/units/ios-device/plugins/wda/client.js'
 
@@ -107,6 +110,32 @@ test('does not classify keyboard actions as pointer gestures', () => {
     assert.equal(isPointerAction({
         actions: [{type: 'key', actions: [{type: 'keyDown', value: 'a'}]}]
     }), false)
+})
+
+test('taps with a single down/up pair and no redundant pointer move', () => {
+    const body = buildTapActions(120, 340)
+    assert.equal(isPointerAction(body), true)
+    assert.deepEqual(body.actions[0].actions, [
+        {type: 'pointerMove', duration: 0, x: 120, y: 340},
+        {type: 'pointerDown', button: 0},
+        {type: 'pause', duration: 50},
+        {type: 'pointerUp'}
+    ])
+})
+
+test('replays queued taps and swipes in the order the user made them', () => {
+    const now = 10_000
+    assert.equal(nextQueuedGesture({queuedAt: now - 100}, {queuedAt: now - 50}, now), 'tap')
+    assert.equal(nextQueuedGesture({queuedAt: now - 50}, {queuedAt: now - 100}, now), 'swipe')
+    assert.equal(nextQueuedGesture({queuedAt: now - 100}, null, now), 'tap')
+    assert.equal(nextQueuedGesture(null, {queuedAt: now}, now), 'swipe')
+    assert.equal(nextQueuedGesture(null, null, now), null)
+})
+
+test('drops a tap that waited too long behind a stuck swipe', () => {
+    const now = 10_000
+    assert.equal(nextQueuedGesture({queuedAt: now - QUEUED_TAP_MAX_AGE_MS - 1}, null, now), 'stale-tap')
+    assert.equal(nextQueuedGesture({queuedAt: now - QUEUED_TAP_MAX_AGE_MS}, null, now), 'tap')
 })
 
 test('detects home-button iPhones from their point size', () => {
