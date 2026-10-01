@@ -195,6 +195,13 @@ curl -X DELETE -H "Authorization: Bearer YOUR_TOKEN" \
 Runs released without `result` (or closed by timeout) show no badge. The Ruby
 examples report it automatically from the script outcome.
 
+Release waits for each active device in the run to acknowledge remote disconnect
+and leaving automation mode before deleting its reservation and finishing the
+build. A device already released, or now owned by another run, is left alone.
+If a device is unavailable or cleanup fails, the endpoint returns an error and
+keeps that group's reservation and build open so the same release can be retried.
+A successful `200 Deleted (groups)` no longer means only a database deletion.
+
 ### Scenario results on the Builds page
 
 Report per-scenario outcomes and they appear under the run (expandable list
