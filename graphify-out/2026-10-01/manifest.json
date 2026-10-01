@@ -882,10 +882,10 @@
     "semantic_hash": "9d73c78838fa337d4386808deb875666"
   },
   "WebDriverAgent/Scripts/ci/build-real.sh": {
-    "mtime": 1784789536.954888,
-    "seen": 1790832224.276586,
-    "ast_hash": "2ad2c442ad08e92e78c9f3561dd3516f",
-    "semantic_hash": "2ad2c442ad08e92e78c9f3561dd3516f"
+    "mtime": 1790832989.023629,
+    "seen": 1790834225.894022,
+    "ast_hash": "9e666cced9e88de702a48b3d58531212",
+    "semantic_hash": ""
   },
   "WebDriverAgent/Scripts/ci/build-sim.sh": {
     "mtime": 1784789536.9549425,
@@ -1044,16 +1044,16 @@
     "semantic_hash": "c309dce057469033b000273e4eea9fd8"
   },
   "WebDriverAgent/WebDriverAgentLib/Categories/XCUIApplication+FBTouchAction.h": {
-    "mtime": 1784789536.9581354,
-    "seen": 1790832224.276596,
-    "ast_hash": "4613ccb04fe589d1f357421e0574a716",
-    "semantic_hash": "4613ccb04fe589d1f357421e0574a716"
+    "mtime": 1790832989.0247946,
+    "seen": 1790834225.8940349,
+    "ast_hash": "020aa2ea8a7d7f88a0bc4f9bf1aea21a",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Categories/XCUIApplication+FBTouchAction.m": {
-    "mtime": 1787811808.2058208,
-    "seen": 1790832224.276597,
-    "ast_hash": "e28a4b18b3bcbe73eab91b90c2c8a1f1",
-    "semantic_hash": "e28a4b18b3bcbe73eab91b90c2c8a1f1"
+    "mtime": 1790832989.0250394,
+    "seen": 1790834225.894036,
+    "ast_hash": "e359d3df70dd24585f5bbbd0a5ba275d",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Categories/XCUIApplication+FBUIInterruptions.h": {
     "mtime": 1784789536.9583042,
@@ -1182,10 +1182,10 @@
     "semantic_hash": "e7d0c5a0e3b8c2e98aa65eee39c5f662"
   },
   "WebDriverAgent/WebDriverAgentLib/Categories/XCUIElement+FBFind.m": {
-    "mtime": 1787811808.2072203,
-    "seen": 1790832224.276604,
-    "ast_hash": "8b09ebda005365fd87583cde65baef72",
-    "semantic_hash": "8b09ebda005365fd87583cde65baef72"
+    "mtime": 1790832989.025282,
+    "seen": 1790834225.894047,
+    "ast_hash": "48b5648e75a4c1f4441c935fbba7757a",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Categories/XCUIElement+FBForceTouch.h": {
     "mtime": 1784789536.959808,
@@ -1314,10 +1314,10 @@
     "semantic_hash": "608cba759afc811ce6a6b01e696bdd12"
   },
   "WebDriverAgent/WebDriverAgentLib/Categories/XCUIElement+FBUtilities.m": {
-    "mtime": 1788081702.4866264,
-    "seen": 1790832224.276612,
-    "ast_hash": "d7f24fd481b11895a84b3d5b15d4be5c",
-    "semantic_hash": "d7f24fd481b11895a84b3d5b15d4be5c"
+    "mtime": 1790832989.0254962,
+    "seen": 1790834225.894058,
+    "ast_hash": "8b437dec58ae18df168d56d8fca7a736",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Categories/XCUIElement+FBVisibleFrame.h": {
     "mtime": 1784789536.9614103,
@@ -1398,10 +1398,10 @@
     "semantic_hash": "5652cf048cc4138b7699a56d856e9afb"
   },
   "WebDriverAgent/WebDriverAgentLib/Commands/FBElementCommands.m": {
-    "mtime": 1790233323.1899545,
-    "seen": 1790832224.276617,
-    "ast_hash": "cd31e17e5fc7d617aa0cceda507819f8",
-    "semantic_hash": "cd31e17e5fc7d617aa0cceda507819f8"
+    "mtime": 1790832989.025667,
+    "seen": 1790834225.894065,
+    "ast_hash": "92a12898e98d895f09339facd9144f2f",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Commands/FBFindElementCommands.h": {
     "mtime": 1784789536.9628162,
@@ -1590,10 +1590,10 @@
     "semantic_hash": "ebba9aa17e3765c57316a8b567af6212"
   },
   "WebDriverAgent/WebDriverAgentLib/Routing/FBHTTPServer.m": {
-    "mtime": 1788081702.4872234,
-    "seen": 1790832224.276628,
-    "ast_hash": "0509ead3fa5e5a3a1780507680bf43d8",
-    "semantic_hash": "0509ead3fa5e5a3a1780507680bf43d8"
+    "mtime": 1790832989.026214,
+    "seen": 1790834225.894081,
+    "ast_hash": "11e1fa933863a932b6029ad8eac39c6c",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Routing/FBHTTPStatusCodes.h": {
     "mtime": 1784789536.9650342,
@@ -1710,16 +1710,16 @@
     "semantic_hash": "7fadd85c714fc72909e89708647bae3b"
   },
   "WebDriverAgent/WebDriverAgentLib/Routing/FBTCPSocket.h": {
-    "mtime": 1788081702.4880667,
-    "seen": 1790832224.276635,
-    "ast_hash": "b4c081243fd1a5c332dd0419e8fea76a",
-    "semantic_hash": "b4c081243fd1a5c332dd0419e8fea76a"
+    "mtime": 1790832989.0265896,
+    "seen": 1790834225.89409,
+    "ast_hash": "c3ae7c0d71dd4b264597c4c3e4e3e928",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Routing/FBTCPSocket.m": {
-    "mtime": 1788081702.48833,
-    "seen": 1790832224.276635,
-    "ast_hash": "f0e777770123b61c321264b69c6bf0fc",
-    "semantic_hash": "f0e777770123b61c321264b69c6bf0fc"
+    "mtime": 1790832989.0271025,
+    "seen": 1790834225.894091,
+    "ast_hash": "d5c00fbd2353afe708e9f6011dcd3f51",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Routing/FBWebServer.h": {
     "mtime": 1787811808.2126544,
@@ -1878,16 +1878,16 @@
     "semantic_hash": "8a89d366de38e9adc263e55d68afabbb"
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/FBConfiguration.h": {
-    "mtime": 1787811808.2141001,
-    "seen": 1790832224.2766452,
-    "ast_hash": "6cbf04fab92c010b97bba1d8ca2dfa17",
-    "semantic_hash": "6cbf04fab92c010b97bba1d8ca2dfa17"
+    "mtime": 1790832989.0273726,
+    "seen": 1790834225.894104,
+    "ast_hash": "c057d46c7e1eeb73f72e13db90a9f1c2",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/FBConfiguration.m": {
-    "mtime": 1787811808.214536,
-    "seen": 1790832224.2766452,
-    "ast_hash": "b4759e45b21adeaa6c10a840343eaf24",
-    "semantic_hash": "b4759e45b21adeaa6c10a840343eaf24"
+    "mtime": 1790832989.027585,
+    "seen": 1790834225.8941052,
+    "ast_hash": "b9aa331e684ba1cd74899639f7d7da6f",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/FBDebugLogDelegateDecorator.h": {
     "mtime": 1784789536.969015,
@@ -1956,10 +1956,10 @@
     "semantic_hash": "0ce9c7fd18a3a03d73fa027931ba1863"
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/FBImageProcessor.m": {
-    "mtime": 1787811808.214792,
-    "seen": 1790832224.276649,
-    "ast_hash": "ede1963bfbc9117002cb1d8fd5255c13",
-    "semantic_hash": "ede1963bfbc9117002cb1d8fd5255c13"
+    "mtime": 1790832989.0278797,
+    "seen": 1790834225.894111,
+    "ast_hash": "86086e2329afdc36803d5765e4be014c",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/FBImageUtils.h": {
     "mtime": 1784789536.9697855,
@@ -2022,10 +2022,10 @@
     "semantic_hash": "68ba8d6bde2edbd81e23549243cc0599"
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/FBMjpegServer.m": {
-    "mtime": 1788081702.4887004,
-    "seen": 1790832224.276653,
-    "ast_hash": "634409767566488de6b64f5ce3303e66",
-    "semantic_hash": "634409767566488de6b64f5ce3303e66"
+    "mtime": 1790832989.0280106,
+    "seen": 1790834225.8941162,
+    "ast_hash": "02525890131c78e48eeccfa8cf5be4c3",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/FBNotificationsHelper.h": {
     "mtime": 1784789536.9704232,
@@ -2100,40 +2100,40 @@
     "semantic_hash": "5651ce4df1c43fd4400d85000831c2b9"
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/FBScreen.h": {
-    "mtime": 1790233323.1909149,
-    "seen": 1790832224.276659,
-    "ast_hash": "fee742d5446c85ee1e3a2c566fe5ca6c",
-    "semantic_hash": "fee742d5446c85ee1e3a2c566fe5ca6c"
+    "mtime": 1790832989.028184,
+    "seen": 1790834225.894123,
+    "ast_hash": "4ccb62acee053e1b7eda6543784392d5",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/FBScreen.m": {
-    "mtime": 1790233323.1910002,
-    "seen": 1790832224.276659,
-    "ast_hash": "02b51b09a4eae20382786b0e04f63a8e",
-    "semantic_hash": "02b51b09a4eae20382786b0e04f63a8e"
+    "mtime": 1790832989.028279,
+    "seen": 1790834225.894124,
+    "ast_hash": "4bf9b60a16fbe2d086d8e6c7a997f2b3",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/FBScreenshot.h": {
-    "mtime": 1784789536.971156,
-    "seen": 1790832224.27666,
-    "ast_hash": "11703808e2caa31479e3540dad999ab4",
-    "semantic_hash": "11703808e2caa31479e3540dad999ab4"
+    "mtime": 1790832989.0284758,
+    "seen": 1790834225.894124,
+    "ast_hash": "7b6c14b625f7ae4895bf321e240c21bb",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/FBScreenshot.m": {
-    "mtime": 1787831668.7480874,
-    "seen": 1790832224.27666,
-    "ast_hash": "bdae0ff415cf383b3c3152765d9861e7",
-    "semantic_hash": "bdae0ff415cf383b3c3152765d9861e7"
+    "mtime": 1790832989.028824,
+    "seen": 1790834225.894124,
+    "ast_hash": "51fa534d02d219766cbd35d897c7de05",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/FBSettings.h": {
-    "mtime": 1787811808.2159863,
-    "seen": 1790832224.27666,
-    "ast_hash": "995830d284aeab1517f64cd7d6814999",
-    "semantic_hash": "995830d284aeab1517f64cd7d6814999"
+    "mtime": 1790832989.0290604,
+    "seen": 1790834225.894125,
+    "ast_hash": "d736c8afa7a68e0faa4de1fd6d8a0a7c",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/FBSettings.m": {
-    "mtime": 1787811808.2160962,
-    "seen": 1790832224.276661,
-    "ast_hash": "89501dc5a1773cb3a7c604c3eb7623f4",
-    "semantic_hash": "89501dc5a1773cb3a7c604c3eb7623f4"
+    "mtime": 1790832989.0291953,
+    "seen": 1790834225.8941262,
+    "ast_hash": "a1569b844151a3ff6601778fa0951196",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/FBSettingsHandler.h": {
     "mtime": 1784789536.9714322,
@@ -2142,10 +2142,10 @@
     "semantic_hash": "977140eea83ab0b0a471dc14f00ee800"
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/FBSettingsHandler.m": {
-    "mtime": 1787811808.2162173,
-    "seen": 1790832224.276661,
-    "ast_hash": "4a38c973f7e273cb7be11301d655b272",
-    "semantic_hash": "4a38c973f7e273cb7be11301d655b272"
+    "mtime": 1790832989.0293114,
+    "seen": 1790834225.8941262,
+    "ast_hash": "e5d70ce7746228b7c8fed10c5493aae3",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/FBTVNavigationTracker-Private.h": {
     "mtime": 1786520270.7818289,
@@ -2274,10 +2274,10 @@
     "semantic_hash": "2fefab21f854ab7363713160ec55feb0"
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/FBXPath.m": {
-    "mtime": 1788081702.489947,
-    "seen": 1790832224.276669,
-    "ast_hash": "e7949fa426d00e95a3cfa49ac5eba2a9",
-    "semantic_hash": "e7949fa426d00e95a3cfa49ac5eba2a9"
+    "mtime": 1790832989.0294542,
+    "seen": 1790834225.894138,
+    "ast_hash": "0cb4901aee640227a524f8b3cbec35fc",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/FBXPathExtensions.h": {
     "mtime": 1784789536.972919,
@@ -2298,16 +2298,16 @@
     "semantic_hash": "0658c3137af1a9260a7e7f90ce19b9d5"
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/LRUCache/LRUCache.m": {
-    "mtime": 1784789536.9732037,
-    "seen": 1790832224.27667,
-    "ast_hash": "54f12a928457c94f3abda0bd59a07b7f",
-    "semantic_hash": "54f12a928457c94f3abda0bd59a07b7f"
+    "mtime": 1790832989.02962,
+    "seen": 1790834225.89414,
+    "ast_hash": "db7f2052d0bbc6b6e6a477e8f00e79fc",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/LRUCache/LRUCacheNode.h": {
-    "mtime": 1784789536.9732904,
-    "seen": 1790832224.276671,
-    "ast_hash": "4deaf54ebdb4f7c2794b21654813200c",
-    "semantic_hash": "4deaf54ebdb4f7c2794b21654813200c"
+    "mtime": 1790832989.0297642,
+    "seen": 1790834225.89414,
+    "ast_hash": "5d19a4081d5dcb2156fe14def57a2ed2",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentLib/Utilities/LRUCache/LRUCacheNode.m": {
     "mtime": 1784789536.9733646,
@@ -2454,10 +2454,10 @@
     "semantic_hash": "c3444422df5af142a711497485874efb"
   },
   "WebDriverAgent/WebDriverAgentTests/IntegrationApp/Classes/SceneDelegate.m": {
-    "mtime": 1784789536.9788468,
-    "seen": 1790832224.276681,
-    "ast_hash": "18a7f25379f9de50cdfb696707f04086",
-    "semantic_hash": "18a7f25379f9de50cdfb696707f04086"
+    "mtime": 1790832989.029903,
+    "seen": 1790834225.894155,
+    "ast_hash": "87ef785adc44e03f5100c80794427eb1",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentTests/IntegrationApp/Classes/TouchSpotView.h": {
     "mtime": 1784789536.9789095,
@@ -2592,10 +2592,10 @@
     "semantic_hash": "4dbc14b99f04c01e9fc2b199c0f3dd53"
   },
   "WebDriverAgent/WebDriverAgentTests/IntegrationTests/FBElementSwipingTests.m": {
-    "mtime": 1790233323.1925592,
-    "seen": 1790832224.27669,
-    "ast_hash": "02277c65bf21bb29d4728761d30d849f",
-    "semantic_hash": "02277c65bf21bb29d4728761d30d849f"
+    "mtime": 1790832989.0302708,
+    "seen": 1790834225.894165,
+    "ast_hash": "ec74209f1ca1fe61074c3eb298d95148",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentTests/IntegrationTests/FBElementVisibilityTests.m": {
     "mtime": 1790233323.1926565,
@@ -2616,10 +2616,10 @@
     "semantic_hash": "6555a27a3ef292574c45eaaab9a6f9ee"
   },
   "WebDriverAgent/WebDriverAgentTests/IntegrationTests/FBImageProcessorTests.m": {
-    "mtime": 1784789536.9803493,
-    "seen": 1790832224.276691,
-    "ast_hash": "051898b87fcd6eb0942b6489e6101e18",
-    "semantic_hash": "051898b87fcd6eb0942b6489e6101e18"
+    "mtime": 1790832989.0303798,
+    "seen": 1790834225.894167,
+    "ast_hash": "7f3257f50166ea16b5ca353c27fd7029",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentTests/IntegrationTests/FBIntegrationAppTests.m": {
     "mtime": 1790233323.1927946,
@@ -2664,10 +2664,10 @@
     "semantic_hash": "ecd934ce582c6054d8b419da6cd29954"
   },
   "WebDriverAgent/WebDriverAgentTests/IntegrationTests/FBScreenTests.m": {
-    "mtime": 1790233323.1931655,
-    "seen": 1790832224.276694,
-    "ast_hash": "e4250c05ee9b7b0214116dd9431dfd15",
-    "semantic_hash": "e4250c05ee9b7b0214116dd9431dfd15"
+    "mtime": 1790832989.030613,
+    "seen": 1790834225.8941708,
+    "ast_hash": "d821e8971a07319fd192369cc40d3da4",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentTests/IntegrationTests/FBScrollingTests.m": {
     "mtime": 1788081702.5005667,
@@ -2778,10 +2778,10 @@
     "semantic_hash": "15573b44e8e232db2f4ee8ac84277dc4"
   },
   "WebDriverAgent/WebDriverAgentTests/IntegrationTests/XCUIElementFBFindTests.m": {
-    "mtime": 1788081702.504425,
-    "seen": 1790832224.276701,
-    "ast_hash": "2b7b183c9062a405af5ac99f7c4e59de",
-    "semantic_hash": "2b7b183c9062a405af5ac99f7c4e59de"
+    "mtime": 1790832989.0308552,
+    "seen": 1790834225.89418,
+    "ast_hash": "799e7e8a83c59ce7f7692197342dbf94",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentTests/IntegrationTests/XCUIElementHelperIntegrationTests.m": {
     "mtime": 1784789536.9826095,
@@ -2928,10 +2928,10 @@
     "semantic_hash": "20b7991e97b18535c3f7c1391ddf5b88"
   },
   "WebDriverAgent/WebDriverAgentTests/UnitTests/FBElementUtilitiesTests.m": {
-    "mtime": 1784789536.9834125,
-    "seen": 1790832224.2767098,
-    "ast_hash": "46eb54d51cf82f6119c80f6d1e36bef7",
-    "semantic_hash": "46eb54d51cf82f6119c80f6d1e36bef7"
+    "mtime": 1790832989.0310273,
+    "seen": 1790834225.8941922,
+    "ast_hash": "c7cfe6430ebd1371df26abcd9ee343bb",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentTests/UnitTests/FBErrorBuilderTests.m": {
     "mtime": 1784789536.9834664,
@@ -2946,22 +2946,22 @@
     "semantic_hash": "4e00b7529a25dbf4220dd932fa78d470"
   },
   "WebDriverAgent/WebDriverAgentTests/UnitTests/FBHTTPServerSessionTests.m": {
-    "mtime": 1788081702.5054452,
-    "seen": 1790832224.276711,
-    "ast_hash": "b47b10738f55e1b99bfd2999e42ba1c2",
-    "semantic_hash": "b47b10738f55e1b99bfd2999e42ba1c2"
+    "mtime": 1790832989.0312045,
+    "seen": 1790834225.894193,
+    "ast_hash": "10c225f1a05c042980083bc803364490",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentTests/UnitTests/FBHTTPServerTests.m": {
-    "mtime": 1788081702.505549,
-    "seen": 1790832224.276711,
-    "ast_hash": "fd7eb1b36d026700bdd8d24ae028eed3",
-    "semantic_hash": "fd7eb1b36d026700bdd8d24ae028eed3"
+    "mtime": 1790832989.0314746,
+    "seen": 1790834225.894194,
+    "ast_hash": "583bd6e148d5b95f3542b248af2904da",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentTests/UnitTests/FBLRUCacheTests.m": {
-    "mtime": 1784789536.9835973,
-    "seen": 1790832224.276712,
-    "ast_hash": "6720325326f5ef26062cabfbaf46188e",
-    "semantic_hash": "6720325326f5ef26062cabfbaf46188e"
+    "mtime": 1790832989.031827,
+    "seen": 1790834225.894194,
+    "ast_hash": "4fce05dbf534c2b8a65f1a1d3de7fb9a",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentTests/UnitTests/FBMathUtilsTests.m": {
     "mtime": 1790233323.1941233,
@@ -3030,10 +3030,10 @@
     "semantic_hash": "04f2a846d1d11abfd9bb25e88c12ac0b"
   },
   "WebDriverAgent/WebDriverAgentTests/UnitTests/FBXPathTests.m": {
-    "mtime": 1784789536.9841123,
-    "seen": 1790832224.276716,
-    "ast_hash": "9e1d3763b0f02a8ef71ea8d2279cc522",
-    "semantic_hash": "9e1d3763b0f02a8ef71ea8d2279cc522"
+    "mtime": 1790832989.0320768,
+    "seen": 1790834225.8942,
+    "ast_hash": "12a6e28d723de7e37d7db1e77c493d46",
+    "semantic_hash": ""
   },
   "WebDriverAgent/WebDriverAgentTests/UnitTests/NSDictionaryFBUtf8SafeTests.m": {
     "mtime": 1788081702.505973,
@@ -3186,10 +3186,10 @@
     "semantic_hash": "23d11e09c86e044f2fbb26cecb0772eb"
   },
   "WebDriverAgent/lib/xcodebuild.ts": {
-    "mtime": 1790233323.19481,
-    "seen": 1790832224.276725,
-    "ast_hash": "654ba0e26cf3a36c693ae92e63c779ea",
-    "semantic_hash": "654ba0e26cf3a36c693ae92e63c779ea"
+    "mtime": 1790832989.032334,
+    "seen": 1790834225.8942132,
+    "ast_hash": "33d5b027e38bf50c8a04dada7c4870ef",
+    "semantic_hash": ""
   },
   "WebDriverAgent/oxfmt.config.mjs": {
     "mtime": 1785259499.509644,
@@ -3204,10 +3204,10 @@
     "semantic_hash": "37adb666f3fb2bbc4522466496c995fe"
   },
   "WebDriverAgent/package.json": {
-    "mtime": 1790233323.1949346,
-    "seen": 1790832224.276726,
-    "ast_hash": "5d82f790366c8844a0d6b28a0100edec",
-    "semantic_hash": "5d82f790366c8844a0d6b28a0100edec"
+    "mtime": 1790832989.0324478,
+    "seen": 1790834225.8942149,
+    "ast_hash": "75812cfb29a5ebf51d3c52b1d495c3a2",
+    "semantic_hash": ""
   },
   "WebDriverAgent/release.config.mjs": {
     "mtime": 1787811808.2241051,
@@ -3228,10 +3228,10 @@
     "semantic_hash": "879114fb8c624a817bd659ec36c2c570"
   },
   "WebDriverAgent/test/functional/webdriveragent-e2e.spec.ts": {
-    "mtime": 1787811808.2245817,
-    "seen": 1790832224.2767282,
-    "ast_hash": "1b7d55f8a797e0a161c47ac32b665f22",
-    "semantic_hash": "1b7d55f8a797e0a161c47ac32b665f22"
+    "mtime": 1790832989.0327652,
+    "seen": 1790834225.894217,
+    "ast_hash": "b2d582171583e747da9d228e01e84a98",
+    "semantic_hash": ""
   },
   "WebDriverAgent/test/unit/processes.spec.ts": {
     "mtime": 1790233323.1951034,
@@ -3258,10 +3258,10 @@
     "semantic_hash": "f9a645d00820d1cca0e4cc2ab5301968"
   },
   "WebDriverAgent/test/unit/xcodebuild.spec.ts": {
-    "mtime": 1790233323.195267,
-    "seen": 1790832224.27673,
-    "ast_hash": "b1b410143c67ef5e966e5f4c5031379e",
-    "semantic_hash": "b1b410143c67ef5e966e5f4c5031379e"
+    "mtime": 1790832989.0329094,
+    "seen": 1790834225.89422,
+    "ast_hash": "82ef6c4d174e6a7732df362419e7b836",
+    "semantic_hash": ""
   },
   "WebDriverAgent/tsconfig.json": {
     "mtime": 1785259499.5114348,
@@ -5736,10 +5736,10 @@
     "semantic_hash": "567590dd4c541e6edbdff29bdcf279b6"
   },
   "scripts/deploy-ios-provider-runtime.sh": {
-    "mtime": 1790243965.747541,
-    "seen": 1790832224.276881,
-    "ast_hash": "4f56902dc88dabfa7d2aed4cfb8641a4",
-    "semantic_hash": "4f56902dc88dabfa7d2aed4cfb8641a4"
+    "mtime": 1790833007.741668,
+    "seen": 1790834225.894421,
+    "ast_hash": "a0d507224ee913993f35148df825c328",
+    "semantic_hash": ""
   },
   "scripts/generate-ssl.sh": {
     "mtime": 1784312668.5595458,
@@ -9942,16 +9942,16 @@
     "semantic_hash": "d2dfca92500ace92a60bce8e5ace6026"
   },
   "CHANGELOG.md": {
-    "mtime": 1790260876.441535,
-    "seen": 1790832224.277148,
-    "ast_hash": "d99434ccc361d1bee0eb2a72b765570c",
-    "semantic_hash": "d99434ccc361d1bee0eb2a72b765570c"
+    "mtime": 1790833007.747605,
+    "seen": 1790834225.89477,
+    "ast_hash": "e955e246f11246ece616a8fbdcfa303a",
+    "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1790260876.4417405,
-    "seen": 1790832224.277148,
-    "ast_hash": "0a4c5131139695446bb09fa03e97d1af",
-    "semantic_hash": "0a4c5131139695446bb09fa03e97d1af"
+    "mtime": 1790833007.740285,
+    "seen": 1790834225.8947709,
+    "ast_hash": "cabec2bef68cb94caeeb4fcdbebb1d7f",
+    "semantic_hash": ""
   },
   "WebDriverAgent/.github/ISSUE_TEMPLATE.md": {
     "mtime": 1784789536.9465523,
@@ -10008,10 +10008,10 @@
     "semantic_hash": "1b16410c50c4176bb702059b6f86f433"
   },
   "WebDriverAgent/CHANGELOG.md": {
-    "mtime": 1790233323.1877334,
-    "seen": 1790832224.277152,
-    "ast_hash": "ccff9a497f8c1ee89993c6c4f2db9726",
-    "semantic_hash": "ccff9a497f8c1ee89993c6c4f2db9726"
+    "mtime": 1790832989.0233016,
+    "seen": 1790834225.8947752,
+    "ast_hash": "8fe872ad3ef5889086ceef5d2810e928",
+    "semantic_hash": ""
   },
   "WebDriverAgent/CONTRIBUTING.md": {
     "mtime": 1784789536.9476967,
@@ -10062,10 +10062,10 @@
     "semantic_hash": "320d83bd26e66866558623aa1b65bf70"
   },
   "docs/architecture.md": {
-    "mtime": 1790240079.7097366,
-    "seen": 1790832224.2771552,
-    "ast_hash": "0ac90a896173f8f552a3ba6056f72b30",
-    "semantic_hash": "0ac90a896173f8f552a3ba6056f72b30"
+    "mtime": 1790833007.7441058,
+    "seen": 1790834225.894779,
+    "ast_hash": "d862f9ba89ec8da62fa88aade7a81678",
+    "semantic_hash": ""
   },
   "docs/automation-api.md": {
     "mtime": 1790260876.4419053,
@@ -10110,10 +10110,10 @@
     "semantic_hash": "7a87a0a91af26e965ac575e7e4f454c3"
   },
   "docs/mimari.md": {
-    "mtime": 1790240079.7099133,
-    "seen": 1790832224.277159,
-    "ast_hash": "0dc9aac1171e711b514394809e53c24f",
-    "semantic_hash": "0dc9aac1171e711b514394809e53c24f"
+    "mtime": 1790833007.7460208,
+    "seen": 1790834225.894783,
+    "ast_hash": "38f0b0416a44e5039856c5500b03fc23",
+    "semantic_hash": ""
   },
   "docs/parallel-execution.md": {
     "mtime": 1786531244.607141,
@@ -10336,5 +10336,17 @@
     "seen": 1790832224.2771719,
     "ast_hash": "45dcd3098aed34fd827efb945d0d171c",
     "semantic_hash": "45dcd3098aed34fd827efb945d0d171c"
+  },
+  "WebDriverAgent/test/functional/helpers/display-settings.ts": {
+    "mtime": 1790832989.0325332,
+    "seen": 1790834225.8942158,
+    "ast_hash": "a5487d9bc592d3120a7b990ecc62f10a",
+    "semantic_hash": ""
+  },
+  "test/device-connector.test.js": {
+    "mtime": 1790834201.7404544,
+    "seen": 1790834225.8944268,
+    "ast_hash": "c556b2fda96d12fba0f2d0b24f71cd90",
+    "semantic_hash": ""
   }
 }

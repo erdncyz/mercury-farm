@@ -1,17 +1,17 @@
 # Graph Report - mercury-farm  (2026-10-01)
 
 ## Corpus Check
-- 1681 files · ~663,465 words
+- 1686 files · ~664,941 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 171 file(s) not represented in the graph (top: .css 86, (none) 42, .xcscheme 15)
 
 ## Summary
-- 13182 nodes · 22514 edges · 1566 communities (430 shown, 1136 thin omitted)
-- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 531 edges (avg confidence: 0.83)
+- 13196 nodes · 22547 edges · 1574 communities (446 shown, 1128 thin omitted)
+- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 534 edges (avg confidence: 0.83)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `64289a60`
+- Built from commit: `f16f7e80`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -21,27 +21,27 @@
 - ref_config
 - util/logger.js
 - wire.js
-- ref_components
+- @vkontakte/vkui
 - cli/index.js
 - XCTestCase
 - types/index.ts
 - LSApplicationWorkspace
-- fbconfiguration
+- XCUIElement
 - WebDriverAgentLib.h
 - uikit
-- WireRouter
+- ios-provider/index.ts
 - XCUIDevice
 - DeviceScreenStore
-- XCUIElement
+- FBXCElementSnapshotWrapper
 - all/model.js
-- FBXPath.m
+- FBElementAttribute
 - device/plugins/screen/stream.js
 - touch/index.ts
 - react
 - dependencies
-- ref_lib
+- ref_components
 - classnames
-- utils/index.ts
+- xcodebuild.ts
 - group-item.tsx
 - device.tsx
 - DeviceControlService
@@ -61,20 +61,20 @@
 - AndroidWebRtcTransport
 - ios-screen-capture.test.js
 - FBElementCommands
-- <FBElement>
-- apiutil.js
+- <FBXCAccessibilityElement>
+- controllers/user.js
 - FBWebServer.m
 - TouchableView
 - addOriginGroupDevices
 - forward/index.js
 - XCAXClient_iOS
 - FBRoute
-- @vkontakte/vkui
+- apiutil.js
 - XCElementSnapshotDouble
 - <FBXCElementSnapshot>
 - XCUIApplication
 - XCUIScreen
-- db/index.ts
+- handlers/group/index.js
 - writeStats
 - TouchService
 - FBCoordinateProbeViewController
@@ -96,7 +96,7 @@
 - XCPointerEventPath
 - XCSynthesizedEventRecord
 - XCUIApplication
-- +logFmt
+- FBSession
 - FBCommandStatus
 - XCUIElementFBFindTests
 - BrowserIcon
@@ -150,7 +150,7 @@
 - XCTWaiterWait
 - RouteResponse
 - mercury-api/index.ts
-- user-item.tsx
+- mobx-react-lite
 - FBRunLoopSpinner
 - XCTestConfiguration
 - XCTMemoryChecker
@@ -171,9 +171,9 @@
 - FBImageProcessor
 - XCUIElementDouble
 - FBTVNavigationTrackerTests
-- TouchConsumer
+- FBScreenRecordingContainer
 - NSPredicate
-- scripts
+- runtime-settings.tsx
 - +builder
 - ApplicationInstallationService
 - scaling-service.ts
@@ -181,7 +181,7 @@
 - XCTMetricDiagnosticHelper
 - XCTRepetitionPolicy
 - XCTTagSelection
-- FBXPath
+- +xmlRepresentationWithRootElementwriterelementStorequeryexcludingAttributes
 - DbClient
 - team/model.js
 - MERCURY_API_ROUTES
@@ -201,7 +201,7 @@
 - FBHTTPServerTests
 - FBTCPSocket
 - build-webdriveragent.mjs
-- create-root-with-providers.tsx
+- react-router
 - vite-env.d.ts
 - GroupDevicesColumnIds
 - GroupSettingsService
@@ -228,9 +228,9 @@
 - FBPasteboard
 - FBTVNavigationTracker
 - automation-playwright/package.json
-- bluebird
+- port-forwarding-control.tsx
 - Replicator.ts
-- runtime-settings.test.tsx
+- inversify-react
 - mercury-api/types.ts
 - mercury/index.ts
 - deviceConnectionRequired
@@ -262,7 +262,7 @@
 - FBElementTypeTransformer
 - TIPreferencesController
 - XCTCapabilities
-- xcodebuild.ts
+- XcodeBuild
 - <XCTMessagingRole_EventSynthesis>
 - XCTRuntimeDiagnosticsPolicy
 - XCTScreenCapturePolicy
@@ -280,14 +280,14 @@
 - Esp32Touch
 - transform/index.js
 - NSExpression
-- swift-tool.js
+- ref_node_path
 - compilerOptions
 - handlers.ts
 - PortForwardingService
 - LogPriority
 - XCTSkippedTestContext
 - XCTTestSelection
-- <XCUIApplicationManaging>
+- XCUIDevice.h
 - FBScreenTests
 - XCUIElementAttributesTests
 - ios-h264-encoder.swift
@@ -320,7 +320,7 @@
 - XCUIDeviceRotationTests
 - FBConfigurationTests
 - ContentView
-- StateQueue
+- access-tokens-control.tsx
 - Transform
 - overrides
 - tsconfig.node.json
@@ -329,10 +329,10 @@
 - SaveLogsService
 - AXSettings
 - XCTestRun
-- processes.ts
-- +handleExpectNotification
+- XCTFuture
+- FBXPath.m
 - <XCUIScreenDataSource>
-- team-item.tsx
+- <XCTElementSnapshotAttributeDataSource>
 - FBActiveAppDetectionPoint
 - FBScrollingTests
 - FBSessionTests
@@ -350,11 +350,12 @@
 - <_XCTestObservationPrivate>
 - ShellSettingsService
 - XCUIApplicationOpenRequest
-- FBSettingsHandler.m
+- FBResponseJSONPayload
 - RouteRequest
 - IosAvCaptureH264Capture
 - XCTest
 - Mimari Dokümanı
+- XCUIElementFBFindTests_ResponseFields
 - WDAService
 - SDBClient
 - Storage
@@ -368,16 +369,16 @@
 - MobxMutation
 - application.type.ts
 - ColumnGroup
-- FBDebugLogDelegateDecorator
+- browser.js
 - XCTMeasureOptions
-- statistic-card.tsx
+- FBAbstractPredicateToken
 - <XCUIPlatformApplicationServicesProviding>
 - WDATypingIntegrationTests
 - .captureOutput
 - groupPayload.ts
 - H.264/WebRTC Screen Streaming Feature Plan
 - getDeviceBookings
-- RiskyStream
+- interceptors.ts
 - arithmetic.ts
 - WDAMjpegStreamingIntegrationTests
 - vite.config.ts
@@ -388,10 +389,10 @@
 - media-file.ts
 - CurrentUserProfileStore
 - NSString
-- <XCTSignpostListener>
+- LinkOpenerStore
 - <XCTRunnerDaemonSessionUIAutomationDelegate>
 - schedule.tsx
-- XCUIKnobControl
+- <XCTHarnessEventReporting>
 - <XCUIRemoteSiriInterface>
 - FBWebServerParams
 - FBForceTouchTests
@@ -401,7 +402,7 @@
 - FBProtocolHelpersTests
 - nsyslog-parser.d.ts
 - ProcessManager.ts
-- FBQuiescenceApplicationDouble
+- XCTPromise
 - MirrorProcess
 - HTML.ts
 - vncauth.js
@@ -419,17 +420,17 @@
 - authStore
 - deviceTableState
 - FBNavigationController
-- XCUIApplicationProcess
+- +startScreenRecordingWithRequesterror
 - IosScreenCapture
-- <XCTMemoryCheckerDelegate>
-- <XCUIAlertMonitoring>
-- <XCUIInterruptionMonitoring>
+- XCTSourceCodeLocation
+- XCUIHitPointResult
+- <XCTMessagingRole_TestExecution>
 - build.sh
 - <FBXCDeviceEvent>
 - FBAutoAlertsHandlerTests
 - FBIntegrationAppTests
 - WDAAlertIntegrationTests
-- lifecycle.ts
+- readyness.ts
 - addAdbPublicKey
 - AccountAddMenuMessage$Type
 - AccountAddMessage$Type
@@ -599,10 +600,11 @@
 - Xcode Test Environment Setup Action
 - UIKeyboardImpl
 - FBRuntimeUtilsTests
-- <XCUIApplicationImplReporter>
+- translate_tr.cjs
 - <XCUIApplicationProcessDelegate>
-- <XCUIRemoteDeviceRunner>
+- XCTestCaseRun
 - +bindingPortRangeFromArguments
+- <XCTMessagingRole_SiriAutomation>
 - FBW3CTypeActionsTests
 - WDAAppLifecycleIntegrationTests
 - Tizen Device Unit
@@ -622,13 +624,13 @@
 - device-table-row.type.ts
 - XCTIssue
 - Coordinate Probe
-- XCApplicationQuery
+- <XCTMessagingRole_SystemConfiguration>
 - <XCTRemoteSignpostListenerProxy>
-- XCUIDeviceAutomationModeInterface-Protocol.h
+- <XCTMessagingRole_UIAutomationRunnerEventReporting>
 - XCUILocation
 - -defaultTypingFrequency
-- lang-switcher.tsx
-- FBSafariAlertIntegrationTests
+- <XCTReportingSessionTestContainer>
+- XCUIApplicationRegistry
 - Pull Request and Main Push Gate
 - iOS Screen Capture Modes
 - Device Reservation and Lease Flow
@@ -638,7 +640,7 @@
 - Serializer
 - limit
 - iOS Screen Streaming
-- engines
+- i18n.ts
 - Apple Touch Icon
 - Mercury
 - addDeviceToGroup
@@ -654,7 +656,7 @@
 - ui/tsconfig.json
 - WebDriverAgent Node LTS Test Matrix
 - WebDriverAgent Release Workflow
-- <XCTIssueHandling>
+- table-with-sticky-header.tsx
 - embed-runner-icon.sh
 - AutomationAliveMessage
 - Mercury Device Farm
@@ -741,15 +743,23 @@
 - NSString
 - NSUInteger
 - GitHub Release
-- XCUISystem
+- FBVoiceOverTests
 - NSNumber
 - xcelementsnapshotdouble
+- <XCTMessagingRole_ForcePressureSupportQuerying>
+- <XCTMessagingRole_HIDEventRecording>
+- <XCTRunnerIDESessionDelegate>
+- <XCUIAXNotificationHandling>
+- <XCUIIssueDiagnosticsProviding>
+- +name
+- +name
+- +name
 
 ## God Nodes (most connected - your core abstractions)
 1. `XCTestCase` - 164 edges
 2. `@vkontakte/vkui` - 120 edges
 3. `LSApplicationWorkspace` - 114 edges
-4. `react` - 107 edges
+4. `react` - 109 edges
 5. `XCUIElement` - 101 edges
 6. `@devicefarmer/stf-syrup` - 96 edges
 7. `XCUIDevice` - 87 edges
@@ -798,7 +808,7 @@
 - **Automation Client SDK Implementations** — examples_automation_ruby_readme_mercury_client_ruby, examples_automation_java_readme_mercury_client_java, examples_automation_playwright_readme_mercury_client_playwright [INFERRED 0.95]
 - **ZeroMQ Message Broker Core Architecture** — docs_mimari_zeromq_message_bus, docs_mimari_triproxy_app, docs_mimari_triproxy_dev, docs_mimari_processor_bridge [INFERRED 0.95]
 
-## Communities (1566 total, 1136 thin omitted)
+## Communities (1574 total, 1128 thin omitted)
 
 ### Community 0 - "wire.ts"
 Cohesion: 0.01
@@ -806,11 +816,11 @@ Nodes (328): AccountAddMenuMessage, AccountAddMenuMessage$Type, AccountAddMessag
 
 ### Community 1 - "package.json"
 Cohesion: 0.02
-Nodes (133): RFC-6750, command, lib_db_index_dbclient, handlers, log, options, auth(), isPublicApiDocPath() (+125 more)
+Nodes (141): RFC-6750, command, lib_db_index_dbclient, handlers, log, options, auth(), isPublicApiDocPath() (+133 more)
 
 ### Community 2 - "ref_config"
 Cohesion: 0.03
-Nodes (61): ref_api, ref_axios, ref_config, ref_generated, i18next, inversify, @lukemorales/query-key-factory, mobx (+53 more)
+Nodes (52): ref_api, ref_axios, ref_config, ref_generated, i18next, inversify, @lukemorales/query-key-factory, mobx (+44 more)
 
 ### Community 3 - "util/logger.js"
 Cohesion: 0.05
@@ -818,15 +828,15 @@ Nodes (71): ADBKey, GroupEvents, GroupState, Joined, DEVICE_TYPE, Key, TODO: Not
 
 ### Community 4 - "wire.js"
 Cohesion: 0.03
-Nodes (124): log, lib_db_models_build_index, getAddedAttributes(), getArgumentsNames(), TODO: argument names can be simplified after build, appReducer(), compareIgnoreCase(), loadBrowsers() (+116 more)
+Nodes (140): lib_db_models_build_index, getAddedAttributes(), getArgumentsNames(), TODO: argument names can be simplified after build, entryListener(), sendDeviceChange(), sendDeviceGroupChange(), sendDeviceGroupChangeOnDeviceCurrentGroupUpdating() (+132 more)
 
-### Community 5 - "ref_components"
+### Community 5 - "@vkontakte/vkui"
 Cohesion: 0.03
-Nodes (78): ref_components, ref_create_root_with_providers, inversify-react, mobx-react-lite, react-i18next, @vkontakte/icons, MainLayout, ui_src_components_layouts_main_layout_module (+70 more)
+Nodes (65): ref_lib, ref_mocks, react-i18next, ref_styles, @vkontakte/icons, @vkontakte/vkui, AppWrapper, BaseModal() (+57 more)
 
 ### Community 6 - "cli/index.js"
 Cohesion: 0.02
-Nodes (55): command, describe, command, describe, command, describe, command, describe (+47 more)
+Nodes (61): command, describe, command, describe, command, describe, command, describe (+53 more)
 
 ### Community 7 - "XCTestCase"
 Cohesion: 0.02
@@ -840,85 +850,85 @@ Nodes (56): AccessTokensResponse, AdbInstallFlagsPayload, AdbKeyAddedResponse, A
 Cohesion: 0.02
 Nodes (113): NSMutableDictionary, NSObject, NSXPCConnection, LSApplicationWorkspace, +activeManagedConfigurationRestrictionUUIDs, -addObserver, -allApplications, -allInstalledApplications (+105 more)
 
-### Community 10 - "fbconfiguration"
-Cohesion: 0.07
-Nodes (31): fbaccessibilitytraits, fbactiveappdetectionpoint, fbconfiguration, fbelementhelpers, fbelementtypetransformer, fbelementutils, fberrorbuilder, fbfindelementcommands (+23 more)
+### Community 10 - "XCUIElement"
+Cohesion: 0.05
+Nodes (57): fbaccessibilitytraits, fbactiveappdetectionpoint, fbconfiguration, fbelementhelpers, fbelementtypetransformer, fbelementutils, fberrorbuilder, fbimageutils (+49 more)
 
 ### Community 11 - "WebDriverAgentLib.h"
-Cohesion: 0.06
-Nodes (50): fbalert, fbcapabilities, fbexceptions, fbfailureprooftestcase, fbkeyboard, fbnotificationshelper, fbpasteboard, fbprotocolhelpers (+42 more)
+Cohesion: 0.05
+Nodes (62): fbalert, fbcapabilities, fbcustomcommands, fbexceptions, fbfailureprooftestcase, fbfindelementcommands, fbkeyboard, fbnotificationshelper (+54 more)
 
 ### Community 12 - "uikit"
-Cohesion: 0.03
-Nodes (37): uikit, NSObject, <XCTElementSnapshotProvider>, -snapshotForElementattributesparameterstimeoutControlserror, NSObject, <XCTestCaseDiscoveryUIAutomationDelegate>, NSObject, <XCTestCaseUIAutomationDelegate> (+29 more)
+Cohesion: 0.02
+Nodes (66): targetconditionals, uikit, NSObject, XCTReportingContext, -init, XCApplicationQuery, -application, -dealloc (+58 more)
 
-### Community 13 - "WireRouter"
-Cohesion: 0.03
-Nodes (72): installOnDevice(), log, useAndConnectDevice(), post(), post(), log, preparingModules, readyModules (+64 more)
+### Community 13 - "ios-provider/index.ts"
+Cohesion: 0.04
+Nodes (42): command, describe, handler(), connect(), createConnection(), db, log, log (+34 more)
 
 ### Community 14 - "XCUIDevice"
 Cohesion: 0.02
 Nodes (84): _Bool, NSError, NSString, XCUIDevice, -accessibilityInterface, -alertMonitor, -alias, -appearanceMode (+76 more)
 
 ### Community 15 - "DeviceScreenStore"
-Cohesion: 0.06
-Nodes (9): joinChannel(), leaveChannel(), DeviceScreenStore, getWebRtcNegotiationTimeoutMs(), createStore(), DeviceScreenStoreInternals, inject, injectable (+1 more)
+Cohesion: 0.05
+Nodes (16): joinChannel(), leaveChannel(), DeviceScreenStore, getWebRtcNegotiationTimeoutMs(), NOTE: No need reconnect if it is already in progress, NOTE: The current view is marked secure and cannot be viewed remotely, NOTE: Prevents ws connection if stopScreenStreaming was called earlier, NOTE: Release the decoded bitmap; otherwise GPU/native memory leaks per frame (+8 more)
 
-### Community 16 - "XCUIElement"
+### Community 16 - "FBXCElementSnapshotWrapper"
 Cohesion: 0.03
-Nodes (118): FBXCElementSnapshotWrapper, -fb_accessibiltyId, -fb_customActions, -fb_hasKeyboardFocus, -fb_hasVisibleDescendants, -fb_isAccessibilityElement, -fb_isVisible, -fb_maxValue (+110 more)
+Nodes (93): FBXCElementSnapshotWrapper, -fb_accessibiltyId, -fb_customActions, -fb_hasKeyboardFocus, -fb_hasVisibleDescendants, -fb_isAccessibilityElement, -fb_isVisible, -fb_maxValue (+85 more)
 
 ### Community 17 - "all/model.js"
 Cohesion: 0.03
 Nodes (35): DEFAULT_IOS_DEVICE_ARGS, deviceTypeCondition(), enhanceStatusChangedAt(), escapeRegExp(), findDevice(), findOneWithFields(), findWithFields(), getAdbRange() (+27 more)
 
-### Community 18 - "FBXPath.m"
-Cohesion: 0.07
-Nodes (47): FBAccessibleAttribute, +valueForElement, FBApplicationBundleIdAttribute, FBApplicationPidAttribute, FBCustomActionsAttribute, +valueForElement, FBDimensionAttribute, FBElementAttribute (+39 more)
+### Community 18 - "FBElementAttribute"
+Cohesion: 0.10
+Nodes (25): FBAccessibleAttribute, +name, +valueForElement, FBCustomActionsAttribute, +name, +valueForElement, FBElementAttribute, -initWithElement (+17 more)
 
 ### Community 19 - "device/plugins/screen/stream.js"
-Cohesion: 0.04
-Nodes (35): command, describe, pkg, send(), wsFrameNotifier(), wsPingNotifier(), wsStartNotifier(), BroadcastSet() (+27 more)
+Cohesion: 0.03
+Nodes (45): command, describe, pkg, command, describe, log, send(), wsFrameNotifier() (+37 more)
 
 ### Community 20 - "touch/index.ts"
 Cohesion: 0.04
 Nodes (46): RFC-6143, Service, Deferred, MessageResolver, Banner, log, MinitouchService, TouchConfig (+38 more)
 
 ### Community 21 - "react"
-Cohesion: 0.03
-Nodes (54): ref_constants, react, react-router, appRouter, ErrorBoundaryElement(), RequireAuth, EmailInput(), EmailInputProps (+46 more)
+Cohesion: 0.04
+Nodes (54): ref_constants, react, BookedBeforeCell, BookedBeforeCellProps, BrowserCell, BrowserCellProps, CellWithEmptyValue(), CellWithEmptyValueProps (+46 more)
 
 ### Community 22 - "dependencies"
 Cohesion: 0.03
 Nodes (75): dependencies, appium-sdb, @aws-sdk/client-s3, @aws-sdk/credential-providers, basic-auth, bluebird, body-parser, bufferutil (+67 more)
 
-### Community 23 - "ref_lib"
-Cohesion: 0.05
-Nodes (44): ref_lib, @tanstack/match-sorter-utils, @tanstack/react-table, LogsTab, ui_src_components_ui_device_control_panel_tabs_logs_tab_logs_tab_module, columnHelper, LOGS_COLUMNS, LogsFilter (+36 more)
+### Community 23 - "ref_components"
+Cohesion: 0.04
+Nodes (51): ref_components, ref_create_root_with_providers, @tanstack/react-table, LogsTab, ui_src_components_ui_device_control_panel_tabs_logs_tab_logs_tab_module, columnHelper, LOGS_COLUMNS, LogsFilter (+43 more)
 
 ### Community 24 - "classnames"
-Cohesion: 0.04
-Nodes (40): classnames, ContentCard(), ContentCardProps, ui_src_components_lib_content_card_content_card_module, CopyableBlock(), CopyableBlockProps, ui_src_components_lib_copyable_block_copyable_block_module, DynamicLogo (+32 more)
+Cohesion: 0.05
+Nodes (35): classnames, MainLayout, ui_src_components_layouts_main_layout_module, ContentCard(), ContentCardProps, ui_src_components_lib_content_card_content_card_module, CopyableBlock(), CopyableBlockProps (+27 more)
 
-### Community 25 - "utils/index.ts"
-Cohesion: 0.20
-Nodes (20): @appium/support, ref_node_os, buildWDASim(), bundleWDASim(), getSimulatorSdk(), PLATFORM_NAME_TVOS, PLATFORM_NAME_WATCHOS, DeviceInfo (+12 more)
+### Community 25 - "xcodebuild.ts"
+Cohesion: 0.14
+Nodes (29): @appium/support, ref_node_os, buildWDASim(), bundleWDASim(), getSimulatorSdk(), PLATFORM_NAME_TVOS, PLATFORM_NAME_WATCHOS, log (+21 more)
 
 ### Community 26 - "group-item.tsx"
 Cohesion: 0.05
-Nodes (41): GroupItem, GroupItemProps, ui_src_components_ui_settings_tabs_groups_tab_group_item_group_item_module, GroupName(), GroupNameProps, validateString(), columnHelper, GroupConflictsTable (+33 more)
+Nodes (42): GroupItem, GroupItemProps, ui_src_components_ui_settings_tabs_groups_tab_group_item_group_item_module, GroupName(), GroupNameProps, validateString(), columnHelper, GroupConflictsTable (+34 more)
 
 ### Community 27 - "device.tsx"
-Cohesion: 0.07
-Nodes (22): react-error-boundary, ErrorFallback(), ui_src_components_lib_error_fallback_error_fallback_module, Device, ui_src_components_ui_device_device_module, DeviceNavigationButtons, ui_src_components_ui_device_device_navigation_buttons_device_navigation_buttons_module, NavigationButton() (+14 more)
+Cohesion: 0.10
+Nodes (18): Device, ui_src_components_ui_device_device_module, DeviceNavigationButtons, ui_src_components_ui_device_device_navigation_buttons_device_navigation_buttons_module, NavigationButton(), NavigationButtonProps, DeviceScreen(), DeviceType (+10 more)
 
 ### Community 28 - "DeviceControlService"
 Cohesion: 0.06
 Nodes (5): DeviceControlService, NOTE: I have no idea where this method used, TouchDownArgs, TouchMoveArgs, TouchMoveIosArgs
 
 ### Community 29 - "FBW3CActionsSynthesizer.m"
-Cohesion: 0.06
-Nodes (27): dlfcn, fbscreenrecordingrequest, limits, targetconditionals, uniformtypeidentifiers, NSObject, <XCUIEventSynthesizing>, -synthesizeEventcompletion (+19 more)
+Cohesion: 0.05
+Nodes (25): dlfcn, fbscreenrecordingrequest, limits, uniformtypeidentifiers, NSObject, <XCDebugLogDelegate>, -logDebugMessage, FBDebugLogDelegateDecorator (+17 more)
 
 ### Community 30 - "MercuryClient"
 Cohesion: 0.06
@@ -933,16 +943,16 @@ Cohesion: 0.06
 Nodes (53): addUserDevice(), lib_units_api_controllers_users_adduserdevicev3, createServiceUser(), createUser(), createUserAccessToken(), deleteUser(), deleteUserAccessToken(), deleteUserAccessTokens() (+45 more)
 
 ### Community 33 - "XCTRunnerIDESession"
-Cohesion: 0.03
-Nodes (70): NSObject, <XCTHarnessEventReporting>, -reportBootstrappingFailurecompletion, -reportDidBeginExecutingTestPlan, -reportDidFinishExecutingTestPlanWithCompletion, -reportInitializationForUITestingFinishedWithError, -reportSelfDiagnosisIssuedescription, -reportStallOnMainThreadInTestCasefileline (+62 more)
+Cohesion: 0.04
+Nodes (48): DTXConnection, NSMutableArray, NSObject, NSString, XCTRunnerIDESession, -_contextdidFinishActivity, -_contextwillStartActivity, -currentTestContainer (+40 more)
 
 ### Community 34 - "BleMouse"
 Cohesion: 0.05
 Nodes (47): adc, ble2902, bledevice, BLEHIDDevice, BLESecurityCallbacks, BLEServer, BLEServerCallbacks, bleutils (+39 more)
 
 ### Community 35 - "FBHTTPServer"
-Cohesion: 0.11
-Nodes (44): dispatch_source_t, NSMutableData, NSRegularExpression, NSArray, FBHTTPRoute, FBHTTPServer, -applyDefaultHeadersToResponse, -clientdidReceiveData (+36 more)
+Cohesion: 0.09
+Nodes (49): dispatch_source_t, NSMutableData, NSRegularExpression, NSArray, XCUISystem, -initWithDevice, FBHTTPRoute, FBHTTPServer (+41 more)
 
 ### Community 36 - "webinspector/index.js"
 Cohesion: 0.10
@@ -953,8 +963,8 @@ Cohesion: 0.06
 Nodes (32): console-feed, react-split, ui_src_components_ui_device_device_screen_screens_inspector_index_inspector, Inspector, InspectorProps, InspectorTab, ui_src_components_ui_device_device_screen_screens_inspector_inspector_module, AssetsTabContent (+24 more)
 
 ### Community 38 - "<XCTMessagingChannel_RunnerToDaemon>"
-Cohesion: 0.04
-Nodes (45): <XCTMessagingChannel_RunnerToDaemon>, -__dummy_method_to_work_around_68987191, <XCTMessagingRole_BundleRequesting>, -_XCT_requestBundleIDForPIDreply, -_XCT_requestProcessSpecifierForPIDreply, <XCTMessagingRole_ForcePressureSupportQuerying>, -_XCT_requestCurrentKeyboardModifierFlagsWithReply, -_XCT_requestPressureEventsSupported (+37 more)
+Cohesion: 0.11
+Nodes (19): <XCTMessagingChannel_RunnerToDaemon>, -__dummy_method_to_work_around_68987191, <XCTMessagingRole_BundleRequesting>, -_XCT_requestBundleIDForPIDreply, -_XCT_requestProcessSpecifierForPIDreply, <XCTMessagingRole_MemoryTesting>, -_XCT_requestDTServiceHubConnectionWithReply, <XCTMessagingRole_ProtectedResourceAuthorization> (+11 more)
 
 ### Community 39 - "XCUIElement"
 Cohesion: 0.04
@@ -965,32 +975,32 @@ Cohesion: 0.05
 Nodes (38): @appium/oxc-config, @appium/semantic-release-config, @appium/tsconfig, async-lock, @types/async-lock, @types/sinon, author, bugs (+30 more)
 
 ### Community 41 - "ui/package.json"
-Cohesion: 0.05
-Nodes (50): eslint-import-resolver-typescript, @eslint/js, eslint-plugin-fp, eslint-plugin-i18next, eslint-plugin-import, eslint-plugin-jsx-a11y, eslint-plugin-react, eslint-plugin-react-hooks (+42 more)
+Cohesion: 0.04
+Nodes (52): eslint-import-resolver-typescript, @eslint/js, eslint-plugin-fp, eslint-plugin-i18next, eslint-plugin-import, eslint-plugin-jsx-a11y, eslint-plugin-react, eslint-plugin-react-hooks (+44 more)
 
 ### Community 42 - "AndroidWebRtcTransport"
 Cohesion: 0.07
-Nodes (19): AndroidWebRtcTransport, H264RtpPacketizer, parseIceServers(), splitAnnexB(), toRtpTimestamp(), ref_dns, werift, finish() (+11 more)
+Nodes (18): AndroidWebRtcTransport, H264RtpPacketizer, parseIceServers(), splitAnnexB(), toRtpTimestamp(), werift, finish(), launchedAt (+10 more)
 
 ### Community 43 - "ios-screen-capture.test.js"
 Cohesion: 0.11
 Nodes (13): AVCAPTURE_EXIT_CODES, describeAvCaptureExit(), avCaptureUnavailableUntil, CAPTURE_MODES, DEFAULT_CAPTURE_MODE, normalizeCaptureMode(), IOSSimEvents, IOSSimObserver (+5 more)
 
 ### Community 44 - "FBElementCommands"
-Cohesion: 0.09
-Nodes (48): +handleDismissKeyboardCommand, FBElementCommands, +gestureCoordinateWithOffsetelementerror, +handleClear, +handleClick, +handleDoubleTap, +handleDrag, +handleFocuse (+40 more)
+Cohesion: 0.08
+Nodes (55): +handleDismissKeyboardCommand, +handleKeyboardInput, +handlePerformHandGestureCommand, +handleResetAppAuth, +handleRotateDigitalCrownCommand, FBElementCommands, +gestureCoordinateWithOffsetelementerror, +handleClear (+47 more)
 
-### Community 45 - "<FBElement>"
-Cohesion: 0.05
-Nodes (31): fbcustomcommands, <FBElement>, -fb_valueForWDAttributeName, NSObject, <FBXCAccessibilityElement>, +deviceElement, +elementWithAXUIElement, +elementWithProcessIdentifier (+23 more)
+### Community 45 - "<FBXCAccessibilityElement>"
+Cohesion: 0.20
+Nodes (10): <FBXCAccessibilityElement>, +deviceElement, +elementWithAXUIElement, +elementWithProcessIdentifier, -init, -initWithAXUIElement, -initWithMockProcessIdentifierpayload, +mockElementWithProcessIdentifier (+2 more)
 
-### Community 46 - "apiutil.js"
-Cohesion: 0.03
-Nodes (96): bookDevice(), generateFakeDevice(), getDeviceSize(), getDeviceType(), log, releaseBooking(), useDeviceByUser(), addUserDevice() (+88 more)
+### Community 46 - "controllers/user.js"
+Cohesion: 0.04
+Nodes (55): installOnDevice(), log, useAndConnectDevice(), addUserDevice(), lib_units_api_controllers_user_adduserdevicev2, deleteUserDeviceBySerial(), getUser(), getUserDeviceBySerial() (+47 more)
 
 ### Community 47 - "FBWebServer.m"
-Cohesion: 0.07
-Nodes (21): fbcommandstatus, fbroute, fbunknowncommands, message, nsdictionary_fbutf8safedictionary, FBExceptionHandler, NSObject, <FBResponsePayload> (+13 more)
+Cohesion: 0.09
+Nodes (18): fbcommandstatus, fbunknowncommands, message, FBExceptionHandler, NSObject, <FBResponsePayload>, -dispatchWithResponse, NSObject (+10 more)
 
 ### Community 48 - "TouchableView"
 Cohesion: 0.07
@@ -1001,40 +1011,40 @@ Cohesion: 0.08
 Nodes (36): addOriginGroupDevice(), addOriginGroupDevices(), askUpdateDeviceOriginGroup(), updateDeviceOriginGroup(), updateDevicesOriginGroup(), deleteDevice(), deleteDevices(), removeDevices() (+28 more)
 
 ### Community 50 - "forward/index.js"
-Cohesion: 0.04
-Nodes (40): awaitServer(), connectService(), ensureService(), startService(), ForwardReader(), installAll(), installResource(), pushResource() (+32 more)
+Cohesion: 0.05
+Nodes (33): awaitServer(), connectService(), ensureService(), startService(), ForwardReader(), installAll(), installResource(), pushResource() (+25 more)
 
 ### Community 51 - "XCAXClient_iOS"
 Cohesion: 0.04
 Nodes (49): _Bool, NSMutableDictionary, NSObject, NSString, OS_dispatch_queue, XCAXClient_iOS, -accessibilityElementForElementAtPointerror, -activeApplications (+41 more)
 
 ### Community 52 - "FBRoute"
-Cohesion: 0.07
-Nodes (48): FBRouteSyncHandler, +routes, +routes, +routes, +routes, +routes, +routes, +routes (+40 more)
+Cohesion: 0.08
+Nodes (46): FBRouteSyncHandler, +routes, +routes, +routes, +routes, +routes, FBRoute, -decorateRequest (+38 more)
 
-### Community 53 - "@vkontakte/vkui"
-Cohesion: 0.04
-Nodes (41): @vkontakte/vkui, BaseModal(), BaseModalProps, ui_src_components_lib_base_modal_base_modal_module, EditableText(), EditableTextProps, ui_src_components_lib_editable_text_editable_text_module, FileInput() (+33 more)
+### Community 53 - "apiutil.js"
+Cohesion: 0.05
+Nodes (38): ADMIN, BOOKABLE, checkQueryParameter(), CLASS_DURATION, DEBUG, FIVE_MN, HALF_HOUR, INSTALL_APK_WAIT (+30 more)
 
 ### Community 54 - "XCElementSnapshotDouble"
-Cohesion: 0.05
-Nodes (54): UIAccessibilityTraits, _Bool, CGPoint, NSObject, XCUIHitPointResult, -description, -initWithHitPointhittable, NSMutableDictionary (+46 more)
+Cohesion: 0.06
+Nodes (46): UIAccessibilityTraits, NSMutableDictionary, NSObject, NSString, XCUIElementAttributes, XCElementSnapshotDouble, -accessibilityElement, -_allDescendants (+38 more)
 
 ### Community 55 - "<FBXCElementSnapshot>"
-Cohesion: 0.04
-Nodes (42): fbclasschainqueryparser, fbtvnavigationtracker, fbxcelementsnapshotdouble, XCUIElementQuery, -fb_cachedSnapshot, <FBXCElementSnapshot>, -_allDescendants, +axAttributesForElementSnapshotKeyPathsisMacOS (+34 more)
+Cohesion: 0.03
+Nodes (57): fbclasschainqueryparser, fbtvnavigationtracker, fbxcelementsnapshotdouble, XCUIElementQuery, <FBXCElementSnapshot>, -_allDescendants, +axAttributesForElementSnapshotKeyPathsisMacOS, -_childMatchingElement (+49 more)
 
 ### Community 56 - "XCUIApplication"
-Cohesion: 0.07
-Nodes (42): fbreflectionutils, synthesizerType, XCUIApplication, +accessibilityInfoForElement, +dictionaryForElementrecursiveexcludedAttributes, -fb_accessibilityTree, +fb_activeApplication, +fb_activeApplications (+34 more)
+Cohesion: 0.08
+Nodes (40): fbreflectionutils, synthesizerType, XCUIApplication, +accessibilityInfoForElement, +dictionaryForElementrecursiveexcludedAttributes, -fb_accessibilityTree, +fb_activeApplication, +fb_activeApplications (+32 more)
 
 ### Community 57 - "XCUIScreen"
 Cohesion: 0.05
-Nodes (40): fbscreenrecordingcontainer, _Bool, CGRect, NSString, NSUUID, XCUIScreen, -initWithDisplayIDisMainScreendevicescreenDataSource, -isEqual (+32 more)
+Nodes (34): NSObject, XCUIButtonConsole, -initWithScreen, -pressButton, -pressButtonforDuration, -_silentlyPressButtonforDuration, NSObject, XCUIKnobControl (+26 more)
 
-### Community 58 - "db/index.ts"
-Cohesion: 0.06
-Nodes (18): handler(), command, handler(), command, handler(), command, handler(), handler() (+10 more)
+### Community 58 - "handlers/group/index.js"
+Cohesion: 0.05
+Nodes (20): handler(), command, handler(), command, handler(), command, handler(), log (+12 more)
 
 ### Community 60 - "TouchService"
 Cohesion: 0.12
@@ -1045,19 +1055,19 @@ Cohesion: 0.06
 Nodes (40): UIAccessibilityCustomAction, UIButton, UISegmentedControl, UITableView, UITableViewCell, UITableViewDelegate, FBCoordinateProbeCanvas, -drawRect (+32 more)
 
 ### Community 62 - "FBBaseClassChainToken"
-Cohesion: 0.08
-Nodes (45): matchingTokenClass, FBAbstractPredicateToken, +allowedCharacters, +canConsumeCharacter, +enclosingMarker, -followingTokens, -nextTokenWithCharacter, -stripLastChar (+37 more)
+Cohesion: 0.09
+Nodes (37): FBBaseClassChainToken, +allowedCharacters, -appendChar, +canConsumeCharacter, -followingTokens, -initWithStringValue, +maxLength, -nextTokenWithCharacter (+29 more)
 
 ### Community 63 - "devDependencies"
 Cohesion: 0.05
 Nodes (43): devDependencies, eslint, eslint-import-resolver-typescript, @eslint/js, eslint-plugin-fp, eslint-plugin-i18next, eslint-plugin-import, eslint-plugin-jsx-a11y (+35 more)
 
 ### Community 64 - "wda-strategies.ts"
-Cohesion: 0.09
-Nodes (18): WdaHostOps, WdaStartupStrategyName, createDefaultRealDevicePreinstalledHostOps(), createDefaultSimulatorWdaHostOps(), createDefaultWdaHostOps(), createPreinstalledWdaEnvironment(), createWdaStartupStrategy(), ExistingWdaUrlStrategy (+10 more)
+Cohesion: 0.08
+Nodes (25): asyncbox, WdaHostOps, WdaStartupStrategyName, filterPIDsByCommandLine(), getPIDsListeningOnPort(), getPIDsUsingPattern(), killAppUsingPattern(), resetTestProcesses() (+17 more)
 
 ### Community 65 - "WebDriverAgent"
-Cohesion: 0.12
+Cohesion: 0.11
 Nodes (5): expressOpenapiUse(), NoSessionProxy, WebDriverAgentArgs, SHARED_RESOURCES_GUARD, WebDriverAgent
 
 ### Community 66 - "XCUIElementQuery"
@@ -1069,20 +1079,20 @@ Cohesion: 0.05
 Nodes (42): DeviceTableColumnIds, ABI, BATTERY_HEALTH, BATTERY_LEVEL, BATTERY_SOURCE, BATTERY_STATUS, BATTERY_TEMP, BOOKED_BEFORE (+34 more)
 
 ### Community 68 - "FBCustomCommands"
-Cohesion: 0.08
-Nodes (41): FBCustomCommands, +fb_handleVoiceOverSpeechResponseerror, +getAppearanceName, +handleActivateSiri, +handleActiveAppInfo, +handleClearSimulatedLocation, +handleDeactivateAppCommand, +handleGetBatteryInfo (+33 more)
+Cohesion: 0.09
+Nodes (35): FBCustomCommands, +fb_handleVoiceOverSpeechResponseerror, +getAppearanceName, +handleActivateSiri, +handleActiveAppInfo, +handleClearSimulatedLocation, +handleDeactivateAppCommand, +handleGetBatteryInfo (+27 more)
 
 ### Community 69 - "XCUIApplicationImpl"
 Cohesion: 0.05
 Nodes (42): _Bool, NSObject, NSString, XCUIApplicationImpl, -_activate, -_activateForPlatform, -_activationExpectation, -applicationProcessAutomationSessionRequestFailed (+34 more)
 
 ### Community 70 - "XCUIApplicationProcess"
-Cohesion: 0.04
-Nodes (52): <XCTElementSnapshotAttributeDataSource>, -attributesForElementattributeserror, -parameterizedAttributeforElementparametererror, -valuesForPrivilegedAttributesforElementerror, NSObject, <XCTMacCatalystStatusProviding>, -isMacCatalystForPID, <XCTRunnerAutomationSession> (+44 more)
+Cohesion: 0.05
+Nodes (39): _Bool, NSObject, NSString, XCUIApplicationProcess, -acquireBackgroundAssertion, -attributesForElementattributeserror, +automaticallyNotifiesObserversForKey, -_awaitKnownApplicationState (+31 more)
 
 ### Community 71 - "lib/types.ts"
-Cohesion: 0.10
-Nodes (13): RealDevicePreinstalledHostOps, RealDeviceXcodebuildHostOps, SimulatorHostOps, WdaBuildConfiguration, WDACapabilities, WdaCleanupObsoleteProcessesOptions, WdaLaunchEnvironment, WdaLaunchOptions (+5 more)
+Cohesion: 0.07
+Nodes (15): AppleDevice, RealDevicePreinstalledHostOps, RealDeviceXcodebuildHostOps, SimulatorHostOps, WdaBuildConfiguration, WDACapabilities, WdaCleanupObsoleteProcessesOptions, WdaLaunchEnvironment (+7 more)
 
 ### Community 72 - "XCTTestIdentifier"
 Cohesion: 0.05
@@ -1090,19 +1100,19 @@ Nodes (40): _Bool, NSCopying, NSObject, NSSecureCoding, NSString, XCTTestIdentif
 
 ### Community 73 - "<XCTMessagingRole_TestReporting>"
 Cohesion: 0.05
-Nodes (41): <_XCTMessaging_VoidProtocol>, <XCTMessagingChannel_RunnerToIDE>, -__dummy_method_to_work_around_68987191, <XCTMessagingRole_ActivityReporting>, -_XCT_testCaseWithIdentifierdidFinishActivity, -_XCT_testCaseWithIdentifierwillStartActivity, <XCTMessagingRole_AttachmentFutureResultStatusUpdating>, -_XCT_didFinishWritingAttachmentWithMetadata (+33 more)
+Nodes (40): <XCTMessagingChannel_RunnerToIDE>, -__dummy_method_to_work_around_68987191, <XCTMessagingRole_ActivityReporting>, -_XCT_testCaseWithIdentifierdidFinishActivity, -_XCT_testCaseWithIdentifierwillStartActivity, <XCTMessagingRole_AttachmentFutureResultStatusUpdating>, -_XCT_didFinishWritingAttachmentWithMetadata, <XCTMessagingRole_DebugLogging> (+32 more)
 
 ### Community 74 - "<FBCommandHandler>"
-Cohesion: 0.07
-Nodes (22): FBDebugCommands, +handleGetAccessibleSourceCommand, +handleGetSourceCommand, +routes, NSObject, FBScreenshotCommands, +routes, NSObject (+14 more)
+Cohesion: 0.06
+Nodes (27): FBDebugCommands, +handleGetAccessibleSourceCommand, +handleGetSourceCommand, +routes, NSObject, FBScreenshotCommands, +routes, NSObject (+19 more)
 
 ### Community 75 - "Replicator.js"
 Cohesion: 0.09
 Nodes (12): builtInTransforms, DecodingTransformer, EncodingTransformer, GLOBAL, JSONSerializer, Replicator, TYPED_ARRAY_CTORS, NOTE: use intermediate object to avoid unescaped and escaped keys interference (+4 more)
 
 ### Community 76 - "SettingsService"
-Cohesion: 0.08
-Nodes (9): GeneralTab, ui_src_components_ui_settings_tabs_general_tab_general_tab_module, InterfaceSettings, RuntimeSettings, IOS_SCREEN_CAPTURE_MODE_OPTIONS, RUNTIME_PROFILE_OPTIONS, SettingsService, inject (+1 more)
+Cohesion: 0.10
+Nodes (4): IOS_SCREEN_CAPTURE_MODE_OPTIONS, SettingsService, inject, injectable
 
 ### Community 77 - "XCPointerEventPath"
 Cohesion: 0.05
@@ -1116,17 +1126,17 @@ Nodes (20): _Bool, CGSize, CGVector, NSObject, NSSecureCoding, NSString, XCSynth
 Cohesion: 0.05
 Nodes (39): _Bool, NSString, XCUIApplication, -application, -clearQuery, -_combinedLaunchArguments, -_combinedLaunchEnvironment, -commonInitWithApplicationSpecifierdevice (+31 more)
 
-### Community 80 - "+logFmt"
-Cohesion: 0.07
-Nodes (48): -fb_stringAttributesymbol, -retrieveCustomActionsByCastingToStringforSymbol, -retrieveCustomActionsFromArrayforSymbol, -retrieveCustomActionsFromStringforSymbol, FBSession, -activateApplicationWithBundleId, -activeApplication, +activeScreenRecordingForGeneration (+40 more)
+### Community 80 - "FBSession"
+Cohesion: 0.10
+Nodes (38): FBSession, -activateApplicationWithBundleId, -activeApplication, +activeScreenRecordingForGeneration, +activeSession, -applicationStateWithBundleId, +beginTerminationForGeneration, -disableAlertsMonitor (+30 more)
 
 ### Community 81 - "FBCommandStatus"
-Cohesion: 0.11
-Nodes (30): +handleGetLocation, CLLocationManager, +handleElementScreenshot, +handleScroll, +handleScrollElementToVisiblewithRequest, +handleGetScreenshot, +unhandledHandler, FBCommandStatus (+22 more)
+Cohesion: 0.13
+Nodes (27): +handleElementScreenshot, +handleGetScreenshot, FBCommandStatus, +elementNotVisibleErrorWithMessagetraceback, -hasError, -initWithErrorstatusCodemessagetraceback, -initWithValue, +invalidCoordinatesErrorWithMessagetraceback (+19 more)
 
 ### Community 82 - "XCUIElementFBFindTests"
-Cohesion: 0.05
-Nodes (38): XCUIElement, XCUIElementFBFindTests, -testClassChainWithDescendantPredicate, -testClassChainWithInvalidPredicate, -testDescendantsWithClassChain, -testDescendantsWithClassChainAndPredicates, -testDescendantsWithClassChainAndPredicatesAndIndexes, -testDescendantsWithClassChainWithIndex (+30 more)
+Cohesion: 0.06
+Nodes (34): XCUIElement, XCUIElementFBFindTests, -testClassChainWithDescendantPredicate, -testClassChainWithInvalidPredicate, -testDescendantsWithClassChain, -testDescendantsWithClassChainAndPredicates, -testDescendantsWithClassChainAndPredicatesAndIndexes, -testDescendantsWithClassChainWithIndex (+26 more)
 
 ### Community 83 - "BrowserIcon"
 Cohesion: 0.05
@@ -1150,7 +1160,7 @@ Nodes (18): AutoTestResponse, AutoTestResponseGroup, Device, DeviceBattery, Devi
 
 ### Community 88 - "FBIntegrationTestCase"
 Cohesion: 0.05
-Nodes (45): FBConfigurationTests, -testAccessibilityDeadlineAbortsSnapshotRequestForDeadlockedApp, -testReduceMotion, FBElementVisibilityTests, -testIconsFromSearchDashboard, -testSpringBoardIcons, -testTableViewCells, FBIntegrationTestCase (+37 more)
+Nodes (40): FBConfigurationTests, -testAccessibilityDeadlineAbortsSnapshotRequestForDeadlockedApp, -testReduceMotion, FBElementVisibilityTests, -testIconsFromSearchDashboard, -testSpringBoardIcons, -testTableViewCells, FBIntegrationTestCase (+32 more)
 
 ### Community 89 - "user/model.js"
 Cohesion: 0.09
@@ -1169,16 +1179,16 @@ Cohesion: 0.06
 Nodes (34): <XCTMessagingRole_CapabilityExchange>, -_XCT_checkForContinuityWithReply, -_XCT_enableAutomationModeWithReply, -_XCT_exchangeCapabilitiesreply, -_XCT_fetchAttributesForElementattributesreply, -_XCT_fetchAttributesforElementreply, -_XCT_fetchParameterizedAttributeForElementattributesparameterreply, -_XCT_fetchParameterizedAttributeforElementparameterreply (+26 more)
 
 ### Community 93 - "FBSessionCommands"
-Cohesion: 0.11
-Nodes (33): FBSessionCommands, +activateBackgroundApplicationbundleIDinitialUrl, +applyConfigurationFromCapabilities, +buildTimestamp, +capabilitiesFromCreateSessionRequestcapabilitiesOut, +currentCapabilities, +deviceNameByUserInterfaceIdiom, +handleCreateSession (+25 more)
+Cohesion: 0.10
+Nodes (32): FBSessionCommands, +activateBackgroundApplicationbundleIDinitialUrl, +applyConfigurationFromCapabilities, +buildTimestamp, +capabilitiesFromCreateSessionRequestcapabilitiesOut, +currentCapabilities, +deviceNameByUserInterfaceIdiom, +handleCreateSession (+24 more)
 
 ### Community 94 - "avcapture-h264-capture.js"
 Cohesion: 0.15
 Nodes (15): avCaptureBinary(), closeSharedMirrorProcesses(), sharedProcesses, sourcePath, encoderBinary(), jpegDimensions(), partitionAnnexBParameterSets(), sourcePath (+7 more)
 
 ### Community 95 - "util/logger.ts"
-Cohesion: 0.08
-Nodes (23): BuildLog, LogArguments, LogEntry, DEBUG, ERROR, FATAL, IMPORTANT, INFO (+15 more)
+Cohesion: 0.06
+Nodes (25): LifecycleObserver, log, BuildLog, LogArguments, LogEntry, DEBUG, ERROR, FATAL (+17 more)
 
 ### Community 96 - "XCTestObservationCenter"
 Cohesion: 0.06
@@ -1197,8 +1207,8 @@ Cohesion: 0.06
 Nodes (31): <NSFastEnumeration>, -countByEnumeratingWithStateobjectscount, _Bool, NSCopying, NSObject, NSSecureCoding, XCTTestIdentifierSet, +allocWithZone (+23 more)
 
 ### Community 100 - "XCTestDriver"
-Cohesion: 0.06
-Nodes (33): NSBundle, NSObject, NSString, NSURL, NSUUID, XCTestDriver, +_applyRandomExecutionOrderingSeed, -_configureGlobalState (+25 more)
+Cohesion: 0.07
+Nodes (29): NSBundle, NSObject, NSString, NSURL, NSUUID, XCTestDriver, +_applyRandomExecutionOrderingSeed, -_configureGlobalState (+21 more)
 
 ### Community 101 - "XCTRunnerDaemonSession"
 Cohesion: 0.06
@@ -1209,8 +1219,8 @@ Cohesion: 0.15
 Nodes (16): createAccessToken(), deleteAccessToken(), deleteAccessTokens(), getAccessToken(), getAccessTokenByTitle(), getAccessTokens(), getUserAccessTokens(), post() (+8 more)
 
 ### Community 103 - "XCTReportingSession"
-Cohesion: 0.07
-Nodes (28): NSObject, XCTReportingContext, -init, NSObject, NSString, XCTReportingSession, +beginReportingSessionWithIdentifiercompletion, -finishWithCompletion (+20 more)
+Cohesion: 0.10
+Nodes (20): NSObject, NSString, XCTReportingSession, +beginReportingSessionWithIdentifiercompletion, -finishWithCompletion, -init, -initWithIDEProxytestConfigurationpublisher, -reportIssueatDate (+12 more)
 
 ### Community 104 - "LogcatService"
 Cohesion: 0.09
@@ -1229,28 +1239,32 @@ Cohesion: 0.18
 Nodes (8): withAndroidPage(), envSerials(), MercuryClient, client, serials, client, serials, ref_node_child_process
 
 ### Community 108 - "FBWebServer"
-Cohesion: 0.09
-Nodes (35): fbdebuglogdelegatedecorator, -getwithBlock, -handleMethodwithPathblock, -setDefaultHeadervalue, -setInterface, -setRouteQueue, -start, -stop (+27 more)
+Cohesion: 0.10
+Nodes (32): fbdebuglogdelegatedecorator, -getwithBlock, -handleMethodwithPathblock, -handleMethodwithPathstandaloneblock, -stop, -stop, FBWebServer, -attemptToStartServeronPortwithError (+24 more)
 
 ### Community 109 - "group/model.js"
 Cohesion: 0.10
 Nodes (18): returnDevicesToRoot(), updateDeviceCurrentGroup(), updateDevicesCurrentGroupFromOrigin(), addGroupModerator(), addGroupUser(), createGroup(), createUserGroup(), deleteUserGroup() (+10 more)
 
+### Community 110 - "FrameProducer"
+Cohesion: 0.05
+Nodes (4): FrameProducer(), TouchConsumer, FailCounter, RiskyStream
+
 ### Community 111 - "ref_node_assert"
-Cohesion: 0.08
-Nodes (18): retryOnTransactionTimeout(), @appium/coresim, ref_node_assert, ref_node_test, makeExecutable(), projectRoot, runAutoConfig(), DEVICE_NAME (+10 more)
+Cohesion: 0.07
+Nodes (23): retryOnTransactionTimeout(), @appium/coresim, @appium/strongbox, ref_node_assert, ref_node_test, sinon, DEVICE_NAME, PLATFORM_NAME (+15 more)
 
 ### Community 112 - "FBClassChainQueryParser.m"
-Cohesion: 0.15
-Nodes (26): NSNumberFormatter, FBAbstractPredicateItem, -initWithValue, -init, -init, FBClassChain, -initWithElements, FBClassChainItem (+18 more)
+Cohesion: 0.18
+Nodes (23): matchingTokenClass, NSNumberFormatter, FBAbstractPredicateItem, -initWithValue, -init, -followingTokenBasedOn, -init, FBClassChain (+15 more)
 
 ### Community 113 - "XCTWaiter"
-Cohesion: 0.07
+Cohesion: 0.08
 Nodes (27): NSString, XCTWaiter, -allowsNestedWaitersWithWait, -cancelPrimitiveWait, -cancelWaiting, -handleStalledWait, -handleStalledWaitafter, -init (+19 more)
 
 ### Community 114 - "FBAlert"
-Cohesion: 0.21
-Nodes (22): +handleAlertAcceptCommand, +handleAlertDismissCommand, FBAlert, -accept, -alertElement, -alertElementFromApplication, -alertSnapshot, -buttonLabels (+14 more)
+Cohesion: 0.14
+Nodes (28): FBAlertViewCommands, +handleAlertAcceptCommand, +handleAlertDismissCommand, +handleAlertGetTextCommand, +handleAlertSetTextCommand, +handleGetAlertButtonsCommand, +routes, NSObject (+20 more)
 
 ### Community 115 - "FBXPathIntegrationTests"
 Cohesion: 0.09
@@ -1265,12 +1279,12 @@ Cohesion: 0.07
 Nodes (29): FBConfigurationKeyboardPreference, NSInteger, NSRange, UInt64, FBConfiguration, -bindingIPAddress, -disableApplicationUIInterruptionsHandling, -disableAttributeKeyPathAnalysis (+21 more)
 
 ### Community 118 - "WdaClient"
-Cohesion: 0.13
-Nodes (3): buildDefaultRuntimeSettings(), createWdaSessionWithRecovery(), WdaClient
+Cohesion: 0.12
+Nodes (5): buildDefaultRuntimeSettings(), createPasteboardPayload(), createWdaSessionWithRecovery(), requestClient, WdaClient
 
 ### Community 119 - "util.ts"
 Cohesion: 0.08
-Nodes (21): ADBDevice, ADBDeviceEntry, ADBDeviceType, ADBEvents, DeviceHealthCheck, PrevADBDeviceType, ADBObserver, Any (+13 more)
+Nodes (24): ADBDevice, ADBDeviceEntry, ADBDeviceType, ADBEvents, DeviceHealthCheck, PrevADBDeviceType, ADBObserver, Any (+16 more)
 
 ### Community 120 - "internalError"
 Cohesion: 0.11
@@ -1289,20 +1303,20 @@ Cohesion: 0.07
 Nodes (26): compilerOptions, allowJs, alwaysStrict, checkJs, declaration, esModuleInterop, lib, module (+18 more)
 
 ### Community 124 - "DeviceBySerialStore"
-Cohesion: 0.09
-Nodes (10): DeviceBySerialStore, inject, injectable, DeviceConnection, inject, injectable, inject, LinkOpenerStore (+2 more)
+Cohesion: 0.13
+Nodes (7): DeviceBySerialStore, inject, injectable, DeviceConnection, inject, injectable, inject
 
 ### Community 125 - "FBMjpegServer"
-Cohesion: 0.11
-Nodes (27): +load, -writeDatatoClient, -writeDatatoClientcompletion, -logDebugMessage, FBLogger, +log, +verboseLog, +verboseLogFmt (+19 more)
+Cohesion: 0.08
+Nodes (33): XCUIApplicationProcess, -fb_shouldWaitForQuiescence, -fb_waitForQuiescenceIncludingAnimationsIdle, +load, -setFb_shouldWaitForQuiescence, +load, NSNumber, -writeDatatoClient (+25 more)
 
 ### Community 127 - "file-explorer-table.tsx"
 Cohesion: 0.10
 Nodes (17): FileExplorerTab, ui_src_components_ui_device_control_panel_tabs_file_explorer_tab_file_explorer_tab_module, FileNameCell, FileNameCellProps, ui_src_components_ui_device_control_panel_tabs_file_explorer_tab_file_explorer_table_cells_file_name_cell_file_name_cell_module, FileSizeCell, FileSizeCellProps, columnHelper (+9 more)
 
 ### Community 128 - "GroupItemService"
-Cohesion: 0.10
-Nodes (4): CLASS_CONFIGURATIONS, GroupItemService, inject, injectable
+Cohesion: 0.09
+Nodes (7): ADMIN_CLASS_OPTIONS, CLASS_CONFIGURATIONS, ClassConfiguration, USER_CLASS_OPTIONS, GroupItemService, inject, injectable
 
 ### Community 129 - "keyboard-service.ts"
 Cohesion: 0.12
@@ -1313,24 +1327,24 @@ Cohesion: 0.08
 Nodes (26): _Bool, CGPoint, CGVector, NSObject, NSSecureCoding, NSString, XCPointerEvent, -description (+18 more)
 
 ### Community 131 - "XCTWaiterWait"
-Cohesion: 0.25
+Cohesion: 0.20
 Nodes (8): NSObject, <XCTestExpectationDelegate>, -didFulfillExpectation, NSObject, NSString, XCTWaiterWait, -didFulfillExpectation, -initWithExpectationstimeoutenforceOrderisSynchronous
 
 ### Community 132 - "RouteResponse"
-Cohesion: 0.11
-Nodes (33): routeresponse, -abandonPendingRequestsForSessionIDwithResponse, FBResponseJSONPayload, -dispatchWithResponse, -initWithDictionaryhttpStatusCode, NSObject, HTTPStatusCode, NSString (+25 more)
+Cohesion: 0.16
+Nodes (22): -abandonPendingRequestsForSessionIDwithResponse, -sessionWasKilled, HTTPStatusCode, NSData, NSObject, NSString, NSMutableDictionary, RouteResponse (+14 more)
 
 ### Community 133 - "mercury-api/index.ts"
 Cohesion: 0.08
 Nodes (3): BookDeviceResponse, getGroups(), getTeamGroups()
 
-### Community 134 - "user-item.tsx"
-Cohesion: 0.13
-Nodes (13): UserItem, UserItemProps, UserList, UserListProps, columnHelper, GroupsTab, GroupsTabProps, QuotaTab (+5 more)
+### Community 134 - "mobx-react-lite"
+Cohesion: 0.05
+Nodes (33): mobx-react-lite, ListItem, ListItemProps, ui_src_components_lib_list_item_list_item_module, ALERT_LEVEL_TO_MARQUEE_VARIANT_MAP, AlertMarquee, DeviceStatistics, ui_src_components_ui_device_statistics_device_statistics_module (+25 more)
 
 ### Community 135 - "FBRunLoopSpinner"
 Cohesion: 0.13
-Nodes (25): -fb_dismissKeyboardWithKeyNameserror, -fb_waitForAppElement, +waitUntilVisibleForApplicationtimeouterror, FBRunLoopSpinner, -init, -interval, -spinUntilNotNilerror, -spinUntilTrue (+17 more)
+Nodes (24): -fb_dismissKeyboardWithKeyNameserror, +waitUntilVisibleForApplicationtimeouterror, FBRunLoopSpinner, -init, -interval, -spinUntilNotNilerror, -spinUntilTrue, -spinUntilTrueerror (+16 more)
 
 ### Community 136 - "XCTestConfiguration"
 Cohesion: 0.08
@@ -1350,26 +1364,26 @@ Nodes (11): DestHandler(), drainListener(), endListener(), errorListener(), mayb
 
 ### Community 140 - "client.js"
 Cohesion: 0.07
-Nodes (29): buildAppSwitcherGesture(), buildTapActions(), createPasteboardPayload(), DEFAULT_IOS_ACTION_TIMEOUT_RECOVERY_THRESHOLD, DEFAULT_IOS_TOUCH_RECOVERY_COOLDOWN_MS, DEFAULT_IOS_TYPE_KEY_DELAY_MS, DEFAULT_IOS_WDA_ANIMATION_COOLOFF_TIMEOUT, DEFAULT_IOS_WDA_LEAN_MODE (+21 more)
+Nodes (27): buildAppSwitcherGesture(), buildTapActions(), DEFAULT_IOS_ACTION_TIMEOUT_RECOVERY_THRESHOLD, DEFAULT_IOS_TOUCH_RECOVERY_COOLDOWN_MS, DEFAULT_IOS_TYPE_KEY_DELAY_MS, DEFAULT_IOS_WDA_ANIMATION_COOLOFF_TIMEOUT, DEFAULT_IOS_WDA_LEAN_MODE, DEFAULT_IOS_WDA_MAX_CHILDREN (+19 more)
 
 ### Community 141 - "start-ios-provider.sh"
 Cohesion: 0.08
 Nodes (23): IOS_ACTION_TIMEOUT_RECOVERY_THRESHOLD, IOS_DISABLE_ESP32, IOS_TOUCH_ACTION_TIMEOUT_MS, IOS_TOUCH_RECOVERY_COOLDOWN_MS, IOS_TYPE_KEY_DELAY_MS, IOS_WDA_ANIMATION_COOLOFF_TIMEOUT, IOS_WDA_BUNDLE_ID, IOS_WDA_DEVELOPMENT_TEAM (+15 more)
 
 ### Community 142 - "XCTestExpectation"
-Cohesion: 0.05
-Nodes (37): _Bool, NSString, XCTestExpectation, -addCleanupHandler, -cleanup, +compoundAndExpectationWithSubexpectations, +compoundOrExpectationWithSubexpectations, -dealloc (+29 more)
+Cohesion: 0.13
+Nodes (15): _Bool, NSString, XCTestExpectation, -addCleanupHandler, -cleanup, +compoundAndExpectationWithSubexpectations, +compoundOrExpectationWithSubexpectations, -dealloc (+7 more)
 
 ### Community 143 - "XCTReportingSessionTestReporter"
-Cohesion: 0.09
-Nodes (22): NSObject, <XCTReportingSessionIssueReporter>, -reportIssueatDate, _Bool, NSObject, XCTReportingSessionTestReporter, -finishAtDate, -finishWithStatusatDate (+14 more)
+Cohesion: 0.11
+Nodes (19): _Bool, NSObject, XCTReportingSessionTestReporter, -finishAtDate, -finishWithStatusatDate, -init, -initWithIdentifiercontextparentIdfinishHandler, -reportActivityFinished (+11 more)
 
 ### Community 144 - "+alertWithApplication"
-Cohesion: 0.16
-Nodes (23): FBAlertViewCommands, +handleAlertGetTextCommand, +handleAlertSetTextCommand, +handleGetAlertButtonsCommand, NSObject, +alertWithApplication, FBAlertTests, -resetPermissions (+15 more)
+Cohesion: 0.15
+Nodes (24): +alertWithApplication, FBAlertTests, -resetPermissions, -setUp, -showApplicationAlert, -showApplicationSheet, -tearDown, -testAcceptingAlert (+16 more)
 
 ### Community 145 - "FBXCAXClientProxy"
-Cohesion: 0.10
+Cohesion: 0.11
 Nodes (24): FBXCAXClientProxy, -activeApplications, -attributesForElementattributeserror, -defaultParameters, -monitoredApplicationWithProcessIdentifier, -notifyWhenEventLoopIsIdleForApplicationreply, -notifyWhenNoAnimationsAreActiveForApplicationreply, +sharedClient (+16 more)
 
 ### Community 146 - "GroupChangeHandler"
@@ -1389,8 +1403,8 @@ Cohesion: 0.09
 Nodes (23): CGVector, XCUIElement, XCUICoordinate, -click, -clickForDuration, -_clickForDurationthenDragToCoordinatedragVelocity, -copyWithZone, -description (+15 more)
 
 ### Community 150 - "devDependencies"
-Cohesion: 0.09
-Nodes (22): devDependencies, cli-docs-generator, eslint, @protobuf-ts/plugin, @types/bluebird, @types/chalk, @types/chrome-remote-interface, @types/cookie-parser (+14 more)
+Cohesion: 0.05
+Nodes (43): devDependencies, cli-docs-generator, eslint, @protobuf-ts/plugin, @types/bluebird, @types/chalk, @types/chrome-remote-interface, @types/cookie-parser (+35 more)
 
 ### Community 151 - "scripts"
 Cohesion: 0.09
@@ -1408,21 +1422,25 @@ Nodes (19): CGRect, NSObject, NSString, NSUInteger, XCUIApplication, XCUIElement
 Cohesion: 0.13
 Nodes (18): FBXCAccessibilityElementDouble, -initWithElementId, NSObject, FBXCElementSnapshotDouble, +snapshotWithElementIdframehasFocus, CGRect, NSObject, FBTVNavigationTrackerTests (+10 more)
 
-### Community 156 - "NSPredicate"
-Cohesion: 0.19
-Nodes (21): NSCompoundPredicate, -fb_cachedSnapshotWithQuery, -fb_descendantsMatchingClassNameshouldReturnAfterFirstMatch, -fb_descendantsMatchingIdentifiershouldReturnAfterFirstMatch, -fb_descendantsMatchingPredicateshouldReturnAfterFirstMatch, -fb_descendantsMatchingPropertyvaluepartialSearch, +fb_extractMatchingElementsFromQueryshouldReturnAfterFirstMatch, NSPredicate (+13 more)
+### Community 155 - "FBScreenRecordingContainer"
+Cohesion: 0.13
+Nodes (15): FBScreenRecordingContainer, -reset, -resetIfPromiseIs, +sharedInstance, -storeScreenRecordingPromisefpscodec, -toDictionary, NSNumber, NSObject (+7 more)
 
-### Community 157 - "scripts"
-Cohesion: 0.10
-Nodes (21): scripts, build, build:swagger, build:swagger:routes, build:swagger:ui, dev, doc, lint (+13 more)
+### Community 156 - "NSPredicate"
+Cohesion: 0.12
+Nodes (28): NSCompoundPredicate, -fb_activeElement, +fb_elementForSnapshotunderElement, -fb_focusedElement, -fb_cachedSnapshotWithQuery, -fb_descendantsMatchingClassNameshouldReturnAfterFirstMatch, -fb_descendantsMatchingIdentifiershouldReturnAfterFirstMatch, -fb_descendantsMatchingPredicateshouldReturnAfterFirstMatch (+20 more)
+
+### Community 157 - "runtime-settings.tsx"
+Cohesion: 0.16
+Nodes (10): ui_public_locales_en_translation, ui_public_locales_tr_translation, GeneralTab, ui_src_components_ui_settings_tabs_general_tab_general_tab_module, InterfaceSettings, RuntimeSettings, MockComponentProps, mocks (+2 more)
 
 ### Community 158 - "+builder"
-Cohesion: 0.12
-Nodes (22): screenRecordingRequestClass, -fb_activateSiriVoiceRecognitionWithTexterror, -fb_openUrlerror, -fb_performHandGestureerror, -fb_pressButtonerror, -fb_pressButtonforDurationerror, -fb_rotateDigitalCrownvelocityerror, -fb_setAppearanceerror (+14 more)
+Cohesion: 0.13
+Nodes (20): screenRecordingRequestClass, -fb_activateSiriVoiceRecognitionWithTexterror, -fb_openUrlerror, -fb_performHandGestureerror, -fb_pressButtonerror, -fb_pressButtonforDurationerror, -fb_rotateDigitalCrownvelocityerror, -fb_setAppearanceerror (+12 more)
 
 ### Community 160 - "ApplicationInstallationService"
-Cohesion: 0.12
-Nodes (7): ApplicationInstallationService, inject, injectable, ActivityOptions, ActivityOptionsSet, RunActivityArgs, SelectOption
+Cohesion: 0.21
+Nodes (3): ApplicationInstallationService, inject, injectable
 
 ### Community 161 - "scaling-service.ts"
 Cohesion: 0.12
@@ -1440,9 +1458,9 @@ Nodes (20): _Bool, NSObject, NSSecureCoding, XCTRepetitionPolicy, +defaultRepeti
 Cohesion: 0.10
 Nodes (20): _Bool, NSCopying, NSObject, NSSecureCoding, NSSet, XCTTagSelection, -copyWithZone, -description (+12 more)
 
-### Community 166 - "FBXPath"
-Cohesion: 0.20
-Nodes (18): FBInternalIndexAttribute, FBXPath, +collectMatchingSnapshotselementStore, +evaluatedocumentcontextNode, +evaluatedocumentcontextNodeerrorMessage, +matchesWithRootElementforQuery, +matchNodeInDocumentelementStoreforSnapshot, +recordElementAttributesforElementindexPathincludedAttributes (+10 more)
+### Community 166 - "+xmlRepresentationWithRootElementwriterelementStorequeryexcludingAttributes"
+Cohesion: 0.27
+Nodes (16): FBXPath, +collectMatchingSnapshotselementStore, +evaluatedocumentcontextNode, +evaluatedocumentcontextNodeerrorMessage, +matchesWithRootElementforQuery, +matchNodeInDocumentelementStoreforSnapshot, +safeXmlStringWithString, +snapshotWithRootuseNative (+8 more)
 
 ### Community 168 - "team/model.js"
 Cohesion: 0.18
@@ -1461,20 +1479,20 @@ Cohesion: 0.10
 Nodes (19): Action, Activity, ActivityAlias, Application, Category, Data, IntentFilter, LauncherActivity (+11 more)
 
 ### Community 172 - "FBXCTestDaemonsProxy"
-Cohesion: 0.11
-Nodes (27): -fb_clearSimulatedLocation, -fb_getSimulatedLocation, -fb_openUrlwithApplicationerror, -fb_setSimulatedLocationerror, -openURLusingApplicationcompletion, +sharedSession, -startScreenRecordingWithRequestwithReply, -stopScreenRecordingWithUUIDwithReply (+19 more)
+Cohesion: 0.16
+Nodes (19): -fb_clearSimulatedLocation, -fb_getSimulatedLocation, -fb_openUrlwithApplicationerror, -fb_setSimulatedLocationerror, -openDefaultApplicationForURLcompletion, -openURLusingApplicationcompletion, +sharedSession, +spinUntilCompletion (+11 more)
 
 ### Community 173 - "XCTSourceCodeContext"
-Cohesion: 0.07
-Nodes (24): _Bool, XCTSourceCodeContext, +_emphasizedImageNamesForSourceLocationInference, -encodeWithCoder, -hash, -initWithCoder, -isEqual, +preferredSourceCodeLocationForSourceCodeFramesemphasizedSymbolName (+16 more)
+Cohesion: 0.11
+Nodes (16): _Bool, XCTSourceCodeContext, +_emphasizedImageNamesForSourceLocationInference, -encodeWithCoder, -hash, -initWithCoder, -isEqual, +preferredSourceCodeLocationForSourceCodeFramesemphasizedSymbolName (+8 more)
 
 ### Community 174 - "FBElementAttributeTests"
 Cohesion: 0.10
 Nodes (20): FBElementAttributeTests, -setUp, -testAccessibilityTraits, -testActivityIndicatorAttributes, -testButtonAttributes, -testContainerAccessibilityAttributes, -testCustomActionsAttributes, -testElementAccessibilityAttributes (+12 more)
 
 ### Community 175 - "-eventPathsWithGestureActionforActionIderror"
-Cohesion: 0.22
-Nodes (23): gestureItemClass, keyItemClass, +actionName, -initWithActionItemapplicationpreviousItemoffseterror, FBKeyPauseItem, +actionName, -addToEventPathallItemscurrentItemIndexerror, -initWithActionItemapplicationpreviousItemoffseterror (+15 more)
+Cohesion: 0.24
+Nodes (21): gestureItemClass, keyItemClass, +actionName, -initWithActionItemapplicationpreviousItemoffseterror, +actionName, -initWithActionItemapplicationpreviousItemoffseterror, +actionName, -initWithActionItemapplicationpreviousItemoffseterror (+13 more)
 
 ### Community 176 - "mercuryctl.sh"
 Cohesion: 0.26
@@ -1485,8 +1503,8 @@ Cohesion: 0.14
 Nodes (15): UIScrollView, FBScrollViewController, -setupLabelViews, -viewDidLayoutSubviews, -viewDidLoad, UIViewController, IBOutlet, UILabel (+7 more)
 
 ### Community 178 - "NSDictionary"
-Cohesion: 0.08
-Nodes (25): -fb_utf8SafeArray, NSDictionary, -fb_utf8SafeDictionary, NSString, -fb_utf8SafeStringWithReplacement, -fb_visibleFrame, NSObject, XCUIApplicationRegistry (+17 more)
+Cohesion: 0.12
+Nodes (18): -fb_utf8SafeArray, NSDictionary, -fb_utf8SafeDictionary, NSString, -fb_utf8SafeStringWithReplacement, FBSDKVersionTests, -setUp, -testIsSDKVersionEqualTo (+10 more)
 
 ### Community 179 - "XCTest"
 Cohesion: 0.11
@@ -1510,15 +1528,15 @@ Nodes (20): dispatch_semaphore_t, FBHTTPServerTests, -connectedSocketWithTimeout
 
 ### Community 184 - "FBTCPSocket"
 Cohesion: 0.11
-Nodes (19): inet, nw_listener_t, stdatomic, unistd, FBTCPSocket, -acceptConnection, -handleDisconnectForConnection, -initWithPort (+11 more)
+Nodes (20): inet, nw_listener_t, stdatomic, unistd, -start, FBTCPSocket, -acceptConnection, -handleDisconnectForConnection (+12 more)
 
 ### Community 185 - "build-webdriveragent.mjs"
-Cohesion: 0.24
-Nodes (9): appium-xcode, buildWebDriverAgent(), BUNDLE_INFO, __dirname, __filename, LOG, ROOT_DIR, SDKS (+1 more)
+Cohesion: 0.13
+Nodes (16): appium-xcode, teen_process, buildWebDriverAgent(), BUNDLE_INFO, __dirname, __filename, LOG, ROOT_DIR (+8 more)
 
-### Community 186 - "create-root-with-providers.tsx"
-Cohesion: 0.14
-Nodes (10): ref_mocks, react-dom, ref_styles, @tanstack/react-query-devtools, AppWrapper, App(), ErrorToast(), ErrorToastProps (+2 more)
+### Community 186 - "react-router"
+Cohesion: 0.08
+Nodes (17): react-error-boundary, react-router, App(), appRouter, ErrorBoundaryElement(), RequireAuth, { authState, socketConnect }, CommonTabsPanelProps (+9 more)
 
 ### Community 187 - "vite-env.d.ts"
 Cohesion: 0.11
@@ -1545,8 +1563,8 @@ Cohesion: 0.11
 Nodes (17): _Bool, NSObject, NSSecureCoding, XCTRuntimeIssueDetectionPolicy, +defaultRuntimeIssueDetectionPolicy, -description, -dictionaryRepresentation, -encodeWithCoder (+9 more)
 
 ### Community 193 - "<XCUIElementEventTarget>"
-Cohesion: 0.08
-Nodes (23): NSObject, <XCTNSPredicateExpectationObject>, -evaluatePredicateForExpectationdebugMessage, XCUIElementAttributes, <XCUIElementAttributesPrivate>, NSObject, <XCUIElementEventTarget>, -clickWithError (+15 more)
+Cohesion: 0.11
+Nodes (18): NSObject, <XCUIElementEventTarget>, -clickWithError, -doubleClickWithError, -doubleTapWithError, -hoverWithError, -rightClickWithError, -swipeDownWithError (+10 more)
 
 ### Community 194 - "FBCustomCommandsTests"
 Cohesion: 0.14
@@ -1577,8 +1595,8 @@ Cohesion: 0.11
 Nodes (23): Autotests Reservation API, AppiumSession Java, Java Automation Examples, MercuryClient Java, ParallelRun Java, SingleRun Java, AndroidSession Playwright, MercuryClient Playwright (+15 more)
 
 ### Community 201 - "iosutil.js"
-Cohesion: 0.15
-Nodes (5): lib_units_ios_device_plugins_util_devices, deviceById, getModelName(), log, recentDeviceNames
+Cohesion: 0.12
+Nodes (9): readIdeviceInfo(), readPymobiledeviceInfo(), resolveIosDeviceInfo(), runCommand(), lib_units_ios_device_plugins_util_devices, deviceById, getModelName(), log (+1 more)
 
 ### Community 204 - "filter-logs.util.ts"
 Cohesion: 0.20
@@ -1605,28 +1623,28 @@ Cohesion: 0.12
 Nodes (16): <XCUIEventRecording>, -recordComment, -recordDragElementapplicationbyCoordinates, -recordFinishedWithError, -recordKeyboardTypingStringapplicationSnapshot, -recordKeyboardTypingStringinApp, -recordLaunchApplicationWithBundleID, -recordLongPressCoordinateappSnapshot (+8 more)
 
 ### Community 210 - "FBPasteboard"
-Cohesion: 0.18
-Nodes (14): +handleGetPasteboard, FBPasteboard, +dataForTypeerror, +pasteboardContentForIteminstancetimeouterror, +setDataforTypeerror, NSObject, NSString, NSURL (+6 more)
+Cohesion: 0.15
+Nodes (16): +handleGetPasteboard, +handleSetPasteboard, NSData, FBPasteboard, +dataForTypeerror, +pasteboardContentForIteminstancetimeouterror, +setDataforTypeerror, NSObject (+8 more)
 
 ### Community 211 - "FBTVNavigationTracker"
-Cohesion: 0.20
+Cohesion: 0.19
 Nodes (17): FBTVNavigationItem, -initWithUid, +itemWithUid, FBTVNavigationTracker, -directionTowardsTargetFromFocusedElementSnapshot, -directionWithItemdeltapositiveDirectionnegativeDirection, -horizontalDirectionWithItemandDelta, -initWithTargetElement (+9 more)
 
 ### Community 212 - "automation-playwright/package.json"
 Cohesion: 0.12
 Nodes (15): dependencies, playwright, description, engines, node, name, private, scripts (+7 more)
 
-### Community 213 - "bluebird"
-Cohesion: 0.06
-Nodes (22): command, describe, handler(), run(), command, describe, log, command (+14 more)
+### Community 213 - "port-forwarding-control.tsx"
+Cohesion: 0.19
+Nodes (8): AdvancedTab(), ui_src_components_ui_device_control_panel_tabs_advanced_tab_advanced_tab_module, MaintenanceControl(), ui_src_components_ui_device_control_panel_tabs_advanced_tab_maintenance_control_maintenance_control_module, PortForwardItem, PortForwardItemProps, ui_src_components_ui_device_control_panel_tabs_advanced_tab_port_forwarding_control_port_forwarding_control_module, PortForwardingControl
 
 ### Community 214 - "Replicator.ts"
 Cohesion: 0.12
 Nodes (15): CircularCandidateDescriptor, CircularReference, NOTE: use intermediate object to avoid unescaped and escaped keys interference, NOTE: we've hit a hard case: object reference itself during transformation., NOTE: new Map(iterable) is not supported by all browsers, NOTE: new Set(iterable) is not supported by all browsers, NOTE: see http://www.ecma-international.org/ecma-262/6.0/index.html#sec-…, TransformedObject (+7 more)
 
-### Community 215 - "runtime-settings.test.tsx"
-Cohesion: 0.15
-Nodes (10): @testing-library/jest-dom, @testing-library/react, vitest, ui_public_locales_en_translation, ui_public_locales_tr_translation, ConditionalRender(), ConditionalRenderProps, MockComponentProps (+2 more)
+### Community 215 - "inversify-react"
+Cohesion: 0.06
+Nodes (29): inversify-react, @testing-library/react, ConditionalRender(), ConditionalRenderProps, ActivityLauncher, ui_src_components_ui_device_control_panel_tabs_dashboard_tab_app_upload_control_activity_launcher_activity_launcher_module, AppUploadControl, UploadMode (+21 more)
 
 ### Community 216 - "mercury-api/types.ts"
 Cohesion: 0.12
@@ -1653,7 +1671,7 @@ Cohesion: 0.12
 Nodes (15): compilerOptions, allowImportingTsExtensions, isolatedModules, lib, module, moduleDetection, moduleResolution, noEmit (+7 more)
 
 ### Community 222 - "<XCUIDeviceEventAndStateInterface>"
-Cohesion: 0.12
+Cohesion: 0.13
 Nodes (15): NSObject, <XCUIDeviceEventAndStateInterface>, -acquireUserPresenceAssertionWithReply, -clearSimulatedLocationWithReply, -clearUserPresenceAssertionWithReply, -continuityDisplayIsActiveWithCompletion, -getAppearanceModeWithReply, -getDeviceOrientationWithCompletion (+7 more)
 
 ### Community 223 - "+parseQueryerror"
@@ -1709,8 +1727,8 @@ Cohesion: 0.21
 Nodes (12): addDevices(), captureDevices(), freeDevices(), isIosDevice(), parseSerials(), serialsToBody(), syncBuildDevices(), del() (+4 more)
 
 ### Community 239 - "webdriveragent.ts"
-Cohesion: 0.10
-Nodes (24): @appium/base-driver, @appium/strongbox, @appium/types, ref_node_path, sinon, DEFAULT_TEST_BUNDLE_SUFFIX, PLATFORM_NAME_IOS, PROJECT_FILE (+16 more)
+Cohesion: 0.22
+Nodes (12): @appium/base-driver, @appium/types, DEFAULT_TEST_BUNDLE_SUFFIX, PLATFORM_NAME_IOS, PROJECT_FILE, SDK_DEVICE, WDA_BASE_URL, WDA_RUNNER_APP (+4 more)
 
 ### Community 240 - "ScrcpyVideoStreamParser"
 Cohesion: 0.20
@@ -1729,23 +1747,23 @@ Cohesion: 0.14
 Nodes (13): NOTE: 480 dpi, NOTE: 640 dpi, NOTE: 120 dpi, NOTE: 160 dpi, NOTE: 240 dpi, NOTE: 320 dpi, ScreenDensity, HDPI (+5 more)
 
 ### Community 244 - "FBElementTypeTransformer"
-Cohesion: 0.22
-Nodes (11): -wdType, FBElementTypeTransformer, +createMapping, +elementTypeWithTypeName, +shortStringWithElementType, +stringWithElementType, NSObject, FBElementTypeTransformerTests (+3 more)
+Cohesion: 0.11
+Nodes (21): -wdType, +uniqueElementTypesWithElements, FBElementTypeTransformer, +createMapping, +elementTypeWithTypeName, +shortStringWithElementType, +stringWithElementType, NSObject (+13 more)
 
 ### Community 245 - "TIPreferencesController"
-Cohesion: 0.22
+Cohesion: 0.20
 Nodes (13): NSObject, TIPreferencesController, -boolForPreferenceKey, -setValueforPreferenceKey, +sharedPreferencesController, -synchronizePreferences, -configureDefaultKeyboardPreferences, -configureKeyboardsPreferenceforPreferenceKey (+5 more)
 
 ### Community 246 - "XCTCapabilities"
 Cohesion: 0.14
 Nodes (13): NSObject, NSSecureCoding, XCTCapabilities, -description, +emptyCapabilities, -encodeWithCoder, -hasCapability, -hash (+5 more)
 
-### Community 247 - "xcodebuild.ts"
-Cohesion: 0.11
-Nodes (15): XCODEBUILD_PROCESS_MARKER, AppleDevice, RetrieveBuildSettingsOptions, XcodeBuildArgs, XcodeBuildSettings, XcodeShowBuildSettingsEntry, getWDAUpgradeTimestamp(), getWDAUpgradeTimestamp() (+7 more)
+### Community 247 - "XcodeBuild"
+Cohesion: 0.19
+Nodes (5): RetrieveBuildSettingsOptions, XcodeBuildSettings, buildSettingsArgsFromOptions(), buildSettingsCacheKey(), XcodeBuild
 
 ### Community 248 - "<XCTMessagingRole_EventSynthesis>"
-Cohesion: 0.14
+Cohesion: 0.15
 Nodes (13): <XCTMessagingRole_EventSynthesis>, -_XCT_enableFauxCollectionViewCells, -_XCT_getDeviceOrientationWithCompletion, -_XCT_getInterfaceOrientationWithCompletion, -_XCT_hasHardwareButtoncompletion, -_XCT_loadAccessibilityWithTimeoutreply, -_XCT_performDeviceEventcompletion, -_XCT_sendStringmaximumFrequencycompletion (+5 more)
 
 ### Community 249 - "XCTRuntimeDiagnosticsPolicy"
@@ -1761,8 +1779,8 @@ Cohesion: 0.29
 Nodes (12): FBOrientationCommands, +handleGetDeviceOrientation, +handleGetOrientation, +handleGetRotation, +handleSetOrientation, +handleSetRotation, +interfaceOrientationForApplication, +_orientationsMapping (+4 more)
 
 ### Community 252 - "FBW3CGestureItem"
-Cohesion: 0.14
-Nodes (17): FBPointerDownItem, +actionName, -addToEventPathallItemscurrentItemIndexerror, FBPointerMoveItem, +actionName, -addToEventPathallItemscurrentItemIndexerror, -positionWithError, FBPointerPauseItem (+9 more)
+Cohesion: 0.15
+Nodes (16): FBPointerDownItem, +actionName, -addToEventPathallItemscurrentItemIndexerror, FBPointerMoveItem, -addToEventPathallItemscurrentItemIndexerror, -positionWithError, FBPointerPauseItem, -addToEventPathallItemscurrentItemIndexerror (+8 more)
 
 ### Community 253 - "FBElementSwipingTests"
 Cohesion: 0.11
@@ -1808,9 +1826,9 @@ Nodes (5): ArithmeticTransform, BigIntTransform, BigIntTransform, FunctionTransf
 Cohesion: 0.31
 Nodes (10): nsexpression_fbformat, NSExpression, +fb_wdExpressionWithExpression, NSExpressionFBFormatTests, -testFormattingForExistingComplexProperty, -testFormattingForExistingComplexPropertyWOPrefix, -testFormattingForExistingProperty, -testFormattingForExistingPropertyShortcut (+2 more)
 
-### Community 265 - "swift-tool.js"
-Cohesion: 0.11
-Nodes (12): compilePromises, ref_node_crypto, ref_node_fs, ref_node_url, ref_node_util, failures, ROOT, moduleRoot (+4 more)
+### Community 265 - "ref_node_path"
+Cohesion: 0.09
+Nodes (19): compilePromises, ref_node_crypto, ref_node_fs, ref_node_path, ref_node_url, ref_node_util, failures, ROOT (+11 more)
 
 ### Community 266 - "compilerOptions"
 Cohesion: 0.15
@@ -1836,25 +1854,25 @@ Nodes (12): _Bool, NSObject, NSString, XCTSkippedTestContext, -initWithCurrentEx
 Cohesion: 0.15
 Nodes (12): NSCopying, NSObject, NSSecureCoding, XCTTestSelection, -copyWithZone, -description, +emptyTestSelection, -encodeWithCoder (+4 more)
 
-### Community 272 - "<XCUIApplicationManaging>"
-Cohesion: 0.18
-Nodes (10): NSObject, <XCUIApplicationManaging>, -launchProcessWithPathbundleIDargumentsenvironmentVariablescompletion, <XCUIApplicationProcessManaging>, -openDefaultApplicationForURLcompletion, -openURLusingApplicationcompletion, <XCUIXcodeApplicationManaging>, -openURLprocessPathbundleIDargumentsenvironmentVariablescompletion (+2 more)
+### Community 272 - "XCUIDevice.h"
+Cohesion: 0.04
+Nodes (38): NSObject, <XCUIAlertMonitoring>, -addUIAlertHandlerWithDescriptionblock, -handleAlertElement, -removeUIAlertHandlerWithIdentifier, NSObject, <XCUIApplicationAutomationSessionProviding>, -requestAutomationSessionForTestTargetWithPIDpreferredBackendPathreply (+30 more)
 
 ### Community 273 - "FBScreenTests"
-Cohesion: 0.25
-Nodes (20): +handleGetScreen, +handleGetScreens, FBScreen, +currentScreenWithError, +displayID, +scale, +screensWithError, +screenWithDisplayIDerror (+12 more)
+Cohesion: 0.15
+Nodes (28): +handleGetScreen, +handleGetScreens, +handleGetSettings, +handleSetSettings, FBScreen, +currentScreenWithError, +displayID, +scale (+20 more)
 
 ### Community 274 - "XCUIElementAttributesTests"
-Cohesion: 0.12
-Nodes (25): XCUIElement, XCUIElementAttributesTests, -setUp, -testGetAccessibilityContainerAttribute, -testGetAccessibleAttribute, -testGetEnabledAttribute, -testGetInvalidAttribute, -testGetLabelAttribute (+17 more)
+Cohesion: 0.17
+Nodes (19): -fb_valueForWDAttributeName, -fb_valueForWDAttributeName, +wdAttributeNameForAttributeName, +wdAttributeNamesMapping, XCUIElement, XCUIElementAttributesTests, -testGetAccessibilityContainerAttribute, -testGetAccessibleAttribute (+11 more)
 
 ### Community 275 - "ios-h264-encoder.swift"
 Cohesion: 0.18
 Nodes (11): CoreGraphics, CoreMedia, CoreVideo, FileHandle, Foundation, ImageIO, appendUInt32BE(), readExact() (+3 more)
 
 ### Community 276 - "FBScreenshot"
-Cohesion: 0.26
-Nodes (12): imageEncodingClass, screenshotRequestClass, -fb_screenshotWithError, FBScreenshot, +compressionQualityWithQuality, +imageEncodingWithUniformTypeIdentifiercompressionQualityerror, +imageUtiWithQuality, +screenshotRequestWithScreenIDrectuticompressionQualityerror (+4 more)
+Cohesion: 0.23
+Nodes (13): imageEncodingClass, screenshotRequestClass, -fb_screenshotWithError, FBScreenshot, +compressionQualityWithQuality, +imageEncodingWithUniformTypeIdentifiercompressionQualityerror, +imageUtiWithQuality, +screenshotRequestWithScreenIDrectuticompressionQualityerror (+5 more)
 
 ### Community 278 - "builds-page.tsx"
 Cohesion: 0.23
@@ -1881,8 +1899,8 @@ Cohesion: 0.17
 Nodes (11): _Bool, NSMutableArray, NSObject, XCTAttachmentManager, -dealloc, -dequeueAndReportBackgroundAttachments, -enqueueAttachment, -ensureNoRemainingAttachments (+3 more)
 
 ### Community 284 - "XCTExpectedFailureContextManager"
-Cohesion: 0.17
-Nodes (12): NSMutableArray, NSMutableDictionary, NSObject, XCTExpectedFailureContextManager, -checkForExpectedFailureMatchingIssue, -_cleanUpContext, -expectedFailureContextStackForCurrentThread, -expectedFailureContextStackForThreadWithId (+4 more)
+Cohesion: 0.12
+Nodes (17): NSMutableArray, NSMutableDictionary, NSObject, XCTExpectedFailureContextManager, -checkForExpectedFailureMatchingIssue, -_cleanUpContext, -expectedFailureContextStackForCurrentThread, -expectedFailureContextStackForThreadWithId (+9 more)
 
 ### Community 285 - "XCUISiriService"
 Cohesion: 0.17
@@ -1897,8 +1915,8 @@ Cohesion: 0.17
 Nodes (3): Bool, WDAFindIntegrationTests, .relaunchForEachTest
 
 ### Community 288 - "+recordElementAttributesforElementindexPathincludedAttributessiblingIndex"
-Cohesion: 0.29
-Nodes (30): +name, +name, +name, +name, +valueForElement, +name, +recordWithWriterforValue, +name (+22 more)
+Cohesion: 0.13
+Nodes (34): FBApplicationBundleIdAttribute, +name, FBApplicationPidAttribute, +name, +valueForElement, +recordWithWriterforValue, +name, FBIndexAttribute (+26 more)
 
 ### Community 289 - "Mercury Release Workflow"
 Cohesion: 0.20
@@ -1910,7 +1928,7 @@ Nodes (10): loadDeviceByCurrent(), loadDeviceByOrigin(), lockDeviceByCurrent(), 
 
 ### Community 291 - "FBBaseActionsSynthesizer.m"
 Cohesion: 0.16
-Nodes (15): FBBaseActionItem, +actionName, -addToEventPathallItemscurrentItemIndexerror, FBBaseActionItemsChain, -addItem, -asEventPathsWithError, -init, FBBaseActionsSynthesizer (+7 more)
+Nodes (16): FBBaseActionItem, +actionName, -addToEventPathallItemscurrentItemIndexerror, FBBaseActionItemsChain, -addItem, -asEventPathsWithError, -init, FBBaseActionsSynthesizer (+8 more)
 
 ### Community 292 - ".encode"
 Cohesion: 0.27
@@ -1921,16 +1939,16 @@ Cohesion: 0.18
 Nodes (10): Build, BuildDevice, BuildListResponse, BuildOwner, BuildResponse, BuildScenario, BuildScenarioStatus, BuildScenarioSummary (+2 more)
 
 ### Community 296 - "FBW3CKeyItem"
-Cohesion: 0.36
-Nodes (10): -typeTextatOffsettypingSpeedshouldRedact, FBKeyDownItem, -addToEventPathallItemscurrentItemIndexerror, -hasUpPairInItemscurrentItemIndex, FBKeyUpItem, -addToEventPathallItemscurrentItemIndexerror, -collectTextWithItemscurrentItemIndex, -hasDownPairInItemscurrentItemIndex (+2 more)
+Cohesion: 0.27
+Nodes (12): -typeTextatOffsettypingSpeedshouldRedact, FBKeyDownItem, -addToEventPathallItemscurrentItemIndexerror, -hasUpPairInItemscurrentItemIndex, FBKeyPauseItem, -addToEventPathallItemscurrentItemIndexerror, FBKeyUpItem, -addToEventPathallItemscurrentItemIndexerror (+4 more)
 
 ### Community 297 - "<XCTElementSetTransformer>"
 Cohesion: 0.20
 Nodes (9): <XCTCapabilitiesProviding>, +provideCapabilitiesToBuilder, NSCopying, NSObject, <XCTElementSetTransformer>, -canBeRemotelyEvaluatedWithCapabilities, -iteratorForInput, -requiredKeyPathsOrError (+1 more)
 
 ### Community 298 - "FBSessionIntegrationTests"
-Cohesion: 0.24
-Nodes (11): FBSession, FBSessionIntegrationTests, -setUp, -tearDown, -testAppWithInvalidBundleIDCannotBeActivated, -testAppWithInvalidBundleIDCannotBeStarted, -testMainAppCanBeReactivatedInScopeOfTheCurrentSession, -testMainAppCanBeRestartedInScopeOfTheCurrentSession (+3 more)
+Cohesion: 0.18
+Nodes (14): +defaultWorkspace, +launchAppWithBundleId, FBSession, FBSessionIntegrationTests, -setUp, -tearDown, -testAppWithInvalidBundleIDCannotBeActivated, -testAppWithInvalidBundleIDCannotBeStarted (+6 more)
 
 ### Community 299 - "FBTVFocusIntegrationTests"
 Cohesion: 0.24
@@ -1955,6 +1973,10 @@ Nodes (10): FBConfigurationTests, -setUp, -testBindingIPDefault, -testBindingIPE
 ### Community 304 - "ContentView"
 Cohesion: 0.22
 Nodes (8): App, Scene, SwiftUI, View, ContentView, .body, WatchSpikeApp, .body
+
+### Community 305 - "access-tokens-control.tsx"
+Cohesion: 0.22
+Nodes (8): AccessTokensControl, ui_src_components_ui_settings_tabs_keys_tab_access_tokens_control_access_tokens_control_module, AdbKeysControl, ui_src_components_ui_settings_tabs_keys_tab_adb_keys_control_adb_keys_control_module, KeyListItem, KeyListItemProps, KeysTab(), ui_src_components_ui_settings_tabs_keys_tab_keys_tab_module
 
 ### Community 306 - "Transform"
 Cohesion: 0.20
@@ -1981,32 +2003,32 @@ Cohesion: 0.27
 Nodes (4): SaveLogsService, inject, injectable, LogsFileExtension
 
 ### Community 312 - "AXSettings"
-Cohesion: 0.28
-Nodes (8): AXSettings, -reduceMotionEnabled, -setReduceMotionEnabled, +sharedInstance, NSObject, -reduceMotionEnabled, -setReduceMotionEnabled, +sharedInstance
+Cohesion: 0.24
+Nodes (9): AXSettings, -reduceMotionEnabled, -setReduceMotionEnabled, +sharedInstance, NSObject, -forceSimulatorSoftwareKeyboardPresence, -reduceMotionEnabled, -setReduceMotionEnabled (+1 more)
 
 ### Community 313 - "XCTestRun"
-Cohesion: 0.11
-Nodes (16): XCTestCaseRun, -_handleIssue, -recordExpectedFailure, -recordSkipWithDescriptionsourceCodeContext, -start, -stop, _Bool, XCTIssue (+8 more)
+Cohesion: 0.20
+Nodes (10): _Bool, XCTIssue, XCTestRun, -description, -expectedFailureCount, -_handleIssue, -recordExpectedFailure, -recordFailureWithDescriptioninFileatLineexpected (+2 more)
 
-### Community 314 - "processes.ts"
-Cohesion: 0.16
-Nodes (15): asyncbox, teen_process, log, filterPIDsByCommandLine(), getPIDsListeningOnPort(), getPIDsUsingPattern(), killAppUsingPattern(), resetTestProcesses() (+7 more)
+### Community 314 - "XCTFuture"
+Cohesion: 0.14
+Nodes (13): _Bool, NSError, NSMutableSet, NSObject, XCTFuture, -addCancelationExpectation, +futureWithDescriptionblock, +futureWithTimeoutdescriptionblock (+5 more)
 
-### Community 315 - "+handleExpectNotification"
-Cohesion: 0.27
-Nodes (8): +waitForExpectationstimeout, +handleExpectNotification, FBNotificationsHelper, +waitForDarwinNotificationWithNametimeout, +waitForNotificationWithNametimeout, NSObject, XCTDarwinNotificationExpectation, XCTNSNotificationExpectation
+### Community 315 - "FBXPath.m"
+Cohesion: 0.19
+Nodes (11): FBDimensionAttribute, FBFocusedAttribute, +name, +valueForElement, FBHeightAttribute, FBTypeAttribute, +name, +valueForElement (+3 more)
 
 ### Community 316 - "<XCUIScreenDataSource>"
 Cohesion: 0.20
 Nodes (10): NSObject, <XCUIScreenDataSource>, -requestBoundsForScreenWithIdentifiercompletion, -requestScaleForScreenWithIdentifiercompletion, -requestScreenIdentifiersWithCompletion, -requestScreenshotAttachmentWithRequestwithReply, -requestScreenshotWithRequestwithReply, -requestTraitsForScreenWithIdentifiercompletion (+2 more)
 
-### Community 317 - "team-item.tsx"
-Cohesion: 0.20
-Nodes (8): TeamItem, TeamItemProps, validateString(), TeamName(), TeamNameProps, createTeamItemContainer(), TeamList, TeamsTab
+### Community 317 - "<XCTElementSnapshotAttributeDataSource>"
+Cohesion: 0.15
+Nodes (13): <XCTElementSnapshotAttributeDataSource>, -attributesForElementattributeserror, -parameterizedAttributeforElementparametererror, -valuesForPrivilegedAttributesforElementerror, NSObject, <XCTMacCatalystStatusProviding>, -isMacCatalystForPID, <XCTRunnerAutomationSession> (+5 more)
 
 ### Community 318 - "FBActiveAppDetectionPoint"
-Cohesion: 0.20
-Nodes (11): FBActiveAppDetectionPoint, -axElement, +axElementWithPoint, -init, -setCoordinatesWithStringerror, +sharedInstance, -stringCoordinates, CGPoint (+3 more)
+Cohesion: 0.24
+Nodes (10): FBActiveAppDetectionPoint, -axElement, +axElementWithPoint, -init, -setCoordinatesWithStringerror, +sharedInstance, -stringCoordinates, CGPoint (+2 more)
 
 ### Community 319 - "FBScrollingTests"
 Cohesion: 0.20
@@ -2064,9 +2086,9 @@ Nodes (6): ShellSettingsService, action, computed, inject, injectable, observabl
 Cohesion: 0.22
 Nodes (8): _Bool, NSObject, NSURL, XCUIApplicationOpenRequest, +activationRequestFromLaunchRequest, +activationRequestWithLaunchArgumentsenvironmentVariablesusePlatformLauncher, +launchRequestWithLaunchArgumentsenvironmentVariableslaunchURLusePlatformLauncherdisableAccessibility, +launchRequestWithLaunchArgumentsenvironmentVariablesusePlatformLauncher
 
-### Community 335 - "FBSettingsHandler.m"
-Cohesion: 0.22
-Nodes (9): +handleGetSettings, +handleSetSettings, FBSettingsHandler, +applySettingstoSession, +configureAutoClickAlertWithSelectorforSession, +currentSettingsForSession, +gettersMap, +settersMap (+1 more)
+### Community 335 - "FBResponseJSONPayload"
+Cohesion: 0.26
+Nodes (11): routeresponse, FBResponseJSONPayload, -dispatchWithResponse, -initWithDictionaryhttpStatusCode, NSObject, HTTPStatusCode, NSString, FBResponseJSONPayloadTests (+3 more)
 
 ### Community 336 - "RouteRequest"
 Cohesion: 0.29
@@ -2080,9 +2102,13 @@ Nodes (4): CoreLocation, WatchKit, XCTest, XCUIAutomation
 Cohesion: 0.18
 Nodes (13): Authentication Strategies, Frontend DI Container (InversifyJS), Mimari Dokümanı, Processor Bridge, Reaper Service, Screen Streaming Architecture, TriProxy-App, TriProxy-Dev (+5 more)
 
+### Community 340 - "XCUIElementFBFindTests_ResponseFields"
+Cohesion: 0.18
+Nodes (12): -setUp, XCUIElementFBFindTests_CompactResponses, -setUp, -testCompactResponseNo, -testCompactResponseYes, XCUIElementFBFindTests_ResponseFields, -setUp, -testArbitraryAttributes (+4 more)
+
 ### Community 345 - "NSDictionaryFBUtf8SafeTests"
-Cohesion: 0.33
-Nodes (6): NSDictionaryFBUtf8SafeTests, -testEmptySafeDictConversion, -testNonEmptySafeDictConversion, -testUnpairedSurrogateKeySanitization, -testUnpairedSurrogateSanitization, -testValidSurrogatePairIsPreserved
+Cohesion: 0.25
+Nodes (7): nsdictionary_fbutf8safedictionary, NSDictionaryFBUtf8SafeTests, -testEmptySafeDictConversion, -testNonEmptySafeDictConversion, -testUnpairedSurrogateKeySanitization, -testUnpairedSurrogateSanitization, -testValidSurrogatePairIsPreserved
 
 ### Community 346 - "TeamGroupsColumnIds"
 Cohesion: 0.25
@@ -2112,17 +2138,17 @@ Nodes (7): ApplicationAsset, ApplicationAssetsList, ApplicationAssetsListItem, A
 Cohesion: 0.25
 Nodes (7): ColumnGroup, BATTERY, DEVICE_INFO, GROUP_USER_DETAILS, LOCATION_ID, NETWORK_CONNECTIVITY, OS_HARDWARE
 
-### Community 354 - "FBDebugLogDelegateDecorator"
-Cohesion: 0.32
-Nodes (5): NSObject, <XCDebugLogDelegate>, -logDebugMessage, FBDebugLogDelegateDecorator, NSObject
+### Community 354 - "browser.js"
+Cohesion: 0.25
+Nodes (9): appReducer(), compareIgnoreCase(), loadBrowsers(), mapping, pkg(), updateBrowsers(), BrowserClearMessage, BrowserOpenMessage (+1 more)
 
 ### Community 355 - "XCTMeasureOptions"
 Cohesion: 0.25
 Nodes (7): _Bool, NSString, XCTMeasureOptions, -applyPerformanceTestConfiguration, +defaultOptions, -init, -initWithInstrumentOptionsDictionary
 
-### Community 356 - "statistic-card.tsx"
-Cohesion: 0.20
-Nodes (9): ui_src_components_lib_statistic_card_statistic_card_module, STATISTIC_ICON_MAP, StatisticCard(), StatisticCardProps, StatisticCardIcon, CHECK_CIRCLE_DEVICE_OUTLINE, DEVICES_OUTLINE, USER_CIRCLE_OUTLINE (+1 more)
+### Community 356 - "FBAbstractPredicateToken"
+Cohesion: 0.25
+Nodes (11): FBAbstractPredicateToken, +allowedCharacters, +canConsumeCharacter, +enclosingMarker, -followingTokens, -nextTokenWithCharacter, -stripLastChar, FBDescendantPredicateToken (+3 more)
 
 ### Community 357 - "<XCUIPlatformApplicationServicesProviding>"
 Cohesion: 0.25
@@ -2147,6 +2173,10 @@ Nodes (7): Android H.264 WebRTC Screen Streaming, Scrcpy H.264 Capture Source, V
 ### Community 362 - "getDeviceBookings"
 Cohesion: 0.38
 Nodes (5): getDeviceBookings(), getDeviceFilteredGroups(), getDeviceGroups(), get(), get()
+
+### Community 363 - "interceptors.ts"
+Cohesion: 0.36
+Nodes (6): attachTokenOnRequest(), extractMessageOnErrorResponse(), logoutOnErrorResponse(), NOTE: Errors can be filtered, mercuryApiClient, mercuryClient
 
 ### Community 364 - "arithmetic.ts"
 Cohesion: 0.29
@@ -2188,21 +2218,21 @@ Nodes (3): CurrentUserProfileStore, inject, injectable
 Cohesion: 0.38
 Nodes (3): NSString, -fb_visualLength, -fb_xmlSafeStringWithReplacement
 
-### Community 374 - "<XCTSignpostListener>"
-Cohesion: 0.40
-Nodes (5): NSObject, <XCTSignpostListener>, -receivedSignpostwithToken, -registerForSignpostsFromSubsystemcategoryintervalTimeouterrorhandler, -unregisterForSignpostsWithToken
+### Community 374 - "LinkOpenerStore"
+Cohesion: 0.24
+Nodes (3): LinkOpenerStore, inject, injectable
 
 ### Community 375 - "<XCTRunnerDaemonSessionUIAutomationDelegate>"
-Cohesion: 0.29
+Cohesion: 0.33
 Nodes (6): NSObject, <XCTRunnerDaemonSessionUIAutomationDelegate>, -daemonDidUpdatePIDforApplicationWithBundleIDandState, -finishInitializationForUIAutomation, -receivedAccessibilityNotificationfromElementpayload, -requestBackgroundAssertionForPIDreply
 
 ### Community 376 - "schedule.tsx"
 Cohesion: 0.25
 Nodes (8): ui_src_components_ui_settings_tabs_groups_tab_group_item_tabs_schedule_schedule_module, Schedule, ScheduleProps, ScheduleFormFields, EXPIRE_DATE, GROUP_CLASS, REPETITIONS, START_DATE
 
-### Community 377 - "XCUIKnobControl"
-Cohesion: 0.29
-Nodes (6): NSObject, XCUIKnobControl, -initWithScreen, -nudgeInDirection, -rotateByNumberOfClicksclockwise, -select
+### Community 377 - "<XCTHarnessEventReporting>"
+Cohesion: 0.20
+Nodes (9): NSObject, <XCTHarnessEventReporting>, -reportBootstrappingFailurecompletion, -reportDidBeginExecutingTestPlan, -reportDidFinishExecutingTestPlanWithCompletion, -reportInitializationForUITestingFinishedWithError, -reportSelfDiagnosisIssuedescription, -reportStallOnMainThreadInTestCasefileline (+1 more)
 
 ### Community 378 - "<XCUIRemoteSiriInterface>"
 Cohesion: 0.29
@@ -2240,9 +2270,9 @@ Nodes (5): RFC-5424, CefExtension, nsyslog-parser, StructuredDataEntry, SyslogMe
 Cohesion: 0.20
 Nodes (9): HealthCheckConfig, ManagedProcess, ProcessCallbacks, ProcessState, ProcessStats, TODO: emit resource allocation error event, TODO: if (isResolved) then emit error, ProcessManager (+1 more)
 
-### Community 387 - "FBQuiescenceApplicationDouble"
+### Community 387 - "XCTPromise"
 Cohesion: 0.20
-Nodes (10): +uniqueElementTypesWithElements, FBElementUtilitiesTests, -testStabilityWaitRestoresSettingsAfterAnException, -testTypesFiltering, FBQuiescenceApplicationDouble, -applicationImpl, -currentProcess, -fb_waitForQuiescenceIncludingAnimationsIdle (+2 more)
+Nodes (9): _Bool, NSError, NSObject, NSString, XCTPromise, -fulfillWithError, -fulfillWithValue, -fulfillWithValueerror (+1 more)
 
 ### Community 389 - "HTML.ts"
 Cohesion: 0.33
@@ -2253,8 +2283,8 @@ Cohesion: 0.60
 Nodes (5): encrypt(), normalizePassword(), reverseBufferByteBits(), reverseByteBits(), verify()
 
 ### Community 391 - "FBUnattachedAppLauncher"
-Cohesion: 0.25
-Nodes (6): mobilecoreservices, +defaultWorkspace, FBUnattachedAppLauncher, +launchAppWithBundleId, NSObject, -testLaunchUnattachedApp
+Cohesion: 0.40
+Nodes (3): mobilecoreservices, FBUnattachedAppLauncher, NSObject
 
 ### Community 392 - "FBXMLSafeStringTests"
 Cohesion: 0.33
@@ -2300,21 +2330,21 @@ Nodes (3): Token, UserAccessTokenResponse, UserAccessTokensResponse
 Cohesion: 0.40
 Nodes (4): UINavigationController, FBNavigationController, -shouldAutorotate, -supportedInterfaceOrientations
 
-### Community 405 - "XCUIApplicationProcess"
-Cohesion: 0.33
-Nodes (6): XCUIApplicationProcess, -fb_shouldWaitForQuiescence, -fb_waitForQuiescenceIncludingAnimationsIdle, +load, -setFb_shouldWaitForQuiescence, NSNumber
+### Community 405 - "+startScreenRecordingWithRequesterror"
+Cohesion: 0.25
+Nodes (9): -startScreenRecordingWithRequestwithReply, -stopScreenRecordingWithUUIDwithReply, -supportsScreenRecording, +handleStopVideoRecording, +startScreenRecordingWithRequesterror, +stopScreenRecordingWithUUIDerror, FBVideoRecordingTests, -setUp (+1 more)
 
-### Community 407 - "<XCTMemoryCheckerDelegate>"
-Cohesion: 0.50
-Nodes (4): NSObject, <XCTMemoryCheckerDelegate>, -memoryCheckerdidFailForProcesswithRootLeakCountsleaksOutputserializedLeakDiffMemoryGraph, -memoryCheckerdidFailWithMessagesserializedMemoryGraph
+### Community 407 - "XCTSourceCodeLocation"
+Cohesion: 0.25
+Nodes (8): NSString, XCTSourceCodeLocation, -description, -encodeWithCoder, -hash, -initWithCoder, -isEqual, +supportsSecureCoding
 
-### Community 408 - "<XCUIAlertMonitoring>"
-Cohesion: 0.33
-Nodes (5): NSObject, <XCUIAlertMonitoring>, -addUIAlertHandlerWithDescriptionblock, -handleAlertElement, -removeUIAlertHandlerWithIdentifier
+### Community 408 - "XCUIHitPointResult"
+Cohesion: 0.25
+Nodes (7): _Bool, CGPoint, NSObject, XCUIHitPointResult, -description, -initWithHitPointhittable, -hitPoint
 
-### Community 409 - "<XCUIInterruptionMonitoring>"
-Cohesion: 0.33
-Nodes (5): NSObject, <XCUIInterruptionMonitoring>, -addInterruptionHandlerWithDescriptionblock, -handleInterruptingElement, -removeInterruptionHandlerWithIdentifier
+### Community 409 - "<XCTMessagingRole_TestExecution>"
+Cohesion: 0.29
+Nodes (7): <XCTMessagingRole_TestExecution>, -_IDE_enumerateTests, -_IDE_executeTestsWithIdentifiersToRunidentifiersToSkip, -_IDE_fetchAllTestIdentifiers, -_IDE_fetchParallelizableTestIdentifiers, -_IDE_shutdown, -_IDE_startExecutingTestPlanWithProtocolVersion
 
 ### Community 410 - "build.sh"
 Cohesion: 0.67
@@ -2335,6 +2365,10 @@ Nodes (6): FBIntegrationAppTests, -rotateTo, -setUp, -tearDown, -testScrollRowsR
 ### Community 414 - "WDAAlertIntegrationTests"
 Cohesion: 0.33
 Nodes (3): Bool, WDAAlertIntegrationTests, .relaunchForEachTest
+
+### Community 415 - "readyness.ts"
+Cohesion: 0.33
+Nodes (3): log, preparingModules, readyModules
 
 ### Community 416 - "addAdbPublicKey"
 Cohesion: 0.60
@@ -2365,28 +2399,32 @@ Cohesion: 0.40
 Nodes (5): Ruby and Bundler Setup, Xcode Version Selection, Xcode Test Environment Setup Action, WebDriverAgent Functional Test Matrix, iOS tvOS and watchOS Functional Test Matrix
 
 ### Community 583 - "UIKeyboardImpl"
-Cohesion: 0.33
-Nodes (5): UIKeyboardImpl, -setAutomaticMinimizationEnabled, -setSoftwareKeyboardShownByTouch, +sharedInstance, -forceSimulatorSoftwareKeyboardPresence
+Cohesion: 0.40
+Nodes (4): UIKeyboardImpl, -setAutomaticMinimizationEnabled, -setSoftwareKeyboardShownByTouch, +sharedInstance
 
 ### Community 584 - "FBRuntimeUtilsTests"
 Cohesion: 0.33
 Nodes (6): <FBMagicProtocol>, FBRuntimeUtilsTests, -testClassesThatConformsToProtocol, -testRetrievingFrameworkSymbols, -testXCTestSymbols, NSObject
 
-### Community 585 - "<XCUIApplicationImplReporter>"
-Cohesion: 0.40
-Nodes (5): <XCUIApplicationImplReporter>, -reportErrorWithMessage, -reportFailureWithMessage, -reportFailureWithTestInterruptionWithMessage, -reportWarningWithMessage
+### Community 585 - "translate_tr.cjs"
+Cohesion: 0.33
+Nodes (5): dictionary, fs, path, trFile, trTranslations
 
 ### Community 586 - "<XCUIApplicationProcessDelegate>"
 Cohesion: 0.40
 Nodes (5): NSObject, <XCUIApplicationProcessDelegate>, -applicationProcessAutomationSessionRequestFailed, -applicationProcessDidLoadAutomationSession, -applicationProcessShouldRequestAutomationSession
 
-### Community 587 - "<XCUIRemoteDeviceRunner>"
-Cohesion: 0.40
-Nodes (4): NSObject, <XCUIRemoteDeviceRunner>, -executeBlockWithIdentifierdata, -exitRemoteRunner
+### Community 587 - "XCTestCaseRun"
+Cohesion: 0.33
+Nodes (6): XCTestCaseRun, -_handleIssue, -recordExpectedFailure, -recordSkipWithDescriptionsourceCodeContext, -start, -stop
 
 ### Community 588 - "+bindingPortRangeFromArguments"
 Cohesion: 0.40
 Nodes (5): -bindingPortRange, +bindingPortRangeFromArguments, -mjpegServerPort, +mjpegServerPortFromArguments, +valueFromArgumentsforKey
+
+### Community 589 - "<XCTMessagingRole_SiriAutomation>"
+Cohesion: 0.33
+Nodes (6): <XCTMessagingRole_SiriAutomation>, -_XCT_injectAssistantRecognitionStringscompletion, -_XCT_injectVoiceRecognitionAudioInputPathscompletion, -_XCT_requestSiriEnabledStatus, -_XCT_startSiriUIRequestWithAudioFileURLcompletion, -_XCT_startSiriUIRequestWithTextcompletion
 
 ### Community 590 - "FBW3CTypeActionsTests"
 Cohesion: 0.40
@@ -2420,17 +2458,17 @@ Nodes (3): S_IFDIR, S_IFLNK, S_IFMT
 Cohesion: 0.50
 Nodes (4): Coordinate Screen Feature, Coordinate Probe, Probe Status Measurement, Targeted Device Family Configuration
 
-### Community 609 - "XCApplicationQuery"
-Cohesion: 0.50
-Nodes (4): XCApplicationQuery, -application, -dealloc, -initWithApplication
+### Community 609 - "<XCTMessagingRole_SystemConfiguration>"
+Cohesion: 0.33
+Nodes (6): <XCTMessagingRole_SystemConfiguration>, -_XCT_clearSimulatedLocationWithReply, -_XCT_getAppearanceModeWithReply, -_XCT_getSimulatedLocationWithReply, -_XCT_setSimulatedLocationreply, -_XCT_updateAppearanceModecompletion
 
 ### Community 610 - "<XCTRemoteSignpostListenerProxy>"
 Cohesion: 0.50
 Nodes (4): NSObject, <XCTRemoteSignpostListenerProxy>, -registerForSignpostsFromSubsystemcategoryintervalTimeoutreply, -unregisterForSignpostsWithToken
 
-### Community 611 - "XCUIDeviceAutomationModeInterface-Protocol.h"
-Cohesion: 0.50
-Nodes (3): NSObject, <XCUIDeviceAutomationModeInterface>, -enableAutomationModeWithError
+### Community 611 - "<XCTMessagingRole_UIAutomationRunnerEventReporting>"
+Cohesion: 0.33
+Nodes (6): <XCTMessagingRole_UIAutomationRunnerEventReporting>, -_XCT_recordedApplicationActivated, -_XCT_recordedEventNamestimestampdurationapplicationSnapshotaccessibilityElementmodifierFlags, -_XCT_recordedFirstResponderChangedWithApplicationSnapshot, -_XCT_recordedKeyEventsWithApplicationSnapshotcharacterscharactersIgnoringModifiersmodifierFlags, -_XCT_recordedOrientationChange
 
 ### Community 612 - "XCUILocation"
 Cohesion: 0.50
@@ -2440,13 +2478,13 @@ Nodes (3): XCUILocation, -hash, -isEqual
 Cohesion: 0.50
 Nodes (4): -defaultTypingFrequency, -init, -maxTypingFrequency, -resetSessionSettings
 
-### Community 614 - "lang-switcher.tsx"
-Cohesion: 0.47
-Nodes (4): LangSwitcher(), LANGUAGES_OPTIONS, OPTION_NAMES, SupportedLanguages
-
-### Community 615 - "FBSafariAlertIntegrationTests"
+### Community 614 - "<XCTReportingSessionTestContainer>"
 Cohesion: 0.33
-Nodes (6): FBSafariAlertIntegrationTests, -setUp, -tearDown, -testCanHandleSafariInputPrompt, FBSession, XCUIApplication
+Nodes (6): NSObject, <XCTReportingSessionTestContainer>, -reportSuiteStartedWithIdentifieratDatetraits, -reportSuiteStartedWithNameatDatetraits, -reportTestStartedWithIdentifieratDatetestCaseRunConfigurationtraits, -reportTestStartedWithNameisParameterizedargumentIDsatDateiterationtraits
+
+### Community 615 - "XCUIApplicationRegistry"
+Cohesion: 0.33
+Nodes (6): NSObject, XCUIApplicationRegistry, -initWithTestDependenciesuserOverridesplatformServicesProvider, -recordForApplicationWithBundleIdentifiererror, -replacePlatformServicesProvider, -testDependencyExistsForApplicationAtURL
 
 ### Community 616 - "Pull Request and Main Push Gate"
 Cohesion: 0.67
@@ -2468,9 +2506,9 @@ Nodes (3): limit(), done(), maybeNext()
 Cohesion: 0.67
 Nodes (3): Experimental USB Screen Mirroring, iOS Screen Streaming, WDA MJPEG Streaming
 
-### Community 625 - "engines"
-Cohesion: 0.67
-Nodes (3): engines, node, npm
+### Community 625 - "i18n.ts"
+Cohesion: 0.24
+Nodes (6): i18next-browser-languagedetector, i18next-http-backend, engines, node, npm, SUPPORTED_LANGUAGES
 
 ### Community 626 - "Apple Touch Icon"
 Cohesion: 0.67
@@ -2508,9 +2546,9 @@ Nodes (3): Conventional Commit Pull Request Title Check, WebDriverAgent Lint For
 Cohesion: 0.67
 Nodes (3): WebDriverAgent Release Build Matrix, WebDriverAgent Release Workflow, WebDriverAgent Semantic Release
 
-### Community 641 - "<XCTIssueHandling>"
-Cohesion: 0.40
-Nodes (5): <XCTIssueHandling>, -expectFailureWithContext, -expectFailureWithContextinBlock, -handleIssue, -handleIssuecompletionHandler
+### Community 641 - "table-with-sticky-header.tsx"
+Cohesion: 0.50
+Nodes (3): ui_src_components_lib_table_with_sticky_header_table_with_sticky_header_module, TableWithStickyHeader(), TableWithStickyHeaderProps
 
 ### Community 644 - "Mercury Device Farm"
 Cohesion: 0.21
@@ -2520,25 +2558,61 @@ Nodes (17): Remote Connect API Endpoint, Mercury REST API Reference, Appium Inte
 Cohesion: 0.67
 Nodes (3): GHCR Package, Git Tag, GitHub Release
 
+### Community 1563 - "FBVoiceOverTests"
+Cohesion: 0.40
+Nodes (5): FBVoiceOverTests, -tearDown, -testVoiceOverEnableDisableAndNavigation, -testVoiceOverMoveBackward, -testVoiceOverUnavailableOnOlderSDK
+
+### Community 1566 - "<XCTMessagingRole_ForcePressureSupportQuerying>"
+Cohesion: 0.50
+Nodes (4): <XCTMessagingRole_ForcePressureSupportQuerying>, -_XCT_requestCurrentKeyboardModifierFlagsWithReply, -_XCT_requestPressureEventsSupported, -_XCT_synthesizeEventimplicitConfirmationIntervalcompletion
+
+### Community 1567 - "<XCTMessagingRole_HIDEventRecording>"
+Cohesion: 0.50
+Nodes (4): <XCTMessagingRole_HIDEventRecording>, -_XCT_playBackHIDEventRecordingFromDatareply, -_XCT_startHIDEventRecordingWithReply, -_XCT_stopHIDEventRecordingWithReply
+
+### Community 1568 - "<XCTRunnerIDESessionDelegate>"
+Cohesion: 0.50
+Nodes (4): NSObject, <XCTRunnerIDESessionDelegate>, -IDESessionDidDisconnect, -testWorkerForIDESessioncompletion
+
+### Community 1569 - "<XCUIAXNotificationHandling>"
+Cohesion: 0.67
+Nodes (3): NSObject, <XCUIAXNotificationHandling>, -handleAccessibilityNotificationfromElementpayload
+
+### Community 1570 - "<XCUIIssueDiagnosticsProviding>"
+Cohesion: 0.67
+Nodes (3): NSObject, <XCUIIssueDiagnosticsProviding>, -diagnosticAttachmentsForError
+
+### Community 1571 - "+name"
+Cohesion: 0.67
+Nodes (3): FBHittableAttribute, +name, +valueForElement
+
+### Community 1572 - "+name"
+Cohesion: 0.67
+Nodes (3): FBLabelAttribute, +name, +valueForElement
+
+### Community 1573 - "+name"
+Cohesion: 0.67
+Nodes (3): FBTraitsAttribute, +name, +valueForElement
+
 ## Knowledge Gaps
-- **3955 isolated node(s):** `+sharedInstance`, `-reduceMotionEnabled`, `+activeManagedConfigurationRestrictionUUIDs`, `+callbackQueue`, `-URLOverrideForURL` (+3950 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 6842 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **1136 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **3956 isolated node(s):** `+sharedInstance`, `-reduceMotionEnabled`, `+activeManagedConfigurationRestrictionUUIDs`, `+callbackQueue`, `-URLOverrideForURL` (+3951 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 6849 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **1128 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `XCTestCase` connect `XCTestCase` to `FBProtocolHelpersTests`, `FBFailureProofTestCase`, `FBQuiescenceApplicationDouble`, `RouteResponse`, `FBRunLoopSpinner`, `FBXMLSafeStringTests`, `XCTMemoryChecker`, `NSExpression`, `WebDriverAgentLib.h`, `uikit`, `FBXCAXClientProxy`, `XCTIssue`, `FBImageProcessor`, `FBTVNavigationTrackerTests`, `XCTAttachmentManager`, `NSPredicate`, `+builder`, `XCTRepetitionPolicy`, `FBTVFocusIntegrationTests`, `FBElementCommands`, `XCTSourceCodeContext`, `FBConfigurationTests`, `FBWebServer.m`, `TouchableView`, `NSDictionary`, `FBRoute`, `XCElementSnapshotDouble`, `FBHTTPServerTests`, `XCTestRun`, `FBSessionTests`, `FBCustomCommandsTests`, `FBRuntimeUtilsTests`, `LRUCache`, `FBIntegrationTestCase`, `NSDictionaryFBUtf8SafeTests`, `+parseQueryerror`, `FBMathUtilsTests`, `FBWebServer`, `FBElementTypeTransformer`, `WDAWatchInProcessTestCase`?**
+- **Why does `XCTestCase` connect `XCTestCase` to `FBProtocolHelpersTests`, `FBFailureProofTestCase`, `RouteResponse`, `FBRunLoopSpinner`, `FBXMLSafeStringTests`, `XCTMemoryChecker`, `NSExpression`, `WebDriverAgentLib.h`, `uikit`, `FBXCAXClientProxy`, `XCTIssue`, `FBImageProcessor`, `FBTVNavigationTrackerTests`, `XCTAttachmentManager`, `NSPredicate`, `+builder`, `XCTRepetitionPolicy`, `FBTVFocusIntegrationTests`, `FBElementCommands`, `XCTSourceCodeContext`, `FBConfigurationTests`, `FBWebServer.m`, `TouchableView`, `NSDictionary`, `FBRoute`, `XCElementSnapshotDouble`, `FBHTTPServerTests`, `FBSessionTests`, `FBCustomCommandsTests`, `FBRuntimeUtilsTests`, `XCTestCaseRun`, `FBResponseJSONPayload`, `LRUCache`, `FBIntegrationTestCase`, `NSDictionaryFBUtf8SafeTests`, `+parseQueryerror`, `FBMathUtilsTests`, `FBWebServer`, `FBElementTypeTransformer`, `WDAWatchInProcessTestCase`?**
   _High betweenness centrality (0.040) - this node is a cross-community bridge._
-- **Why does `FBIntegrationTestCase` connect `FBIntegrationTestCase` to `XCTestCase`, `FBRunLoopSpinner`, `WebDriverAgentLib.h`, `+alertWithApplication`, `FBScreenTests`, `XCUIElementAttributesTests`, `FBImageProcessor`, `FBAutoAlertsHandlerTests`, `FBIntegrationAppTests`, `FBSessionIntegrationTests`, `FBXCTestDaemonsProxy`, `XCUIApplicationHelperTests`, `FBElementAttributeTests`, `XCUIDeviceRotationTests`, `FBW3CTouchActionsIntegrationTestsPart1`, `XCUIDeviceHelperTests`, `FBScrollingTests`, `FBTapTest`, `XCElementSnapshotHelperTests`, `FBW3CTypeActionsTests`, `FBPasteboard`, `XCUIElementFBFindTests`, `FBSafariAlertIntegrationTests`, `FBXPathIntegrationTests`, `FBElementSwipingTests`, `FBForceTouchTests`, `FBW3CMultiTouchActionsIntegrationTests`, `XCUIElementFBFindTests_IdentifierSemantics`?**
+- **Why does `FBIntegrationTestCase` connect `FBIntegrationTestCase` to `XCTestCase`, `FBRunLoopSpinner`, `WebDriverAgentLib.h`, `+alertWithApplication`, `FBScreenTests`, `XCUIElementAttributesTests`, `+startScreenRecordingWithRequesterror`, `FBImageProcessor`, `FBVoiceOverTests`, `FBAutoAlertsHandlerTests`, `FBIntegrationAppTests`, `FBSessionIntegrationTests`, `XCUIApplicationHelperTests`, `FBElementAttributeTests`, `XCUIDeviceRotationTests`, `FBW3CTouchActionsIntegrationTestsPart1`, `XCUIDeviceHelperTests`, `FBScrollingTests`, `FBTapTest`, `XCElementSnapshotHelperTests`, `FBW3CTypeActionsTests`, `FBPasteboard`, `XCUIElementFBFindTests`, `XCUIElementFBFindTests_ResponseFields`, `FBXPathIntegrationTests`, `FBElementSwipingTests`, `FBForceTouchTests`, `FBW3CMultiTouchActionsIntegrationTests`, `XCUIElementFBFindTests_IdentifierSemantics`?**
   _High betweenness centrality (0.017) - this node is a cross-community bridge._
-- **Why does `NSArray` connect `FBHTTPServer` to `XCTestConfiguration`, `XCTestExpectation`, `+alertWithApplication`, `XCUIElementDouble`, `XCUISystem`, `XCTExpectedFailureContextManager`, `FBW3CActionsSynthesizer.m`, `XCTMetricDiagnosticHelper`, `FBBaseActionsSynthesizer.m`, `FBXPath`, `XCUIApplicationHelperTests`, `FBScrollViewController`, `NSDictionary`, `XCAXClient_iOS`, `XCElementSnapshotDouble`, `XCUIApplication`, `XCUIElementQuery`, `FBCustomCommands`, `XCElementSnapshotHelperTests`, `XCTTestIdentifier`, `XCPointerEventPath`, `XCSynthesizedEventRecord`, `XCUIApplicationOpenRequest`, `+logFmt`, `XCTAggregateSuiteRunStatistics`, `XCUIElementDouble`, `XCTMeasureOptions`, `XCTTestIdentifierSet`, `FBClassChainQueryParser.m`, `FBXPathIntegrationTests`?**
+- **Why does `NSArray` connect `FBHTTPServer` to `XCTestConfiguration`, `XCTestExpectation`, `FBXCElementSnapshotWrapper`, `XCUIElementDouble`, `XCTExpectedFailureContextManager`, `XCTMetricDiagnosticHelper`, `FBBaseActionsSynthesizer.m`, `+xmlRepresentationWithRootElementwriterelementStorequeryexcludingAttributes`, `XCUIApplicationHelperTests`, `FBScrollViewController`, `NSDictionary`, `XCAXClient_iOS`, `XCElementSnapshotDouble`, `XCUIApplication`, `XCUIElementQuery`, `FBCustomCommands`, `XCElementSnapshotHelperTests`, `XCTTestIdentifier`, `XCPointerEventPath`, `XCSynthesizedEventRecord`, `XCUIApplicationOpenRequest`, `XCTAggregateSuiteRunStatistics`, `XCUIElementDouble`, `XCTMeasureOptions`, `XCTTestIdentifierSet`, `FBClassChainQueryParser.m`, `FBAlert`, `FBXPathIntegrationTests`?**
   _High betweenness centrality (0.015) - this node is a cross-community bridge._
 - **What connects `+sharedInstance`, `-reduceMotionEnabled`, `+activeManagedConfigurationRestrictionUUIDs` to the rest of the system?**
-  _3955 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _3956 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `wire.ts` be split into smaller, more focused modules?**
   _Cohesion score 0.0060790273556231 - nodes in this community are weakly interconnected._
 - **Should `package.json` be split into smaller, more focused modules?**
-  _Cohesion score 0.019950248756218904 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.019321016361560903 - nodes in this community are weakly interconnected._
 - **Should `ref_config` be split into smaller, more focused modules?**
-  _Cohesion score 0.02536820846263731 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.026894461284100304 - nodes in this community are weakly interconnected._
