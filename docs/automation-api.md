@@ -103,6 +103,18 @@ curl -H "Authorization: Bearer YOUR_TOKEN" https://YOUR_DOMAIN/api/v1/user
 - `DELETE /api/v1/builds/{id}` → delete one finished run (owner or admin)
 - `DELETE /api/v1/builds` → delete all finished runs (admins delete everything, users delete their own)
 
+### Reusing a device after a run
+
+After releasing and reserving a device for another run, call `useDevice` as usual.
+If its remote endpoint is still open, Mercury reuses it without restarting it
+and sends a connection-start confirmation for the new request. This applies
+whether the previous test run passed or failed.
+
+A `504` with `failed to connect to device` means that no connection-start
+confirmation arrived within 20 seconds after joining the group. An `Available`
+device in the UI does not guarantee this confirmation: availability and the
+remote connection are separate states.
+
 ### Capture devices
 
 ```bash
@@ -475,6 +487,18 @@ curl -H "Authorization: Bearer YOUR_TOKEN" https://YOUR_DOMAIN/api/v1/user
 - `GET /api/v1/builds` → otomasyon koşumlarını listeler (**Builds** sayfasındaki koşum geçmişi)
 - `DELETE /api/v1/builds/{id}` → biten bir koşumu siler (sahibi veya admin)
 - `DELETE /api/v1/builds` → biten koşumları toplu siler (admin hepsini, kullanıcı kendisininkini)
+
+### Koşum sonrasında cihazı tekrar kullanma
+
+Cihazı bırakıp yeni bir koşum için ayırdıktan sonra normal şekilde `useDevice`
+çağırın. Remote bağlantı hâlâ açıksa Mercury bağlantıyı yeniden başlatmadan
+kullanır ve yeni istek için bağlantı başlatma onayı gönderir. Önceki test
+koşumunun başarılı veya başarısız olması bu davranışı değiştirmez.
+
+`failed to connect to device` açıklamalı bir `504`, gruba katıldıktan sonraki
+20 saniyede bağlantı başlatma onayının gelmediğini belirtir. UI'da cihazın
+`Available` görünmesi bu onayın geleceğini garanti etmez: kullanılabilirlik ve
+remote bağlantı ayrı durumlardır.
 
 ### Cihaz ayırma örneği
 

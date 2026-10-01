@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.10.6] — 2026-10-01
+
 ### Added / Eklendi
 
 **Admin-managed device runtime settings / Yönetici tarafından belirlenen cihaz çalışma zamanı ayarları** — Settings → General → Device Runtime Settings (Android profile, iOS profile and the new **iOS Screen Mode**) are now chosen by an admin and applied to every user. Non-admins see the current values read-only; changes from non-admins are rejected by the backend. The values are stored with the global alert message on the `MERCURY_ADMIN_EMAIL` user, pushed immediately to every device currently in use, sent to each device when a user takes it, and are not touched by *Reset settings*. The iOS Screen Mode selector explains each choice in plain language: *Server default* (keeps the provider's `IOS_SCREEN_CAPTURE_MODE`), *Standard* (WDA screenshots, ~10-15 fps, most stable) and *Smooth* (experimental USB video, ~30 fps, USB-connected devices only); it applies the next time a device screen is opened.
@@ -25,9 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Yalnızca yöneticiye özel cihaz kurtarma eylemleri** — Cihaz kontrol panelindeki Yeniden Başlat ve Dokunmayı Onar düğmeleri artık yalnızca yönetici hesaplarına gösterilir. Her ikisi de cihazı yeniden başlattığı veya kayıtlı ekran geometrisini yeniden yazdığı için diğer kullanıcıların oturumlarını kesintiye uğratır.
 
-**WebDriverAgent 16.12.10** — Updated the bundled iOS control service to WebDriverAgent 16.12.10. Includes upstream fixes for gesture coordinate rescaling in compatibility-mode windows, scroll gesture anchoring, keyboard input key lookup, and a new get-screens endpoint.
+**WebDriverAgent 16.13.6** — Updated the bundled iOS control service to stable WebDriverAgent 16.13.6. Includes upstream fixes for screenshot orientation/scaling, coordinate-drag hangs, stale-session handling, HTTP connection cleanup, and idle-wait recovery, plus faster accessibility lookups/XML generation and a new `currentDisplayId` screenshot setting.
 
-**WebDriverAgent 16.12.10** — Paketlenen iOS kontrol servisi WebDriverAgent 16.12.10 sürümüne güncellendi. Uyumluluk modu pencerelerinde jest koordinatlarının yeniden ölçeklenmesi, kaydırma jesti referans noktası, klavye girişi tuş adı çözümleme düzeltmeleri ve yeni ekran listeleme uç noktası içerir.
+**WebDriverAgent 16.13.6** — Paketlenen iOS kontrol servisi kararlı WebDriverAgent 16.13.6 sürümüne güncellendi. Ekran görüntüsü yönü/ölçeklendirmesi, koordinatla sürükleme sırasında takılma, eski oturumların işlenmesi, HTTP bağlantılarının temizlenmesi ve uygulamanın kararlı hale gelmesini bekleme ayarlarının geri yüklenmesi için düzeltmeler; daha hızlı erişilebilirlik aramaları/XML üretimi ve yeni `currentDisplayId` ekran görüntüsü ayarı içerir.
 
 ### Fixed / Düzeltildi
 
