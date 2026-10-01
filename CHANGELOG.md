@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed / Düzeltildi
+
+**Automation device release waits for cleanup acknowledgement / Otomasyon cihazının serbest bırakılması temizleme onayı bekler** — Automation runs now wait for each active device to acknowledge disconnect and leave automation mode before deleting the reservation or finishing the build. If cleanup fails or times out, the reservation and build remain available for retry, and a device already owned by a newer run is left untouched.
+
+**Otomasyon cihazının serbest bırakılması temizleme onayı bekler** — Otomasyon çalıştırmaları, ayırmayı silmeden veya derlemeyi tamamlamadan önce etkin her cihazın bağlantıyı kesip otomasyon modundan çıktığını onaylamasını bekler. Temizleme başarısız olur veya zaman aşımına uğrarsa ayırma ve derleme yeniden deneme için korunur; daha yeni bir çalıştırmaya ait cihazlara dokunulmaz.
+
 ## [0.10.6] — 2026-10-01
 
 ### Added / Eklendi
