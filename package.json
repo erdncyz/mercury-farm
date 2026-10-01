@@ -1,6 +1,6 @@
 {
   "name": "mercury-device-farm",
-  "version": "0.10.6",
+  "version": "0.10.7",
   "description": "Mercury Device Farm - Remote Device Management Platform",
   "type": "module",
   "keywords": [
