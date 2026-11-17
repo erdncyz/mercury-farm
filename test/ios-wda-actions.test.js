@@ -12,6 +12,38 @@ import {
     QUEUED_TAP_MAX_AGE_MS,
     watchWdaMjpeg
 } from '../lib/units/ios-device/plugins/wda/client.js'
+import {resolveInfoSession} from '../lib/units/ios-device/plugins/info/index.js'
+
+test('device info reuses an active WDA session instead of replacing it', async() => {
+    let createCalls = 0
+    const result = await resolveInfoSession({
+        getStatus: async() => ({sessionId: 'appium-session', value: {os: {sdkVersion: '18.2'}}}),
+        createSession: async() => {
+            createCalls += 1
+            return {sessionId: 'new-session'}
+        }
+    })
+
+    assert.deepEqual(result, {sessionId: 'appium-session', sdkVersion: '18.2', reused: true})
+    assert.equal(createCalls, 0)
+})
+
+test('device info creates a WDA session when none is active or status fails', async() => {
+    const created = {sessionId: 'new-session', value: {capabilities: {sdkVersion: '17.4'}}}
+    const withoutSession = await resolveInfoSession({
+        getStatus: async() => ({value: {}}),
+        createSession: async() => created
+    })
+    const statusFailed = await resolveInfoSession({
+        getStatus: async() => {
+            throw new Error('ECONNREFUSED')
+        },
+        createSession: async() => created
+    })
+
+    assert.deepEqual(withoutSession, {sessionId: 'new-session', sdkVersion: '17.4', reused: false})
+    assert.deepEqual(statusFailed, withoutSession)
+})
 
 test('restarts WDA once when session bootstrap times out', async() => {
     let createCalls = 0
