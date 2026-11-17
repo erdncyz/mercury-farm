@@ -64,6 +64,9 @@ export interface ManagedProcess<TContext, TResources> {
 
     // Internal flag to mark an intentional stop sequence.
     expectedStop?: boolean
+
+    // Incremented on every start() so a superseded spawn can detect it is stale.
+    generation?: number
 }
 
 export interface ProcessStats {
@@ -157,10 +160,16 @@ export class ProcessManager<TContext = any, TResources = any> {
         }
 
         process.expectedStop = false
+        const generation = (process.generation ?? 0) + 1
+        process.generation = generation
 
         this.log.info('Starting process "%s"', id)
         process.state = 'starting'
         process.startTime = Date.now()
+
+        // Never let a previous child of this managed process outlive the new one;
+        // two workers for the same device both consume its input channel.
+        await (process as any).terminateHandler?.()
 
         return new Promise<boolean>(async(resolve) => {
             let childProcess: ChildProcess | null = null
@@ -242,6 +251,19 @@ export class ProcessManager<TContext = any, TResources = any> {
             try {
                 // Spawn the child process
                 childProcess = await this.callbacks.spawn(id, process.context, [...process.resources])
+
+                // The process may have been stopped, removed or restarted while spawn() was pending.
+                // No terminate handler was installed for this child yet, so kill it here.
+                if (this.processes.get(id) !== process || process.generation !== generation || process.expectedStop) {
+                    this.log.warn('Process "%s" was stopped or replaced while spawning, killing the new child', id)
+                    const staleChild = childProcess
+                    childProcess = null
+                    await this.callbacks.onError?.(id, process.context, new Error('Process stopped while spawning'))
+                    await procutil.gracefullyKill(staleChild, this.killTimeout)
+                    resolveOnce(false)
+                    return
+                }
+
                 this.log.info('Spawned process "%s"', id)
 
                 // Set up event listeners
@@ -289,6 +311,9 @@ export class ProcessManager<TContext = any, TResources = any> {
                 const originalChildProcess = childProcess
                 this.updateTerminateHandler(id, async () => {
                     cleanup()
+                    if (originalChildProcess.exitCode !== null || originalChildProcess.signalCode !== null) {
+                        return
+                    }
                     this.log.info('Gracefully killing process "%s"', id)
                     await procutil.gracefullyKill(originalChildProcess, this.killTimeout)
                 })

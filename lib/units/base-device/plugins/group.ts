@@ -169,6 +169,11 @@ export default syrup.serial()
                 }
                 catch (err: any) {
                     log.error(`Failed to join group ${JSON.stringify(newGroup)}, Error: %s`, err?.message)
+                    // Let the GroupMessage/AutoGroupMessage handlers reply with a failure
+                    // instead of confirming a join to a device owned by someone else.
+                    if (err instanceof grouputil.AlreadyGroupedError) {
+                        throw err
+                    }
                     return this.currentGroup
                 }
             }
@@ -273,7 +278,6 @@ export default syrup.serial()
                     ])
                 }
                 catch (err: any) {
-                    log.error('Failed processing UngroupMessage: %s', err?.message)
                     if (err instanceof grouputil.NoGroupError) {
                         // Device is already not in any group - desired state achieved, respond okay
                         log.info('Device was not in any group during UngroupMessage, treating as success')
@@ -281,7 +285,9 @@ export default syrup.serial()
                             channel,
                             reply.okay()
                         ])
+                        return
                     }
+                    log.error('Failed processing UngroupMessage: %s', err?.message)
                 }
             })
 

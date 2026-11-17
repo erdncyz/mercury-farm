@@ -123,7 +123,7 @@ If it is empty, restore it manually:
 ```bash
 mkdir -p ~/.mercury-farm/current/WebDriverAgent
 cd ~/.mercury-farm/current/WebDriverAgent
-git clone --depth 1 --branch v16.13.6 https://github.com/appium/WebDriverAgent.git .
+git clone --depth 1 --branch v16.15.3 https://github.com/appium/WebDriverAgent.git .
 ```
 
 Then repeat the signing step above and re-run
@@ -195,7 +195,7 @@ npm run ui:commit -- "your message"
 
 `WebDriverAgent/` tracks upstream [`appium/WebDriverAgent`](https://github.com/appium/WebDriverAgent)
 as a git submodule pinned to a specific commit. The bundled stable version is
-**16.13.6** (`v16.13.6`). Dependabot opens a weekly PR to bump the pointer when
+**16.15.3** (`v16.15.3`). Dependabot opens a weekly PR to bump the pointer when
 upstream advances (see `.github/dependabot.yml`).
 
 After a `git pull` (or when the Dependabot PR is merged) sync the submodule:
@@ -551,7 +551,7 @@ Klasor bossa elle doldurun:
 ```bash
 mkdir -p ~/.mercury-farm/current/WebDriverAgent
 cd ~/.mercury-farm/current/WebDriverAgent
-git clone --depth 1 --branch v16.13.6 https://github.com/appium/WebDriverAgent.git .
+git clone --depth 1 --branch v16.15.3 https://github.com/appium/WebDriverAgent.git .
 ```
 
 Ardindan yukaridaki imzalama adimini tekrarlayin ve
