@@ -9,6 +9,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.11.0] — 2026-11-17
+
+### Changed / Değiştirildi
+
+**WebDriverAgent 16.15.3** — Updated the bundled iOS control service to stable WebDriverAgent 16.15.3. Includes upstream fixes for cleaning up app-under-test launches after session deletion, a standalone `/health` route, binding the MJPEG server to the `USE_IP` address, skipping accessibility idle checks for WebKit services and reporting geometry for the selected display, plus a new `asAppUnderTest` flag for `/wda/apps/launch`.
+
+**WebDriverAgent 16.15.3** — Paketlenen iOS kontrol servisi kararlı WebDriverAgent 16.15.3 sürümüne güncellendi. Oturum silindikten sonra test edilen uygulama başlatmalarının temizlenmesi, bağımsız `/health` rotası, MJPEG sunucusunun `USE_IP` adresine bağlanması, WebKit servisleri için erişilebilirlik boşta bekleme kontrollerinin atlanması ve seçili ekranın geometrisinin raporlanması için düzeltmeler; ayrıca `/wda/apps/launch` için yeni `asAppUnderTest` bayrağı içerir.
+
+### Fixed / Düzeltildi
+
+**iOS devices no longer get stuck in Preparing (status 6) after a worker restart / iOS cihazlar worker yeniden başlatması sonrası artık Preparing (status 6) durumunda kalmıyor** — The iOS worker reports `PREPARING` (6) while WebDriverAgent boots, and the iOS provider announced `ONLINE` (3) only after the first start. When the provider restarted a crashed worker (for example after the WDA MJPEG connection was lost), the device stayed at 6 until someone opened it. The UI still showed it as Available, but automation could not book it because booking requires status 3. The provider now announces `ONLINE` every time a worker becomes ready, including restarts. Update the iOS providers.
+
+**iOS cihazlar worker yeniden başlatması sonrası artık Preparing (status 6) durumunda kalmıyor** — iOS worker'ı WebDriverAgent açılırken `PREPARING` (6) bildiriyor, iOS provider ise `ONLINE` (3) durumunu yalnızca ilk başlatmada gönderiyordu. Provider çöken bir worker'ı yeniden başlattığında (örneğin WDA MJPEG bağlantısı koptuğunda) cihaz, biri açana kadar 6'da kalıyordu. Arayüz cihazı Available gösterse de rezervasyon status 3 istediği için otomasyon cihazı alamıyordu. Provider artık worker her hazır olduğunda, yeniden başlatmalar dahil, `ONLINE` gönderiyor. iOS provider'larını güncelleyin.
+
+**iOS worker no longer crash-loops or ends automation sessions while starting / iOS worker başlarken artık çökme döngüsüne girmiyor ve otomasyon oturumlarını sonlandırmıyor** — On startup the iOS worker created a new WebDriverAgent session, which replaced the session of an Appium run already using the device. It also died when reading the screen size took too long while the app under test was busy (`stale element reference`, `socket hang up`), which made the device restart over and over. The worker now reuses the active WDA session, gives startup requests a 30 s timeout, and keeps retrying the battery and screen-size lookup in the background instead of exiting. Swipes sent before the screen size is known are ignored instead of crashing the message loop.
+
+**iOS worker başlarken artık çökme döngüsüne girmiyor ve otomasyon oturumlarını sonlandırmıyor** — iOS worker'ı açılırken yeni bir WebDriverAgent oturumu oluşturuyordu; bu, cihazı kullanan bir Appium koşumunun oturumunun yerini alıyordu. Test edilen uygulama meşgulken ekran boyutunu okumak uzun sürdüğünde (`stale element reference`, `socket hang up`) worker kapanıyor ve cihaz sürekli yeniden başlıyordu. Worker artık etkin WDA oturumunu yeniden kullanıyor, başlangıç isteklerine 30 sn zaman aşımı veriyor ve pil/ekran boyutu bilgisini kapanmak yerine arka planda yeniden deniyor. Ekran boyutu bilinmeden gelen kaydırma hareketleri mesaj döngüsünü çökertmek yerine yok sayılıyor.
+
+**Taking a device that is still held by another user now fails cleanly / Başka bir kullanıcıda olan cihazı alma isteği artık düzgün şekilde reddediliyor** — When a device was still in another user's group, the device swallowed the conflict and confirmed the join, so the user's screen kept failing with "Device used by another user". The join is now rejected with a failure reply. Logs also no longer report an `UngroupMessage` for an already-free device as an error, and no longer warn when a WDA request outlives a session that was closed on purpose.
+
+**Başka bir kullanıcıda olan cihazı alma isteği artık düzgün şekilde reddediliyor** — Cihaz hâlâ başka bir kullanıcının grubundayken çakışma yutuluyor ve katılım onaylanıyordu; kullanıcının ekranı "Device used by another user" hatasıyla düşmeye devam ediyordu. Katılım artık başarısız yanıtıyla reddediliyor. Ayrıca zaten boşta olan cihaza gelen `UngroupMessage` artık hata olarak loglanmıyor ve bilerek kapatılan bir oturumdan sonra yanıtlanan WDA istekleri için uyarı basılmıyor.
+
+**A device never runs two workers at once / Bir cihaz için aynı anda iki worker çalışmıyor** — When a device worker was restarted, the previous worker could still be alive and both consumed the same device channel. A worker started while the device was being stopped or removed could also be left running. The provider now stops the previous worker before starting a new one and kills a newly spawned worker if the device was stopped, removed or restarted in the meantime.
+
+**Bir cihaz için aynı anda iki worker çalışmıyor** — Bir cihazın worker'ı yeniden başlatıldığında önceki worker hâlâ çalışıyor olabiliyor ve ikisi aynı cihaz kanalını dinliyordu. Cihaz durdurulurken veya kaldırılırken başlatılan bir worker da açık kalabiliyordu. Provider artık yeni worker'ı başlatmadan önce öncekini durduruyor; bu arada cihaz durdurulmuş, kaldırılmış veya yeniden başlatılmışsa yeni açılan worker'ı sonlandırıyor.
+
+## [0.10.7] — 2026-10-01
+
 ### Fixed / Düzeltildi
 
 **Automation device release waits for cleanup acknowledgement / Otomasyon cihazının serbest bırakılması temizleme onayı bekler** — Automation runs now wait for each active device to acknowledge disconnect and leave automation mode before deleting the reservation or finishing the build. If cleanup fails or times out, the reservation and build remain available for retry, and a device already owned by a newer run is left untouched.
